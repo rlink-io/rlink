@@ -27,7 +27,7 @@
     'company': 'ALTANMYA - TECHNOLOGY SOLUTIONS Part of ALTANMYA GROUP',
     'website': "https://tech.altanmya.net",
     'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll'],
-    'data': ['views/view_v.xml','security/ir.model.access.csv','views/tstyle.xml','views/view_actions.xml','views/view_menu.xml'],
+    'data': ['views/view_v.xml','security/ir.model.access.csv','views/tstyle.xml','views/view_actions.xml','views/view_menu.xml','data/data.xml'],
     'demo': [],
     'qweb': [],
     'installable': True,
