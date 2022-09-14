@@ -504,21 +504,21 @@ class AttPayRoll(models.Model):
                   return notification
 
       def tranfer_payroll(self):
-          if self.env.user.has_group('fgprint.altanmya_fgp_admin') or self.env.user.has_group('fgprint.altanmya_fgp_hr')  :
-            n_cr=self._cr
-            diff_hour = -3
-            odoobot = self.env['res.users'].browse(1)
-            tt = datetime.now(pytz.timezone(odoobot.tz)).strftime('%z')
-            diff_hour = int(tt[1:3]) + int(tt[3:]) / 60
-            if tt[0:1] == '+':
-                  diff_hour = -1 * diff_hour
-            rec_settings = self.env['od.fp.settings'].sudo().search([('setting_name', '=', 'tz')],
-                                                                    limit=1)
-            if rec_settings:
-                diff_hour = -1 * rec_settings.setting_value
-            qry=f"""
-            insert into od_attpayroll (employee_id,"inout",date_in,diff_entry,date_out,"diff_Exit",status,status_u2,shift_id
-            ,att_date,status2,status2_u2,att_leave,os_in,os_out)
+#           if self.env.user.has_group('fgprint.altanmya_fgp_admin') or self.env.user.has_group('fgprint.altanmya_fgp_hr')  :
+	  n_cr=self._cr
+	  diff_hour = -3
+	  odoobot = self.env['res.users'].browse(1)
+	  tt = datetime.now(pytz.timezone(odoobot.tz)).strftime('%z')
+	  diff_hour = int(tt[1:3]) + int(tt[3:]) / 60
+	  if tt[0:1] == '+':
+	      diff_hour = -1 * diff_hour
+	  rec_settings = self.env['od.fp.settings'].sudo().search([('setting_name', '=', 'tz')],
+							    limit=1)
+	  if rec_settings:
+	      diff_hour = -1 * rec_settings.setting_value
+	  qry=f"""
+		insert into od_attpayroll (employee_id,"inout",date_in,diff_entry,date_out,"diff_Exit",status,status_u2,shift_id
+		,att_date,status2,status2_u2,att_leave,os_in,os_out)
 select EE.id,AA.id,AA.date_in,
 case when AA.att_leave<>0 then AA.os_in-AA.date_in else (AA.att_date-AA.date_in)+interval '1 hours'*(rca.hour_from+{diff_hour}) end as diffin,AA.date_out,
 case when AA.att_leave<>0 then AA.date_out-AA.os_out else AA.date_out-(AA.att_date+interval '1 hours'*
@@ -533,7 +533,7 @@ case when AA.att_leave<>0 then AA.date_out-AA.os_out else AA.date_out-(AA.att_da
             """
             # Notification section Todo
 
-            n_cr.execute(qry)
+          n_cr.execute(qry)
             # rec_id = self.env['ir.model'].sudo().search([('model', '=', 'od.attpayroll')], limit=1)
             # if n_cr.rowcount:
             #     qry = f"""
@@ -569,4 +569,4 @@ case when AA.att_leave<>0 then AA.date_out-AA.os_out else AA.date_out-(AA.att_da
             #                     where od.id>{max_id}
             #                     """
                     # n_cr.execute(qry)
-            return True
+          return True
