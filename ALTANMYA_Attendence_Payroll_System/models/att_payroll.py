@@ -504,69 +504,69 @@ class AttPayRoll(models.Model):
                   return notification
 
       def tranfer_payroll(self):
-#           if self.env.user.has_group('fgprint.altanmya_fgp_admin') or self.env.user.has_group('fgprint.altanmya_fgp_hr')  :
-	  n_cr=self._cr
-	  diff_hour = -3
-	  odoobot = self.env['res.users'].browse(1)
-	  tt = datetime.now(pytz.timezone(odoobot.tz)).strftime('%z')
-	  diff_hour = int(tt[1:3]) + int(tt[3:]) / 60
-	  if tt[0:1] == '+':
-	      diff_hour = -1 * diff_hour
-	  rec_settings = self.env['od.fp.settings'].sudo().search([('setting_name', '=', 'tz')],
-							    limit=1)
-	  if rec_settings:
-	      diff_hour = -1 * rec_settings.setting_value
-	  qry=f"""
-		insert into od_attpayroll (employee_id,"inout",date_in,diff_entry,date_out,"diff_Exit",status,status_u2,shift_id
-		,att_date,status2,status2_u2,att_leave,os_in,os_out)
-select EE.id,AA.id,AA.date_in,
-case when AA.att_leave<>0 then AA.os_in-AA.date_in else (AA.att_date-AA.date_in)+interval '1 hours'*(rca.hour_from+{diff_hour}) end as diffin,AA.date_out,
-case when AA.att_leave<>0 then AA.date_out-AA.os_out else AA.date_out-(AA.att_date+interval '1 hours'*
-			(rca.hour_from+{diff_hour}+
-(case when COALESCE(rca.duration,0)=0 then rca.hour_to-rca.hour_from else rca.duration end))) end as diffout
-,'draft','draft',AA.shift_id,AA.att_date,'draft','draft',AA.att_leave,AA.os_in,AA.os_out
-            from od_inout AS AA left join od_attpayroll AS B on AA.id=B.inout
-            inner join hr_employee AS EE on EE.studio_employee_number=AA.emp_deviceno
-            left join resource_calendar_attendance
-			 as  rca on rca.id= AA.shift_id
-            where B.id is null and  EE.att_mode in ('shift')
-            """
-            # Notification section Todo
+          n_cr = self._cr
+          diff_hour = -3
+          odoobot = self.env['res.users'].browse(1)
+          tt = datetime.now(pytz.timezone(odoobot.tz)).strftime('%z')
+          diff_hour = int(tt[1:3]) + int(tt[3:]) / 60
+          if tt[0:1] == '+':
+              diff_hour = -1 * diff_hour
+          rec_settings = self.env['od.fp.settings'].sudo().search([('setting_name', '=', 'tz')],
+                                                                  limit=1)
+          if rec_settings:
+              diff_hour = -1 * rec_settings.setting_value
+          qry = f"""
+                  insert into od_attpayroll (employee_id,"inout",date_in,diff_entry,date_out,"diff_Exit",status,status_u2,shift_id
+                  ,att_date,status2,status2_u2,att_leave,os_in,os_out)
+                  select EE.id,AA.id,AA.date_in,
+                  case when AA.att_leave<>0 then AA.os_in-AA.date_in else (AA.att_date-AA.date_in)+interval '1 hours'*(rca.hour_from+{diff_hour}) end as diffin,AA.date_out,
+                  case when AA.att_leave<>0 then AA.date_out-AA.os_out else AA.date_out-(AA.att_date+interval '1 hours'*
+                              (rca.hour_from+{diff_hour}+
+                  (case when COALESCE(rca.duration,0)=0 then rca.hour_to-rca.hour_from else rca.duration end))) end as diffout
+                  ,'draft','draft',AA.shift_id,AA.att_date,'draft','draft',AA.att_leave,AA.os_in,AA.os_out
+                  from od_inout AS AA left join od_attpayroll AS B on AA.id=B.inout
+                  inner join hr_employee AS EE on EE.studio_employee_number=AA.emp_deviceno
+                  left join resource_calendar_attendance
+                   as  rca on rca.id= AA.shift_id
+                  where B.id is null and  EE.att_mode in ('shift')
+                  """
+          # Notification section Todo
 
           n_cr.execute(qry)
-            # rec_id = self.env['ir.model'].sudo().search([('model', '=', 'od.attpayroll')], limit=1)
-            # if n_cr.rowcount:
-            #     qry = f"""
-            #                 select  u.id as id
-            #                from res_groups_users_rel G inner join res_users U on G.uid=U.id
-            #     inner join res_groups s on s.id=G.gid
-            #     where s.name='Fgp Hr officer'
-            #                 """
-            #     n_cr.execute("select max(id) as maxp from od_attpayroll ")
-            #
-            #     rows=n_cr.dictfetchall()
-            #     max_id=rows[0].get('maxp')
-            #     n_cr.execute(qry)
-            #     rows = n_cr.dictfetchall()
-            #     if rows:
-            #         for row in rows:
-            #             self.env['mail.activity'].sudo().create({
-            #                 'activity_type_id': 4,
-            #                 'date_deadline': date.today(),
-            #                 'summary': 'Request to approve',
-            #                 'user_id':row.get('id'),
-            #                 'res_model_id': rec_id.id,
-            #                  'res_id': max_id
-            #             })
-            #     # n_cr.execute(qry)
-            #     # n_cr.execute(qry)
-            #     if self.approval_level == 2:
-            #         qry = f"""
-            #                     insert into mail_activity (res_model_id, res_id, activity_type_id, summary, date_deadline, user_id)
-            #                     select  {rec_id.id},od.id,4,'Request to approve',{date.today()},ee2.user_id from od_attpayroll as od
-            #                     inner join hr_employee ee on od.employee_id=ee.id
-            #                     inner join hr_employee ee2 on ee2.id=ee.parent_id
-            #                     where od.id>{max_id}
-            #                     """
-                    # n_cr.execute(qry)
+          # rec_id = self.env['ir.model'].sudo().search([('model', '=', 'od.attpayroll')], limit=1)
+          # if n_cr.rowcount:
+          #     qry = f"""
+          #                 select  u.id as id
+          #                from res_groups_users_rel G inner join res_users U on G.uid=U.id
+          #     inner join res_groups s on s.id=G.gid
+          #     where s.name='Fgp Hr officer'
+          #                 """
+          #     n_cr.execute("select max(id) as maxp from od_attpayroll ")
+          #
+          #     rows=n_cr.dictfetchall()
+          #     max_id=rows[0].get('maxp')
+          #     n_cr.execute(qry)
+          #     rows = n_cr.dictfetchall()
+          #     if rows:
+          #         for row in rows:
+          #             self.env['mail.activity'].sudo().create({
+          #                 'activity_type_id': 4,
+          #                 'date_deadline': date.today(),
+          #                 'summary': 'Request to approve',
+          #                 'user_id':row.get('id'),
+          #                 'res_model_id': rec_id.id,
+          #                  'res_id': max_id
+          #             })
+          #     # n_cr.execute(qry)
+          #     # n_cr.execute(qry)
+          #     if self.approval_level == 2:
+          #         qry = f"""
+          #                     insert into mail_activity (res_model_id, res_id, activity_type_id, summary, date_deadline, user_id)
+          #                     select  {rec_id.id},od.id,4,'Request to approve',{date.today()},ee2.user_id from od_attpayroll as od
+          #                     inner join hr_employee ee on od.employee_id=ee.id
+          #                     inner join hr_employee ee2 on ee2.id=ee.parent_id
+          #                     where od.id>{max_id}
+          #                     """
+          # n_cr.execute(qry)
           return True
+
