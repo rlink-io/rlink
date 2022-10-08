@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='yearly_advantages']" position="after" >
+                   <br></br>
+                <group >
+               <field name="probation_period_start_date"/>
+               <field name="permanent_period_start_date"/>
+                </group>
+                <group>
+                <field name="probation_period_salary"/>
+                <field name="permanent_period_salary"/>
+                </group>
+            </xpath>
+             <xpath expr="//page[@name='information']" position="after" >
+                <page string="Job Leave" name="job_leave">
+                    <group name="job_leave">
+                       <field name="leave_date" style = 'width:40%'/>
+                       <field name="leave_reason" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>
