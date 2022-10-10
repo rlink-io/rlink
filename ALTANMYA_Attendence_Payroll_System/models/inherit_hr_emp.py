@@ -1,5 +1,6 @@
 from odoo import api, models, fields
 
+
 class ExtendEmp(models.Model):
     _inherit = 'hr.employee'
     # _name = 'attendance.employee'
@@ -15,19 +16,40 @@ class ExtendEmp(models.Model):
                                         ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
     insurance_card_number = fields.Char(string='Insurance Card Number')
     bank_account_number = fields.Char(string='Bank Account Number')
-    # deduction_history = fields.Many2one('hr.deduction.history', compute='_compute_deduction_history')
+    deduction_ids = fields.One2many('hr.deduction', 'employee_id')
+    violation_ids = fields.One2many('hr.violation', 'employee_id')
+    training_id = fields.Many2one('hr.training')
+    days_off_id = fields.Many2one('hr.days.off')
 
-    # def action_open_deduction_history(self):
-    #     self.ensure_one()
-    #     action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_deduction_history_action")
-    #     action['res_id'] = self.deduction_history.id
-    #     return action
+    def call_deduction_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_deduction_action")
+        action['context'] = dict(self._context, default_employee_id=self.id, )
+        action['domain'] = [('employee_id', '=', self.id)]
+        return action
 
-    # def _compute_deduction_history(self):
-    #     for emp in self:
-    #         if not emp.deduction_history:
-    #             deduction_history = self.env['hr.deduction.history'].create({'employee_id': emp.id})
-    #             emp.deduction_history = deduction_history.id
+    def call_violation_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_violation_action")
+        action['context'] = dict(self._context, default_employee_id=self.id, )
+        action['domain'] = [('employee_id', '=', self.id)]
+        return action
+
+    def call_training_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_training_action")
+        action['context'] = dict(self._context, default_employee_id=self.id, )
+        if self.training_id:
+            action['res_id'] = self.training_id.id
+        return action
+
+    def call_days_off_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_days_off_action")
+        action['context'] = dict(self._context, default_employee_id=self.id, )
+        if self.days_off_id:
+            action['res_id'] = self.days_off_id.id
+        return action
 
 
 class ExtendEmpPub(models.Model):

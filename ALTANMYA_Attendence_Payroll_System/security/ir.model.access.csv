@@ -12,5 +12,8 @@ fp_logerror_admin,fp.logerror,model_fp_logerror,ALTANMYA_Attendence_Payroll_Syst
 od_fp_settings_admin,od.fp.settings,model_od_fp_settings,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 od_attpayroll_admin,od.attpayroll,model_od_attpayroll,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 od_attpayroll_manager,od.attpayroll,model_od_attpayroll,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_manager,1,1,1,0
-
+hr_deduction,hr.deduction,model_hr_deduction,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
+hr_violation,hr.violation,model_hr_violation,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
+hr_training,hr.training,model_hr_training,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
+hr_days_off,hr.days.off,model_hr_days_off,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 

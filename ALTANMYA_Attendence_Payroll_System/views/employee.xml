@@ -1,68 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data>
-    <record id="tanHrEmpAttMode_inherit" model="ir.ui.view">
-        <field name="name">tanHrEmpAttMode.inherit</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_form"/>
-        <field name="arch" type="xml">
-                 <div name="button_box" position="inside">
-<!--                        <button name="action_open_deduction_history" class="oe_stat_button" icon="fa-money"-->
-<!--                                type="object">-->
-<!--                               Deductions-->
-<!--                        </button>-->
-<!--                     <button name="action_open_contract_history" class="oe_stat_button" icon="fa-money" type="object">-->
-<!--                            Employee Assessments-->
-<!--                        </button>-->
-<!--                     <button name="action_open_contract_history" class="oe_stat_button" icon="fa-money" type="object">-->
-<!--                               Violations-->
-<!--                        </button>-->
-<!--                     <button name="action_open_contract_history" class="oe_stat_button" icon="fa-plus-square" type="object">-->
-<!--                               Bonuses-->
-<!--                        </button>-->
-<!--                     <button name="action_open_contract_history" class="oe_stat_button" icon="fa-money" type="object">-->
-<!--                               Training-->
-<!--                        </button>-->
-<!--                     <button name="action_open_contract_history" class="oe_stat_button" icon="fa-money" type="object">-->
-<!--                               Salary Raise-->
-<!--                        </button>-->
-<!--                      <button name="action_open_contract_history" class="oe_stat_button" icon="fa-money" type="object">-->
-
-<!--                     Employee's Days Off-->
-
-<!--                        </button>-->
-                    </div>
-            <xpath expr="//field[@name='coach_id']" position="attributes">
-                <attribute name="attrs">{'invisible':1}</attribute>
-            </xpath>
-             <xpath expr="//field[@name='lang']" position="attributes">
-                <attribute name="attrs">{'invisible':1}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='pin']" position="after" >
-               <field name="att_mode"/>
-               <field name="studio_employee_number"/>
-            </xpath>
-            <xpath expr="//field[@name='passport_id']" position="after" >
-                <field name="military_status"/>
-                <field name="father_name"/>
-                <field name="mother_name"/>
-            </xpath>
-             <xpath expr="//field[@name='phone']" position="after" >
-                <field name="Landline_number"/>
-            </xpath>
-              <xpath expr="//field[@name='registration_number']" position="after" >
-                <field name="insurance_card_number"/>
-                  <field name="bank_account_number"/>
-            </xpath>
-             <xpath expr="//field[@name='has_work_permit']" position="attributes" >
-                  <attribute name="nolabel">1</attribute>
-            </xpath>
-            <xpath expr="//field[@name='work_phone']" position="attributes">
-
-            <attribute name="string" >Mobile Phone</attribute>
-
-</xpath>
-        </field>
-    </record>
-</data>
+	<data>
+		<record id="tanHrEmpAttMode_inherit" model="ir.ui.view">
+			<field name="name">
+				tanHrEmpAttMode.inherit
+			</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<div name="button_box" position="inside">
+					<button name="call_deduction_action" class="oe_stat_button" icon="fa-money" type="object">
+						Deductions
+					</button>
+					<button name="call_violation_action" class="oe_stat_button" type="object" icon="fa-meh-o">
+						Violations</button>
+					 <button name="call_training_action" class="oe_stat_button" icon="fa-user" type="object">
+						Training
+					</button>
+					 <button name="call_days_off_action" class="oe_stat_button" icon="fa-paperclip" type="object">
+						Days Off
+					</button>
+				</div>
+				<xpath expr="//field[@name='coach_id']" position="attributes">
+					<attribute name="attrs">
+						{'invisible':1}
+					</attribute>
+				</xpath>
+				<xpath expr="//field[@name='lang']" position="attributes">
+					<attribute name="attrs">
+						{'invisible':1}
+					</attribute>
+				</xpath>
+				<xpath expr="//field[@name='pin']" position="after">
+					<field name="att_mode" />
+					<field name="studio_employee_number" />
+				</xpath>
+				<xpath expr="//field[@name='passport_id']" position="after">
+					<field name="military_status" />
+					<field name="father_name" />
+					<field name="mother_name" />
+				</xpath>
+				<xpath expr="//field[@name='phone']" position="after">
+					<field name="Landline_number" />
+				</xpath>
+				<xpath expr="//field[@name='registration_number']" position="after">
+					<field name="insurance_card_number" />
+					<field name="bank_account_number" />
+				</xpath>
+				<xpath expr="//field[@name='has_work_permit']" position="attributes">
+					<attribute name="nolabel">
+						1
+					</attribute>
+				</xpath>
+				<xpath expr="//field[@name='work_phone']" position="attributes">
+					<attribute name="string">
+						Mobile Phone
+					</attribute>
+				</xpath>
+			</field>
+		</record>
+	</data>
 </odoo>

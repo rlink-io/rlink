@@ -1,0 +1,107 @@
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="hr_deduction_tree">
+			<field name="name">hr.deduction.tree</field>
+			<field name="model">hr.deduction</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="reason" />
+					<field name="date" />
+					<field name="value" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="hr_deduction_form">
+			<field name="name">hr.deduction.form</field>
+			<field name="model">hr.deduction</field>
+			<field name="arch" type="xml">
+				<form string="Deductions">
+					<group col="2">
+						<group col="2" name="main_group">
+							<field name="reason" />
+							<field name="date" />
+							<field name="value" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_deduction_action" model="ir.actions.act_window">
+			<field name="name">Deductions</field>
+			<field name="res_model">hr.deduction</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+        <record model="ir.ui.view" id="hr_violation_tree">
+			<field name="name">hr.violation.tree</field>
+			<field name="model">hr.violation</field>
+			<field name="arch" type="xml">
+				<tree>
+				    <field name="violation_type" />
+                    <field name="reason" />
+                    <field name="date" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="hr_violation_form">
+			<field name="name">hr.violation.form</field>
+			<field name="model">hr.violation</field>
+			<field name="arch" type="xml">
+				<form string="Violations">
+					<group col="2">
+						<group col="2" name="main_group">
+							<field name="violation_type" />
+							<field name="reason" />
+							<field name="date" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_violation_action" model="ir.actions.act_window">
+			<field name="name">Violations</field>
+			<field name="res_model">hr.violation</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+        <record model="ir.ui.view" id="hr_training_form">
+			<field name="name">hr.training.form</field>
+			<field name="model">hr.training</field>
+			<field name="arch" type="xml">
+				<form string="Training" create="false">
+					<group col="2">
+						<group col="2" name="main_group">
+							<field name="training_type" />
+							<field name="hours" />
+							<field name="cost" />
+                            <field name="training_party" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_training_action" model="ir.actions.act_window">
+			<field name="name">Training</field>
+			<field name="res_model">hr.training</field>
+			<field name="view_mode">form</field>
+		</record>
+         <record model="ir.ui.view" id="hr_days_off_form">
+			<field name="name">hr.days.off.form</field>
+			<field name="model">hr.days.off</field>
+			<field name="arch" type="xml">
+				<form string="Training" create="false">
+					<group col="2">
+						<group col="2" name="main_group">
+							<field name="total" />
+							<field name="used" />
+							<field name="remaining" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_days_off_action" model="ir.actions.act_window">
+			<field name="name">Days Off</field>
+			<field name="res_model">hr.days.off</field>
+			<field name="view_mode">form</field>
+		</record>
+	</data>
+</odoo>
