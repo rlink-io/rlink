@@ -18,12 +18,27 @@ class ExtendEmp(models.Model):
     bank_account_number = fields.Char(string='Bank Account Number')
     deduction_ids = fields.One2many('hr.deduction', 'employee_id')
     violation_ids = fields.One2many('hr.violation', 'employee_id')
+    bonus_ids = fields.One2many('hr.bonus', 'employee_id')
     training_id = fields.Many2one('hr.training')
     days_off_id = fields.Many2one('hr.days.off')
+    salary_raises_id = fields.Many2one('hr.salary.raise')
 
     def call_deduction_action(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_deduction_action")
+        action['context'] = dict(self._context, default_employee_id=self.id, )
+        action['domain'] = [('employee_id', '=', self.id)]
+        return action
+    def call_bonus_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_bonus_action")
+        action['context'] = dict(self._context, default_employee_id=self.id, )
+        action['domain'] = [('employee_id', '=', self.id)]
+        return action
+
+    def call_salary_raise_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_salary_raise_action")
         action['context'] = dict(self._context, default_employee_id=self.id, )
         action['domain'] = [('employee_id', '=', self.id)]
         return action
@@ -50,6 +65,7 @@ class ExtendEmp(models.Model):
         if self.days_off_id:
             action['res_id'] = self.days_off_id.id
         return action
+
 
 
 class ExtendEmpPub(models.Model):

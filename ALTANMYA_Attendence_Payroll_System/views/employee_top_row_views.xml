@@ -4,10 +4,10 @@
 			<field name="name">hr.deduction.tree</field>
 			<field name="model">hr.deduction</field>
 			<field name="arch" type="xml">
-				<tree>
-					<field name="reason" />
-					<field name="date" />
-					<field name="value" />
+				<tree class="column_width">
+					<field width="33.3%" name="reason" />
+					<field width="33.3%" name="date" />
+					<field width="33.3%" name="value" />
 				</tree>
 			</field>
 		</record>
@@ -31,14 +31,45 @@
 			<field name="res_model">hr.deduction</field>
 			<field name="view_mode">tree,form</field>
 		</record>
+		<record model="ir.ui.view" id="hr_bonus_tree">
+			<field name="name">hr.bonus.tree</field>
+			<field name="model">hr.bonus</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field width="33.3%" name="reason" />
+					<field width="33.3%" name="date" />
+					<field width="33.3%" name="value" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="hr_bonus_form">
+			<field name="name">hr.bonus.form</field>
+			<field name="model">hr.bonus</field>
+			<field name="arch" type="xml">
+				<form string="Bonuses">
+					<group col="2">
+						<group col="2" name="main_group">
+							<field name="reason" />
+							<field name="date" />
+							<field name="value" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_bonus_action" model="ir.actions.act_window">
+			<field name="name">Bonuses</field>
+			<field name="res_model">hr.bonus</field>
+			<field name="view_mode">tree,form</field>
+		</record>
         <record model="ir.ui.view" id="hr_violation_tree">
 			<field name="name">hr.violation.tree</field>
 			<field name="model">hr.violation</field>
 			<field name="arch" type="xml">
 				<tree>
-				    <field name="violation_type" />
-                    <field name="reason" />
-                    <field name="date" />
+				    <field width="33.3%" name="violation_type" />
+                    <field width="33.3%" name="reason" />
+                    <field width="33.3%" name="date" />
 				</tree>
 			</field>
 		</record>
@@ -72,6 +103,7 @@
 							<field name="training_type" />
 							<field name="hours" />
 							<field name="cost" />
+							<field name="trainer" />
                             <field name="training_party" />
 						</group>
 					</group>
@@ -102,6 +134,38 @@
 			<field name="name">Days Off</field>
 			<field name="res_model">hr.days.off</field>
 			<field name="view_mode">form</field>
+		</record>
+		<record model="ir.ui.view" id="hr_salary_raise_tree">
+			<field name="name">hr.salary.raise.tree</field>
+			<field name="model">hr.salary.raise</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field width="33.3%" name="reason" />
+					<field width="33.3%" name="fixed_raise_value"/>
+					<field width="33.3%" name="date" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="hr_salary_raise_form">
+			<field name="name">hr.salary.raise.form</field>
+			<field name="model">hr.salary.raise</field>
+			<field name="arch" type="xml">
+				<form string="Salary Raises">
+					<group col="2">
+						<group col="2" name="main_group">
+							<field name="reason" />
+							<field name="raise_value_type"/>
+							<field name="raise_value"/>
+							<field name="date" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_salary_raise_action" model="ir.actions.act_window">
+			<field name="name">Salary Raises</field>
+			<field name="res_model">hr.salary.raise</field>
+			<field name="view_mode">tree,form</field>
 		</record>
 	</data>
 </odoo>

@@ -27,5 +27,46 @@
             </xpath>
         </field>
     </record>
+     <record id="hr_contract_history_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.history.form.inherit</field>
+        <field name="model">hr.contract.history</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_history_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+					<button style="text-align: center" name="call_advanced_payment_action" class="oe_stat_button" type="object">
+						Advanced Payment
+					</button>
+				</div>
+        </field>
+    </record>
+<record model="ir.ui.view" id="hr_advanced_payment_tree">
+			<field name="name">hr.advanced.payment.tree</field>
+			<field name="model">hr.advanced.payment</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field width="50%" name="date" />
+					<field width="50%" name="value" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="hr_advanced_payment_form">
+			<field name="name">hr.advanced.payment.form</field>
+			<field name="model">hr.advanced.payment</field>
+			<field name="arch" type="xml">
+				<form string="Advanced Payments">
+					<group col="2">
+						<group col="2" name="main_group">
+							<field name="date" />
+							<field name="value" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_advanced_payment_action" model="ir.actions.act_window">
+			<field name="name">Advanced Payment</field>
+			<field name="res_model">hr.advanced.payment</field>
+			<field name="view_mode">tree,form</field>
+		</record>
 </data>
 </odoo>

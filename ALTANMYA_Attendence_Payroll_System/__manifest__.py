@@ -43,5 +43,9 @@
     'installable': True,
     'auto_install': False,
     'application': True,
+    # 'assets': {
+    # 'web.assets_backend': [
+    # 'ALTANMYA_Attendence_Payroll_System/static/src/scss/tcustom.css',
+    # ]},
 
 }

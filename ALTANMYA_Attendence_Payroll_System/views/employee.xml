@@ -9,16 +9,22 @@
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
 				<div name="button_box" position="inside">
-					<button name="call_deduction_action" class="oe_stat_button" icon="fa-money" type="object">
+					 <button name="call_bonus_action" class="oe_stat_button" icon="fa-plus-square-o" type="object">
+						Bonuses
+					</button>
+					<button name="call_deduction_action" class="oe_stat_button" icon="fa-minus-square-o" type="object">
 						Deductions
 					</button>
-					<button name="call_violation_action" class="oe_stat_button" type="object" icon="fa-meh-o">
+					<button name="call_violation_action" class="oe_stat_button" type="object" icon="fa-exclamation-triangle">
 						Violations</button>
-					 <button name="call_training_action" class="oe_stat_button" icon="fa-user" type="object">
+					 <button name="call_training_action" class="oe_stat_button" icon="fa-check-square-o" type="object">
 						Training
 					</button>
 					 <button name="call_days_off_action" class="oe_stat_button" icon="fa-paperclip" type="object">
 						Days Off
+					</button>
+					 <button name="call_salary_raise_action" class="oe_stat_button" icon="fa-external-link-square" type="object">
+						Salary Raise
 					</button>
 				</div>
 				<xpath expr="//field[@name='coach_id']" position="attributes">
@@ -48,9 +54,7 @@
 					<field name="bank_account_number" />
 				</xpath>
 				<xpath expr="//field[@name='has_work_permit']" position="attributes">
-					<attribute name="nolabel">
-						1
-					</attribute>
+					<attribute name="nolabel">1</attribute>
 				</xpath>
 				<xpath expr="//field[@name='work_phone']" position="attributes">
 					<attribute name="string">
