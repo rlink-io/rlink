@@ -1,5 +1,5 @@
 from odoo import api, models, fields, _
-
+from odoo.exceptions import UserError, ValidationError
 
 class HrContractInherited(models.Model):
     _inherit = 'hr.contract'
@@ -11,6 +11,15 @@ class HrContractInherited(models.Model):
     leave_date = fields.Date(string='Leave Date')
     leave_reason = fields.Char(string='Reason')
 
+    @api.onchange('probation_period_salary')
+    def check_probation_period_salary_value(self):
+        if self.probation_period_salary < 0:
+            raise ValidationError('You can\'t enter negative value for Probation Period Salary')
+
+    @api.onchange('permanent_period_salary')
+    def check_permanent_period_salary_value(self):
+        if self.permanent_period_salary < 0:
+            raise ValidationError('You can\'t enter negative value for Permanent Period Salary')
 
 class HrContractHistoryInherited(models.Model):
     _inherit = 'hr.contract.history'
@@ -37,6 +46,11 @@ class AdvancedPayment(models.Model):
     company_id = fields.Many2one('res.company', related='employee_id.company_id', readonly=False,
                                  default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
+
+    @api.onchange('value')
+    def check_value(self):
+        if self.value < 0:
+            raise ValidationError('You can\'t enter negative value for Advanced Payment Value')
 
     def _compute_display_name(self):
         for advanced_payment in self:

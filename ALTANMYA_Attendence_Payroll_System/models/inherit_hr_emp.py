@@ -19,10 +19,21 @@ class ExtendEmp(models.Model):
     deduction_ids = fields.One2many('hr.deduction', 'employee_id')
     violation_ids = fields.One2many('hr.violation', 'employee_id')
     bonus_ids = fields.One2many('hr.bonus', 'employee_id')
-    training_id = fields.Many2one('hr.training')
+    training_ids = fields.One2many('hr.training', 'employee_id')
     days_off_id = fields.Many2one('hr.days.off')
     salary_raises_id = fields.Many2one('hr.salary.raise')
+    assessment_id = fields.Many2one('hr.assessment')
 
+    @api.model
+    def create(self, vals):
+        new = super(ExtendEmp, self).create(vals)
+        employees = self.env['hr.employee'].search([])
+        for employee in employees:
+            if not employee.assessment_id:
+                assessment = self.env['hr.assessment'].sudo().create({
+                    "employee_id": employee.id
+                })
+        return new
     def call_deduction_action(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_deduction_action")
@@ -54,8 +65,7 @@ class ExtendEmp(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_training_action")
         action['context'] = dict(self._context, default_employee_id=self.id, )
-        if self.training_id:
-            action['res_id'] = self.training_id.id
+        action['domain'] = [('employee_id', '=', self.id)]
         return action
 
     def call_days_off_action(self):
@@ -64,6 +74,13 @@ class ExtendEmp(models.Model):
         action['context'] = dict(self._context, default_employee_id=self.id, )
         if self.days_off_id:
             action['res_id'] = self.days_off_id.id
+        return action
+    def call_assessment_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_assessment_action")
+        action['context'] = dict(self._context, default_employee_id=self.id, )
+        if self.assessment_id:
+            action['res_id'] = self.assessment_id.id
         return action
 
 

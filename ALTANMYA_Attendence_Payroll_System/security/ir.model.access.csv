@@ -19,4 +19,9 @@ hr_days_off,hr.days.off,model_hr_days_off,ALTANMYA_Attendence_Payroll_System.alt
 hr_salary_raise,hr.salary.raise,model_hr_salary_raise,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 hr_advanced_payment,hr.advanced.payment,model_hr_advanced_payment,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 hr_bonus,hr.bonus,model_hr_bonus,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
+hr_assessment,hr.assessment,model_hr_assessment,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,0,0,0
+tasks_table,tasks.table,model_tasks_table,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
+evaluation_table,evaluation.table,model_evaluation_table,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,0,0
+evaluation_table_row,evaluation.table.row,model_evaluation_table_row,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
+
 

@@ -29,7 +29,7 @@
     'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll'],
     'data': ['views/view_v.xml',
              'security/ir.model.access.csv',
-
+             'views/cron_jobs.xml',
              'views/tstyle.xml',
              'views/view_actions.xml',
              'views/view_menu.xml',
