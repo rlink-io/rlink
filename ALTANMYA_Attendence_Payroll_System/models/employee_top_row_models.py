@@ -240,12 +240,12 @@ class EvaluationTable(models.Model):
                                       , ('April', 'April'), ('May', 'May'), ('June', 'June'),
                                    ('July', 'July'), ('August', 'August'), ('September', 'September'),
                                    ('October', 'October'), ('November', 'November'), ('December', 'December')
-                                   ], default='January')
+                                   ], default='January', required=True)
     to_month = fields.Selection([('January', 'January'), ('February', 'February'), ('March', 'March')
                                     , ('April', 'April'), ('May', 'May'), ('June', 'June'),
                                  ('July', 'July'), ('August', 'August'), ('September', 'September'),
                                  ('October', 'October'), ('November', 'November'), ('December', 'December')
-                                 ], default='December')
+                                 ], default='December', required=True)
     rows_ids = fields.One2many('evaluation.table.row', 'table_id')
     filtered_ids = fields.Many2many('evaluation.table.row')
 

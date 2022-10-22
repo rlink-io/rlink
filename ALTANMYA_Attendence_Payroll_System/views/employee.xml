@@ -8,22 +8,25 @@
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
+				<header position="inside">
+					<field name="state" widget="statusbar" />
+				</header>
 				<div name="button_box" position="inside">
-					 <button name="call_bonus_action" class="oe_stat_button" icon="fa-plus-square-o" type="object">
+					 <button name="call_bonuses_action" class="oe_stat_button" icon="fa-plus-square-o" type="object">
 						Bonuses
 					</button>
-					<button name="call_deduction_action" class="oe_stat_button" icon="fa-minus-square-o" type="object">
+					<button name="call_deductions_action" class="oe_stat_button" icon="fa-minus-square-o" type="object">
 						Deductions
 					</button>
-					<button name="call_violation_action" class="oe_stat_button" type="object" icon="fa-exclamation-triangle">
+					<button name="call_violations_action" class="oe_stat_button" type="object" icon="fa-exclamation-triangle">
 						Violations</button>
-					 <button name="call_training_action" class="oe_stat_button" icon="fa-check-square-o" type="object">
+					 <button name="call_trainings_action" class="oe_stat_button" icon="fa-check-square-o" type="object">
 						Trainings
 					</button>
 					 <button name="call_days_off_action" class="oe_stat_button" icon="fa-paperclip" type="object">
 						Days Off
 					</button>
-					 <button name="call_salary_raise_action" class="oe_stat_button" icon="fa-external-link-square" type="object">
+					 <button name="call_salary_raises_action" class="oe_stat_button" icon="fa-external-link-square" type="object">
 						Salary Raise
 					</button>
 					 <button name="call_assessment_action" class="oe_stat_button" icon="fa-table" type="object">
@@ -56,9 +59,9 @@
 					<field name="insurance_card_number" />
 					<field name="bank_account_number" />
 				</xpath>
-<!--				<xpath expr="//field[@name='has_work_permit']" position="attributes">-->
-<!--					<attribute name="nolabel">1</attribute>-->
-<!--				</xpath>-->
+				<xpath expr="//field[@name='has_work_permit']" position="attributes">
+					<attribute name="nolabel">1</attribute>
+				</xpath>
 				<xpath expr="//field[@name='work_phone']" position="attributes">
 					<attribute name="string">
 						Mobile Phone
@@ -66,5 +69,65 @@
 				</xpath>
 			</field>
 		</record>
+		<record model="ir.ui.view" id="hr_change_request_tree">
+			<field name="name">hr.change.request.tree</field>
+			<field name="model">hr.change.request</field>
+			<field name="arch" type="xml">
+				<tree create="0" edit="0" delete="0">
+				    <field  name="employee_id" />
+					 <field  name="field_string" />
+<!--                    <field  name="field_name" />-->
+<!--					 <field  name="field_type" />-->
+                    <field  name="previous_value" />
+<!--					 <field  name="previous_value_origin" />-->
+					<field  name="new_value" />
+					<field  name="status"/>
+                    <button  name="confirm_request" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible': [('status','!=','pending')]}" groups="hr.group_hr_manager"/>
+					<button name="reject_request" type="object" string="Reject" class="oe_link" attrs="{'invisible': [('status','!=','pending')]}"  groups="hr.group_hr_manager" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="hr_change_request_search" model="ir.ui.view">
+        <field name="name">hr.change.request.search</field>
+        <field name="model">hr.change.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Pending Requests" name="status" domain="[('status', '=','pending')]"/>
+            </search>
+        </field>
+    	</record>
+
+		<record id="hr_change_request_action" model="ir.actions.act_window">
+			<field name="name">Change Requests</field>
+			<field name="res_model">hr.change.request</field>
+			<field name="view_mode">tree</field>
+			 <field name="context">{"search_default_status":1}</field>
+		</record>
+		<record id="hr_action_emp_profile" model="ir.actions.server">
+          <field name="name">My Profile</field>
+          <field name="model_id" ref="model_hr_employee"/>
+          <field name="state">code</field>
+          <field name="code">action=env.get('hr.employee').open_emp_profile()</field>
+ 		</record>
+		<record id="hr_action_emp_kanban" model="ir.actions.server">
+          <field name="name">Employees</field>
+          <field name="model_id" ref="model_hr_employee"/>
+          <field name="state">code</field>
+          <field name="code">action=env.get('hr.employee').open_emp_kanban()</field>
+ 		</record>
+		   <menuitem
+            id="menu_employee_change_request"
+            name="Change Requests"
+			action ='hr_change_request_action'
+			parent="hr.menu_hr_employee_payroll"
+			groups="hr.group_hr_user"
+            sequence="7"
+         />
+		<record id="hr.menu_hr_employee_user" model="ir.ui.menu">
+			<field name="groups_id" eval="[(5,ref('make_invisible'))]"/>
+		</record>
+		<menuitem id="hr.menu_hr_employee_user" name="Employees" groups="make_invisible"/>
+
 	</data>
 </odoo>

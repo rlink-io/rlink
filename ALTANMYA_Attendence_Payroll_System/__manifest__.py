@@ -29,6 +29,7 @@
     'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll'],
     'data': ['views/view_v.xml',
              'security/ir.model.access.csv',
+             'security/security.xml',
              'views/cron_jobs.xml',
              'views/tstyle.xml',
              'views/view_actions.xml',
@@ -36,7 +37,8 @@
              'data/data.xml',
              'views/employee.xml',
              'views/hr_contract_inherited.xml',
-             'views/employee_top_row_views.xml'
+             'views/employee_top_row_views.xml',
+
              ],
     'demo': [],
     'qweb': [],

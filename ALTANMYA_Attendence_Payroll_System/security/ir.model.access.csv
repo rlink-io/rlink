@@ -12,16 +12,17 @@ fp_logerror_admin,fp.logerror,model_fp_logerror,ALTANMYA_Attendence_Payroll_Syst
 od_fp_settings_admin,od.fp.settings,model_od_fp_settings,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 od_attpayroll_admin,od.attpayroll,model_od_attpayroll,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 od_attpayroll_manager,od.attpayroll,model_od_attpayroll,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_manager,1,1,1,0
-hr_deduction,hr.deduction,model_hr_deduction,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-hr_violation,hr.violation,model_hr_violation,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-hr_training,hr.training,model_hr_training,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-hr_days_off,hr.days.off,model_hr_days_off,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-hr_salary_raise,hr.salary.raise,model_hr_salary_raise,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-hr_advanced_payment,hr.advanced.payment,model_hr_advanced_payment,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-hr_bonus,hr.bonus,model_hr_bonus,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-hr_assessment,hr.assessment,model_hr_assessment,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,0,0,0
-tasks_table,tasks.table,model_tasks_table,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-evaluation_table,evaluation.table,model_evaluation_table,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,0,0
-evaluation_table_row,evaluation.table.row,model_evaluation_table_row,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
-
-
+hr_deduction,hr.deduction,model_hr_deduction,hr.group_hr_user,1,1,1,1
+hr_violation,hr.violation,model_hr_violation,hr.group_hr_user,1,1,1,1
+hr_training,hr.training,model_hr_training,hr.group_hr_user,1,1,1,1
+hr_days_off_manager,hr.days.off,model_hr_days_off,hr.group_hr_manager,1,1,1,1
+hr_salary_raise,hr.salary.raise,model_hr_salary_raise,hr.group_hr_user,1,1,1,1
+hr_advanced_payment,hr.advanced.payment,model_hr_advanced_payment,hr.group_hr_user,1,1,1,1
+hr_bonus,hr.bonus,model_hr_bonus,hr.group_hr_user,1,1,1,1
+hr_assessment,hr.assessment,model_hr_assessment,hr.group_hr_user,1,0,0,0
+tasks_table,tasks.table,model_tasks_table,hr.group_hr_user,1,1,1,1
+evaluation_table,evaluation.table,model_evaluation_table,hr.group_hr_user,1,1,0,0
+evaluation_table_row,evaluation.table.row,model_evaluation_table_row,hr.group_hr_user,1,1,1,1
+access_hr_change_Request_employee,hr.change.request,model_hr_change_request,hr.group_hr_user,1,1,1,1
+hr.access_hr_employee_user,hr.employee user,model_hr_employee,hr.group_hr_user,1,1,0,0
+access_hr_employee_manger,hr.employee manager,model_hr_employee,hr.group_hr_manager,1,1,1,1

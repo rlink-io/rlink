@@ -237,8 +237,8 @@
 		</record>
 
 
-	 <record model="ir.ui.view" id="evaluation_table">
-				<field name="name">evaluation.table.tree</field>
+	 <record model="ir.ui.view" id="evaluation_table_form">
+				<field name="name">evaluation.table.form</field>
 				<field name="model">evaluation.table</field>
 				<field name="arch" type="xml">
 					<form string="Evaluation Point Table">
@@ -273,13 +273,11 @@
                                     <field name="training"/>
                                     <field name="evaluation"/>
                                     <field name="total"  readonly="1"/>
-
                                 </tree>
                             </field>
                         </page>
                     </notebook>
-							</sheet>
-
+						</sheet>
 				</form>
 				</field>
 			</record>
