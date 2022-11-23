@@ -16,38 +16,41 @@ class Deduction(models.Model):
                                  default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
 
-    @api.depends('employee_id.name')
     def _compute_display_name(self):
         for deduction in self:
-            deduction.display_name = "Deduction"
+            employee_deductions_count = self.env['hr.deduction'].search_count(
+                [('employee_id', '=', deduction.employee_id.id)])
+            deduction.display_name = "Deduction {count}".format(count=employee_deductions_count)
 
-    @api.onchange('value')
-    def check_deduction_value(self):
-        if self.value < 0:
+    def write(self, vals):
+        if 'value' in vals and vals['value'] < 0:
             raise ValidationError('You can\'t enter negative value for deduction value')
+        else:
+            return super(Deduction, self).write(vals)
+
+    @api.model
+    def create(self, vals_list):
+        if 'value' in vals_list and vals_list['value'] < 0:
+            raise ValidationError('You can\'t enter negative value for deduction value')
+        else:
+            return super(Deduction, self).create(vals_list)
 
 
 class Violation(models.Model):
     _name = "hr.violation"
     _description = 'Violation'
 
-    display_name = fields.Char(compute='_compute_display_name')
     violation_type = fields.Char(string="Violation Type")
     reason = fields.Char(string="Violation Reason")
     date = fields.Date(string="Violation Date")
     employee_id = fields.Many2one('hr.employee', required=True)
-
-    @api.depends('employee_id.name')
-    def _compute_display_name(self):
-        for violation in self:
-            violation.display_name = "Violation"
 
 
 class Bonus(models.Model):
     _name = "hr.bonus"
     _description = 'Employee Bonuses'
 
-    display_name = fields.Char(compute='_compute_display_name')
+    # display_name = fields.Char(compute='_compute_display_name')
     reason = fields.Char(string="Bonus Reason")
     date = fields.Date(string="Bonus Date")
     value = fields.Monetary(string="Bonus Value")
@@ -56,15 +59,24 @@ class Bonus(models.Model):
                                  default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
 
-    @api.depends('employee_id.name')
-    def _compute_display_name(self):
-        for bonus in self:
-            bonus.display_name = "Bonus"
+    # def _compute_display_name(self):
+    #     for bonus in self:
+    #         employee_bonuses_count = self.env['hr.bonus'].search_count(
+    #             [('employee_id', '=', bonus.employee_id.id)])
+    #         bonus.display_name = "Bonus {count}".format(count=employee_bonuses_count)
 
-    @api.onchange('value')
-    def check_bonus_value(self):
-        if self.value < 0:
-            raise ValidationError('You can\'t enter negative value for Bonus Value')
+    def write(self, vals):
+        if 'value' in vals and vals['value'] < 0:
+            raise ValidationError('You can\'t enter negative value for bonus value')
+        else:
+            return super(Bonus, self).write(vals)
+
+    @api.model
+    def create(self, vals_list):
+        if 'value' in vals_list and vals_list['value'] < 0:
+            raise ValidationError('You can\'t enter negative value for bonus value')
+        else:
+            return super(Bonus, self).create(vals_list)
 
 
 class SalaryRaise(models.Model):
@@ -83,10 +95,11 @@ class SalaryRaise(models.Model):
                                  default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
 
-    @api.depends('employee_id.name')
     def _compute_display_name(self):
         for salary_raise in self:
-            salary_raise.display_name = "Salary Raise"
+            employee_raises_count = self.env['hr.salary.raise'].search_count(
+                [('employee_id', '=', salary_raise.employee_id.id)])
+            salary_raise.display_name = "Salary Raise {count}".format(count=employee_raises_count)
 
     @api.depends('raise_value_type', 'raise_value')
     def _compute_fixed_raise_value(self):
@@ -96,17 +109,25 @@ class SalaryRaise(models.Model):
             else:
                 salary_raise.fixed_raise_value = str(salary_raise.raise_value) + '%'
 
-    @api.onchange('raise_value')
-    def check_raise_value(self):
-        if self.raise_value < 0:
+    def write(self, vals):
+        if 'raise_value' in vals and vals['raise_value'] < 0:
             raise ValidationError('You can\'t enter negative value for Raise Value')
+
+        else:
+            return super(SalaryRaise, self).write(vals)
+
+    @api.model
+    def create(self, vals_list):
+        if 'raise_value' in vals_list and vals_list['raise_value'] < 0:
+            raise ValidationError('You can\'t enter negative value for Raise Value')
+        else:
+            return super(SalaryRaise, self).create(vals_list)
 
 
 class Training(models.Model):
     _name = "hr.training"
     _description = 'Training'
 
-    display_name = fields.Char(compute='_compute_display_name')
     training_type = fields.Selection([('internal', 'Internal'), ('external', 'External')], string="Training Type")
     hours = fields.Integer(string=" Hours")
     cost = fields.Monetary(string="Cost")
@@ -117,19 +138,55 @@ class Training(models.Model):
                                  default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
 
-    def _compute_display_name(self):
-        for training in self:
-            training.display_name = _("%s\'s Training", training.employee_id.name)
-
-    @api.onchange('hours')
-    def check_hours_value(self):
-        if self.hours < 0:
+    def write(self, vals):
+        if 'hours' in vals and vals['hours'] < 0:
             raise ValidationError('You can\'t enter negative value for Hours')
-
-    @api.onchange('cost')
-    def check_cost_value(self):
-        if self.cost < 0:
+        elif 'cost' in vals and vals['cost'] < 0:
             raise ValidationError('You can\'t enter negative value for Cost')
+        else:
+            return super(Training, self).write(vals)
+
+    @api.model
+    def create(self, vals_list):
+        if 'hours' in vals_list and vals_list['hours'] < 0:
+            raise ValidationError('You can\'t enter negative value for hours')
+        elif 'cost' in vals_list and vals_list['cost'] < 0:
+            raise ValidationError('You can\'t enter negative value for cost')
+        else:
+            return super(Training, self).create(vals_list)
+
+
+class Rotation(models.Model):
+    _name = 'hr.rotation'
+
+    employee_id = fields.Many2one('hr.employee', required=True)
+    date = fields.Date(string='Rotation Date')
+    old_title = fields.Char(string='Old Title')
+    new_title = fields.Char(string='New Title')
+    old_department = fields.Many2one('hr.department', string='Old Department')
+    new_department = fields.Many2one('hr.department', string="New Department")
+    old_salary = fields.Monetary(string='Old Salary')
+    new_salary = fields.Monetary(string='New Salary')
+    company_id = fields.Many2one('res.company', related='employee_id.company_id', readonly=False,
+                                 default=lambda self: self.env.company, required=True)
+    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
+
+    def write(self, vals):
+        if 'old_salary' in vals and vals['old_salary'] < 0:
+            raise ValidationError('You can\'t enter negative value for old salary')
+        elif 'new_salary' in vals and vals['new_salary'] < 0:
+            raise ValidationError('You can\'t enter negative value for new salary')
+        else:
+            return super(Rotation, self).write(vals)
+
+    @api.model
+    def create(self, vals_list):
+        if 'old_salary' in vals_list and vals_list['old_salary'] < 0:
+            raise ValidationError('You can\'t enter negative value for old salary')
+        elif 'new_salary' in vals_list and vals_list['new_salary'] < 0:
+            raise ValidationError('You can\'t enter negative value for new salary')
+        else:
+            return super(Rotation, self).create(vals_list)
 
 
 class DaysOff(models.Model):
@@ -159,154 +216,377 @@ class Assessment(models.Model):
 
     display_name = fields.Char(compute='_compute_display_name')
     employee_id = fields.Many2one('hr.employee', required=True)
-    evaluation_table_id = fields.Many2one('evaluation.table')
-    tasks_table_rows_ids = fields.One2many('tasks.table', 'assessment_id')
+    points_report_id = fields.Many2one('points.credit.report')
+    kpi_report_id = fields.Many2one('kpi.monthly.report')
 
     @api.model
     def create(self, vals):
         new = super(Assessment, self).create(vals)
         new.employee_id.assessment_id = new.id
 
-        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                       'October', 'November', 'December']
-        for month in months_list:
-            new_task_table_row = self.env['tasks.table'].create({
-                "assessment_id": new.id,
-                "year": datetime.now().year,
-                "month": month
-            })
+        kpi_report = self.env['kpi.monthly.report'].sudo().create({"assessment_id": new.id, })
+        new.kpi_report_id = kpi_report.id
 
-        evaluation_table = self.env['evaluation.table'].sudo().create({
+        points_report = self.env['points.credit.report'].sudo().create({
             "assessment_id": new.id,
         })
-        new.evaluation_table_id = evaluation_table.id
+        new.points_report_id = points_report.id
         return new
 
-    def open_evaluation_point_table(self):
+    def open_points_credit_report(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "ALTANMYA_Attendence_Payroll_System.evaluation_table_action")
+            "ALTANMYA_Attendence_Payroll_System.points_credit_report_action")
         action['context'] = dict(self._context, default_assessment_id=self.id)
         action['domain'] = [('assessment_id', '=', self.id)]
-        if self.evaluation_table_id:
-            action['res_id'] = self.evaluation_table_id.id
+        if self.points_report_id:
+            action['res_id'] = self.points_report_id.id
         return action
 
-    def open_monthly_tasks_assessment_table(self):
+    def open_kpi_monthly_report(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.tasks_table_action")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "ALTANMYA_Attendence_Payroll_System.kpi_monthly_report_action")
         action['context'] = dict(self._context, default_assessment_id=self.id)
         action['domain'] = [('assessment_id', '=', self.id)]
+        if self.kpi_report_id:
+            action['res_id'] = self.kpi_report_id.id
         return action
-
-    def _yearly_update_tasks_table_cron(self):
-        all_assessments = self.env['hr.assessment'].search([])
-        for assessment in all_assessments:
-            months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                           'October', 'November', 'December']
-            for month in months_list:
-                new_row = self.env['tasks.table'].create({
-                    "assessment_id": assessment.id,
-                    "year": datetime.now().year,
-                    "month": month
-                })
 
     def _compute_display_name(self):
         for assessment in self:
             assessment.display_name = _("%s\'s assessment", assessment.employee_id.name)
 
 
-class TasksTable(models.Model):
-    _name = 'tasks.table'
-    _description = 'Monthly Task Assessment Table'
+class KPIMonthlyReport(models.Model):
+    _name = 'kpi.monthly.report'
+    _description = 'KPI Monthly Report'
 
-    assessment_id = fields.Many2one('hr.assessment')
+    @api.model
+    def year_selection(self):
+        year = 2022
+        year_list = []
+        while year != 2043:
+            year_list.append((str(year), str(year)))
+            year += 1
+        return year_list
+
+    @api.model
+    def filter_rows(self):
+        domain = []
+        years_list = ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033',
+                      '2034', '2035', '2036', '2037', '2038', '2039', '2040', '2041', '2042']
+        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                       'October', 'November', 'December']
+
+        if self.filter_by == 'year':
+            if self.year:
+                domain = [("year", "=", self.year)]
+
+        elif self.filter_by == 'year_and_month' and self.from_year and self.to_year and self.from_month and self.to_month:
+            if int(self.from_year) > int(self.to_year):
+                domain = [('id', '=', '0')]
+            elif self.from_year == self.to_year:
+                if months_list.index(self.from_month) > months_list.index(self.to_month):
+                    domain = [('id', '=', '0')]
+                else:
+                    months_range = months_list[months_list.index(self.from_month):months_list.index(self.to_month) + 1]
+                    domain = [('month', 'in', months_range), ('year', '=', self.from_year)]
+            elif int(self.from_year) < int(self.to_year):
+                from_months_list = months_list[months_list.index(self.from_month):]
+                to_months_list = months_list[:months_list.index(self.to_month) + 1]
+                domain = ['|', (
+                    'year', 'in', years_list[years_list.index(self.from_year) + 1:years_list.index(self.to_year)]),
+                          '|', '&', ('month', 'in', from_months_list), ('year', '=', self.from_year),
+                          '&', ('month', 'in', to_months_list), ('year', '=', self.to_year)]
+        return domain
+
+    display_name = fields.Char(default='Kpi Monthly Report')
+    assessment_id = fields.Many2one('hr.assessment', required=True, ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    year = fields.Char(string='Year')
-    month = fields.Char(string='Month')
-    kpi = fields.Integer(string='KPI', default=5)
-    date = fields.Date(string='Date')
+    filter_by = fields.Selection([('year', 'Year'), ('year_and_month', 'Year And Month')],
+                                 default='year',
+                                 string='Filter By')
+    from_year = fields.Selection(
+        year_selection,
+        string="Year",
 
+    )
+    to_year = fields.Selection(
+        year_selection,
+        string="Year",
 
-class EvaluationTable(models.Model):
-    _name = 'evaluation.table'
-    _description = 'Evaluation Point Table'
+    )
+    year = fields.Selection(
+        year_selection,
+        string="Year",
 
-    display_name = fields.Char(default='Evaluation Point Table')
-    assessment_id = fields.Many2one('hr.assessment', 'evaluation_table_id')
-    employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    round_limit = fields.Integer(string='Round Limit', default=5, required=True)
-    from_month = fields.Selection([('January', 'January'), ('February', 'February'), ('March', 'March')
-                                      , ('April', 'April'), ('May', 'May'), ('June', 'June'),
-                                   ('July', 'July'), ('August', 'August'), ('September', 'September'),
-                                   ('October', 'October'), ('November', 'November'), ('December', 'December')
-                                   ], default='January', required=True)
-    to_month = fields.Selection([('January', 'January'), ('February', 'February'), ('March', 'March')
-                                    , ('April', 'April'), ('May', 'May'), ('June', 'June'),
-                                 ('July', 'July'), ('August', 'August'), ('September', 'September'),
-                                 ('October', 'October'), ('November', 'November'), ('December', 'December')
-                                 ], default='December', required=True)
-    rows_ids = fields.One2many('evaluation.table.row', 'table_id')
-    filtered_ids = fields.Many2many('evaluation.table.row')
+    )
+    from_month = fields.Selection([('January', 'January'), ('February', 'February'),
+                                   ('March', 'March'), ('April', 'April'),
+                                   ('May', 'May'), ('June', 'June'),
+                                   ('July', 'July'), ('August', 'August'),
+                                   ('September', 'September'), ('October', 'October'),
+                                   ('November', 'November'), ('December', 'December')], string='From')
+    to_month = fields.Selection([('January', 'January'), ('February', 'February'),
+                                 ('March', 'March'), ('April', 'April'),
+                                 ('May', 'May'), ('June', 'June'),
+                                 ('July', 'July'), ('August', 'August'),
+                                 ('September', 'September'), ('October', 'October'),
+                                 ('November', 'November'), ('December', 'December')],
+                                string='To')
+
+    rows_ids = fields.One2many('kpi.report.row', 'report_id', domain=filter_rows)
 
     @api.model
     def create(self, vals):
-        new = super(EvaluationTable, self).create(vals)
+        new = super(KPIMonthlyReport, self).create(vals)
 
         months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
                        'October', 'November', 'December']
-        for month in months_list:
-            evaluation_table_row = self.env['evaluation.table.row'].create({
-                "account": 0,
-                "table_id": new.id,
+        current_month = datetime.now().month
+        for month in months_list[current_month - 1:]:
+            KPI_report_row = self.env['kpi.report.row'].create({
+                "report_id": new.id,
                 "month": month,
+                "year": str(datetime.now().year),
+
+            })
+        return new
+
+    def _yearly_update_monthly_kpi_report_cron(self):
+        KPI_report_ids = self.env['kpi.monthly.report'].search([])
+        for KPI_report_id in KPI_report_ids:
+            if KPI_report_id.employee_id.contract_id:
+                if KPI_report_id.employee_id.contract_id.date_end:
+                    if KPI_report_id.employee_id.contract_id.date_end > datetime.today().date():
+                        KPI_report_id.year = str(datetime.now().year)
+                        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                                       'September',
+                                       'October', 'November', 'December']
+                        for month in months_list:
+                            new_row = self.env['kpi.report.row'].create({
+                                "report_id": KPI_report_id.id,
+                                "year": str(datetime.now().year),
+                                "month": month,
+
+                            })
+
+
+class KPIReportRow(models.Model):
+    _name = 'kpi.report.row'
+    _description = 'KPI Monthly Report Row'
+
+    @api.model
+    def year_selection(self):
+        year = 2022
+        year_list = []
+        while year != 2043:
+            year_list.append((str(year), str(year)))
+            year += 1
+        return year_list
+
+    report_id = fields.Many2one('kpi.monthly.report', required=True, ondelete="cascade")
+    year = fields.Selection(
+        year_selection,
+        string="Year",
+        required=True
+    )
+    month = fields.Selection([('January', 'January'), ('February', 'February'),
+                              ('March', 'March'), ('April', 'April'),
+                              ('May', 'May'), ('June', 'June'),
+                              ('July', 'July'), ('August', 'August'),
+                              ('September', 'September'), ('October', 'October'),
+                              ('November', 'November'), ('December', 'December')],
+                             required=True, string='Month')
+
+    kpi = fields.Integer(string='KPI', default=0)
+    is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
+
+    def _compute_is_hr_manager(self):
+        for rec in self:
+            if self.env.user.has_group('hr.group_hr_manager'):
+                rec.is_hr_manager = True
+            else:
+                rec.is_hr_manager = False
+
+
+class PointsCreditReport(models.Model):
+    _name = 'points.credit.report'
+    _description = 'Points Credit Report'
+
+    @api.model
+    def year_selection(self):
+        year = 2022
+        year_list = []
+        while year != 2043:
+            year_list.append((str(year), str(year)))
+            year += 1
+        return year_list
+
+    @api.model
+    def filter_rows(self):
+        domain = []
+        years_list = ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033',
+                      '2034', '2035', '2036', '2037', '2038', '2039', '2040', '2041', '2042']
+        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                       'October', 'November', 'December']
+
+        if self.filter_by == 'year':
+            if self.year:
+                domain = [("eval_year", "=", self.year)]
+
+        elif self.filter_by == 'year_and_month' and self.from_year and self.to_year and self.from_month and self.to_month:
+            if int(self.from_year) > int(self.to_year):
+                domain = [('id', '=', '0')]
+            elif self.from_year == self.to_year:
+                if months_list.index(self.from_month) > months_list.index(self.to_month):
+                    domain = [('id', '=', '0')]
+                else:
+                    months_range = months_list[months_list.index(self.from_month):months_list.index(self.to_month) + 1]
+                    domain = [('eval_month', 'in', months_range), ('eval_year', '=', self.from_year)]
+            elif int(self.from_year) < int(self.to_year):
+                from_months_list = months_list[months_list.index(self.from_month):]
+                to_months_list = months_list[:months_list.index(self.to_month) + 1]
+                domain = ['|', (
+                    'eval_year', 'in', years_list[years_list.index(self.from_year) + 1:years_list.index(self.to_year)]),
+                          '|', '&', ('eval_month', 'in', from_months_list), ('eval_year', '=', self.from_year),
+                          '&', ('eval_month', 'in', to_months_list), ('eval_year', '=', self.to_year)]
+        return domain
+
+    display_name = fields.Char(default='Points Credit Report')
+    assessment_id = fields.Many2one('hr.assessment', 'points_report_id', required=True, ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
+    round_limit = fields.Integer(string='Round Limit', default=5, required=True)
+
+    filter_by = fields.Selection([('year', 'Year'), ('year_and_month', 'Year And Month')],
+                                 default='year',
+                                 string='Filter By')
+    from_year = fields.Selection(
+        year_selection,
+    )
+    to_year = fields.Selection(
+        year_selection,
+    )
+    year = fields.Selection(
+        year_selection,
+        string="Year",
+    )
+    from_month = fields.Selection([('January', 'January'), ('February', 'February'),
+                                   ('March', 'March'), ('April', 'April'),
+                                   ('May', 'May'), ('June', 'June'),
+                                   ('July', 'July'), ('August', 'August'),
+                                   ('September', 'September'), ('October', 'October'),
+                                   ('November', 'November'), ('December', 'December')], string='From')
+    to_month = fields.Selection([('January', 'January'), ('February', 'February'),
+                                 ('March', 'March'), ('April', 'April'),
+                                 ('May', 'May'), ('June', 'June'),
+                                 ('July', 'July'), ('August', 'August'),
+                                 ('September', 'September'), ('October', 'October'),
+                                 ('November', 'November'), ('December', 'December')],
+                                string='To')
+    rows_ids = fields.One2many('points.report.row', 'report_id', domain=filter_rows)
+
+    @api.model
+    def create(self, vals):
+        new = super(PointsCreditReport, self).create(vals)
+
+        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                       'October', 'November', 'December']
+        current_month = datetime.now().month
+        for month in months_list[current_month - 1:]:
+            points_report_row = self.env['points.report.row'].create({
+                "account": 0,
+                "report_id": new.id,
+                "eval_month": month,
+                "eval_year": str(datetime.now().year),
+                "date": datetime.now().replace(month=months_list.index(month) + 1),
                 "month_number": months_list.index(month) + 1})
         return new
 
-    @api.onchange('round_limit')
-    def _check_round_limit(self):
-        if self.round_limit < 0:
+    def write(self, vals):
+        if 'round_limit' in vals and vals['round_limit'] < 0:
             raise ValidationError('you can\'t enter negative value for Round Limit')
-
-    @api.onchange('to_month', 'from_month')
-    def _validate_months(self):
-        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                       'October', 'November', 'December']
-        if months_list.index(self.from_month) > months_list.index(self.to_month):
-            raise ValidationError('Please make sure that To Month value after From Month')
         else:
-            months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                           'October', 'November', 'December']
-            filtered_months = months_list[months_list.index(self.from_month):months_list.index(self.to_month) + 1]
-            self.filtered_ids = self.env['evaluation.table.row'].search(
-                [('table_id', '=', self._origin.id), ('month', 'in', filtered_months)])
+            return super(PointsCreditReport, self).write(vals)
+
+    def _yearly_update_points_credit_report_cron(self):
+        points_report_ids = self.env['points.credit.report'].search([])
+        for points_report_id in points_report_ids:
+            if points_report_id.employee_id.contract_id:
+                if points_report_id.employee_id.contract_id.date_end:
+                    if points_report_id.employee_id.contract_id.date_end > datetime.today().date():
+                        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                                       'September',
+                                       'October', 'November', 'December']
+                        for month in months_list:
+                            self.env['points.report.row'].create({
+                                "account": 0,
+                                "report_id": points_report_id.id,
+                                "eval_month": month,
+                                "eval_year": str(datetime.now().year),
+                                "date": datetime.now().replace(month=months_list.index(month) + 1),
+                                "month_number": months_list.index(month) + 1})
 
 
-class evaluation_table_row(models.Model):
-    _name = 'evaluation.table.row'
-    _description = 'Evaluation Point Table Row'
+class points_report_row(models.Model):
+    _name = 'points.report.row'
+    _description = 'Points Credit Report Row'
 
-    table_id = fields.Many2one('evaluation.table')
-    month = fields.Char(string='month')
+    @api.model
+    def year_selection(self):
+        year = 2022
+        year_list = []
+        while year != 2043:
+            year_list.append((str(year), str(year)))
+            year += 1
+        return year_list
+
+    report_id = fields.Many2one('points.credit.report', required=True, ondelete="cascade")
+    eval_month = fields.Selection([('January', 'January'), ('February', 'February'),
+                                   ('March', 'March'), ('April', 'April'),
+                                   ('May', 'May'), ('June', 'June'),
+                                   ('July', 'July'), ('August', 'August'),
+                                   ('September', 'September'), ('October', 'October'),
+                                   ('November', 'November'), ('December', 'December')],
+                                  required=True, string='Month')
     month_number = fields.Integer()
+    eval_year = fields.Selection(
+        year_selection,
+        string="Year",
+        required=True
+    )
+    date = fields.Date(string="Full Date")
     account = fields.Integer(string='Account')
-    kpi = fields.Integer(string='KPI')
+    eval_kpi = fields.Integer(string='KPI')
     evaluation = fields.Integer(string='Evaluation')
     training = fields.Integer(string='Training')
-    total = fields.Integer(string='Total', compute='_compute_total')
+    eval_total = fields.Integer(string='Total', compute='_compute_total')
     round_limit_row = fields.Integer(string='Round Limit', default=0)
+    is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
-    @api.onchange('total')
+    def _compute_is_hr_manager(self):
+        for rec in self:
+            if self.env.user.has_group('hr.group_hr_manager'):
+                rec.is_hr_manager = True
+            else:
+                rec.is_hr_manager = False
+
+    @api.onchange('eval_total')
     def compute_account_value(self):
-        self.round_limit_row = self.table_id.round_limit
-        domain = [("month_number", "=", self.month_number + 1), ("table_id", "=", self.table_id._origin.id)]
-        next_row = self.env['evaluation.table.row'].search(domain)
-        if next_row:
-            next_row.account = self.total - self.round_limit_row
-        else:
-            domain = [("month_number", "=", 1), ("table_id", "=", self.table_id._origin.id)]
-            first_row = self.env['evaluation.table.row'].search(domain)
-            first_row.account = self.total - self.round_limit_row
+        print('sdfgbhnj', self.eval_month)
+
+        self.round_limit_row = self.report_id.round_limit
+        domain_year = str(int(self.eval_year) + 1) if self.month_number == 12 else self.eval_year
+        domain_month = 0 if self.month_number == 12 else self.month_number
+        domain = [("month_number", ">", domain_month),
+                  ("eval_year", "=", domain_year),
+                  ("report_id", "=", self.report_id._origin.id)]
+        next_rows = self.env['points.report.row'].search(domain)
+        if next_rows:
+            for i, next_row in enumerate(next_rows):
+                previous_row_total = self.eval_total if i == 0 else next_rows[i - 1].eval_total
+                next_row.account = previous_row_total - self.round_limit_row if self.round_limit_row < previous_row_total else 0
 
     @api.onchange('training')
     def check_training_value(self):
@@ -318,7 +598,7 @@ class evaluation_table_row(models.Model):
         if self.evaluation < 0:
             raise ValidationError('you can\'t enter negative value for evaluation value')
 
-    @api.depends('account', 'kpi', 'evaluation', 'training')
+    @api.depends('account', 'eval_kpi', 'evaluation', 'training')
     def _compute_total(self):
         for row in self:
-            row.total = row.account + row.kpi + row.evaluation + row.training
+            row.eval_total = row.account + row.eval_kpi + row.evaluation + row.training

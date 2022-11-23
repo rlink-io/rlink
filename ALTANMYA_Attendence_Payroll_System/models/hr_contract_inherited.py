@@ -1,6 +1,7 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError, ValidationError
 
+
 class HrContractInherited(models.Model):
     _inherit = 'hr.contract'
 
@@ -11,19 +12,26 @@ class HrContractInherited(models.Model):
     leave_date = fields.Date(string='Leave Date')
     leave_reason = fields.Char(string='Reason')
 
-    @api.onchange('probation_period_salary')
-    def check_probation_period_salary_value(self):
-        if self.probation_period_salary < 0:
+    def write(self, values):
+        if 'probation_period_salary' in values and values['probation_period_salary'] < 0:
             raise ValidationError('You can\'t enter negative value for Probation Period Salary')
-
-    @api.onchange('permanent_period_salary')
-    def check_permanent_period_salary_value(self):
-        if self.permanent_period_salary < 0:
+        elif 'permanent_period_salary' in values and values['permanent_period_salary'] < 0:
             raise ValidationError('You can\'t enter negative value for Permanent Period Salary')
+        else:
+            return super(HrContractInherited, self).write(values)
+
+    @api.model
+    def create(self, vals_list):
+        if 'probation_period_salary' in vals_list and vals_list['probation_period_salary'] < 0:
+            raise ValidationError('You can\'t enter negative value for Probation Period Salary')
+        elif 'permanent_period_salary' in vals_list and vals_list['permanent_period_salary'] < 0:
+            raise ValidationError('You can\'t enter negative value for Permanent Period Salary')
+        else:
+            return super(HrContractInherited, self).create(vals_list)
+
 
 class HrContractHistoryInherited(models.Model):
     _inherit = 'hr.contract.history'
-
     advanced_payment_ids = fields.One2many('hr.advanced.payment', 'contract_history_id')
 
     def call_advanced_payment_action(self):
@@ -47,11 +55,15 @@ class AdvancedPayment(models.Model):
                                  default=lambda self: self.env.company, required=True)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
 
-    @api.onchange('value')
-    def check_value(self):
-        if self.value < 0:
+    def write(self, vals):
+        if 'value' in vals and vals['value'] < 0:
             raise ValidationError('You can\'t enter negative value for Advanced Payment Value')
+        else:
+            return super(AdvancedPayment, self).write(vals)
 
-    def _compute_display_name(self):
-        for advanced_payment in self:
-            advanced_payment.display_name = _("%s\'s Advanced Payment", advanced_payment.employee_id.name)
+    @api.model
+    def create(self, vals_list):
+        if 'value' in vals_list and vals_list['value'] < 0:
+            raise ValidationError('You can\'t enter negative value for Advanced Payment Value')
+        else:
+            return super(AdvancedPayment, self).write(vals_list)

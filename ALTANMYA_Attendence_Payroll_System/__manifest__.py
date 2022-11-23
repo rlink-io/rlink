@@ -26,7 +26,7 @@
     'author': 'ALTANMYA - TECHNOLOGY SOLUTIONS',
     'company': 'ALTANMYA - TECHNOLOGY SOLUTIONS Part of ALTANMYA GROUP',
     'website': "https://tech.altanmya.net",
-    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll'],
+    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts'],
     'data': ['views/view_v.xml',
              'security/ir.model.access.csv',
              'security/security.xml',
@@ -35,9 +35,11 @@
              'views/view_actions.xml',
              'views/view_menu.xml',
              'data/data.xml',
+             'data/custom_channels.xml',
              'views/employee.xml',
              'views/hr_contract_inherited.xml',
              'views/employee_top_row_views.xml',
+             'views/change_request.xml'
 
              ],
     'demo': [],
@@ -45,9 +47,9 @@
     'installable': True,
     'auto_install': False,
     'application': True,
-    # 'assets': {
-    # 'web.assets_backend': [
-    # 'ALTANMYA_Attendence_Payroll_System/static/src/scss/tcustom.css',
-    # ]},
+    'assets': {
+    'web.assets_backend': [
+    '/ALTANMYA_Attendence_Payroll_System\static\src\css\style.css',
+    ]},
 
 }

@@ -4,44 +4,54 @@
 			<field name="name">hr.deduction.tree</field>
 			<field name="model">hr.deduction</field>
 			<field name="arch" type="xml">
-				<tree class="column_width">
+				<tree editable="bottom" string="Employee Deductions">
 					<field width="33.3%" name="reason" />
 					<field width="33.3%" name="date" />
-					<field width="33.3%" name="value" />
+					<field width="33.3%" name="value" class="text-left" />
 				</tree>
 			</field>
 		</record>
-		<record model="ir.ui.view" id="hr_deduction_form">
-			<field name="name">hr.deduction.form</field>
-			<field name="model">hr.deduction</field>
-			<field name="arch" type="xml">
-				<form string="Deductions">
-					<group col="2">
-						<group col="2" name="main_group">
-							<field name="reason" />
-							<field name="date" />
-							<field name="value" />
-						</group>
-					</group>
-				</form>
-			</field>
-		</record>
+
 		<record id="hr_deduction_action" model="ir.actions.act_window">
 			<field name="name">Deductions</field>
 			<field name="res_model">hr.deduction</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree</field>
 		</record>
+
+		<record model="ir.ui.view" id="hr_rotation_tree">
+			<field name="name">hr.rotation.tree</field>
+			<field name="model">hr.rotation</field>
+			<field name="arch" type="xml">
+				<tree editable="bottom" string="Employee Rotation">
+					<field width="15%" name="date" />
+					<field width="15%" name="old_title" />
+					<field width="15%" name="new_title" />
+					<field width="15%" name="old_department" />
+					<field width="15%" name="new_department" />
+					<field width="12%" name="old_salary" class="text-left" />
+					<field width="12%" name="new_salary" class="text-left" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="hr_rotation_action" model="ir.actions.act_window">
+			<field name="name">Rotation</field>
+			<field name="res_model">hr.rotation</field>
+			<field name="view_mode">tree</field>
+		</record>
+
 		<record model="ir.ui.view" id="hr_bonus_tree">
 			<field name="name">hr.bonus.tree</field>
 			<field name="model">hr.bonus</field>
 			<field name="arch" type="xml">
-				<tree>
+				<tree editable="bottom" string="Employee Bonuses">
 					<field width="33.3%" name="reason" />
 					<field width="33.3%" name="date" />
-					<field width="33.3%" name="value" />
+					<field width="33.3%" name="value" class="text-left" />
 				</tree>
 			</field>
 		</record>
+
 		<record model="ir.ui.view" id="hr_bonus_form">
 			<field name="name">hr.bonus.form</field>
 			<field name="model">hr.bonus</field>
@@ -57,77 +67,84 @@
 				</form>
 			</field>
 		</record>
+
 		<record id="hr_bonus_action" model="ir.actions.act_window">
 			<field name="name">Bonuses</field>
 			<field name="res_model">hr.bonus</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree</field>
 		</record>
+
         <record model="ir.ui.view" id="hr_violation_tree">
 			<field name="name">hr.violation.tree</field>
 			<field name="model">hr.violation</field>
 			<field name="arch" type="xml">
-				<tree>
+				<tree editable="bottom">
 				    <field width="33.3%" name="violation_type" />
                     <field width="33.3%" name="reason" />
                     <field width="33.3%" name="date" />
 				</tree>
 			</field>
 		</record>
-		<record model="ir.ui.view" id="hr_violation_form">
-			<field name="name">hr.violation.form</field>
-			<field name="model">hr.violation</field>
-			<field name="arch" type="xml">
-				<form string="Violations">
-					<group col="2">
-						<group col="2" name="main_group">
-							<field name="violation_type" />
-							<field name="reason" />
-							<field name="date" />
-						</group>
-					</group>
-				</form>
-			</field>
-		</record>
+
+<!--		<record model="ir.ui.view" id="hr_violation_form">-->
+<!--			<field name="name">hr.violation.form</field>-->
+<!--			<field name="model">hr.violation</field>-->
+<!--			<field name="arch" type="xml">-->
+<!--				<form string="Violations">-->
+<!--					<group col="2">-->
+<!--						<group col="2" name="main_group">-->
+<!--							<field name="violation_type" />-->
+<!--							<field name="reason" />-->
+<!--							<field name="date" />-->
+<!--						</group>-->
+<!--					</group>-->
+<!--				</form>-->
+<!--			</field>-->
+<!--		</record>-->
+
 		<record id="hr_violation_action" model="ir.actions.act_window">
 			<field name="name">Violations</field>
 			<field name="res_model">hr.violation</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree</field>
 		</record>
+
 		<record model="ir.ui.view" id="hr_training_tree">
 			<field name="name">hr.training.tree</field>
 			<field name="model">hr.training</field>
 			<field name="arch" type="xml">
-				<tree>
-				    <field width="20%" name="training_type" />
-                    <field width="20%" name="hours" />
-                    <field width="20%" name="cost" />
-					<field width="20%" name="trainer" />
-					<field width="20%" name="training_entity"/>
+				<tree editable="bottom" string="Employee Training">
+				    <field  name="training_type"/>
+                    <field  name="hours" class="text-left"/>
+                    <field  name="cost" class="text-left"/>
+					<field  name="trainer"/>
+					<field  name="training_entity"/>
 
 				</tree>
 			</field>
 		</record>
-        <record model="ir.ui.view" id="hr_training_form">
-			<field name="name">hr.training.form</field>
-			<field name="model">hr.training</field>
-			<field name="arch" type="xml">
-				<form string="Training">
-					<group col="2">
-						<group col="2" name="main_group">
-							<field name="training_type" />
-							<field name="hours" />
-							<field name="cost" />
-							<field name="trainer" />
-                            <field name="training_entity" />
-						</group>
-					</group>
-				</form>
-			</field>
-		</record>
+
+<!--        <record model="ir.ui.view" id="hr_training_form">-->
+<!--			<field name="name">hr.training.form</field>-->
+<!--			<field name="model">hr.training</field>-->
+<!--			<field name="arch" type="xml">-->
+<!--				<form string="Training">-->
+<!--					<group col="2">-->
+<!--						<group col="2" name="main_group">-->
+<!--							<field name="training_type" />-->
+<!--							<field name="hours" />-->
+<!--							<field name="cost" />-->
+<!--							<field name="trainer" />-->
+<!--                            <field name="training_entity" />-->
+<!--						</group>-->
+<!--					</group>-->
+<!--				</form>-->
+<!--			</field>-->
+<!--		</record>-->
+
 		<record id="hr_training_action" model="ir.actions.act_window">
 			<field name="name">Training</field>
 			<field name="res_model">hr.training</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree</field>
 		</record>
 
          <record model="ir.ui.view" id="hr_days_off_form">
@@ -145,11 +162,13 @@
 				</form>
 			</field>
 		</record>
+
 		<record id="hr_days_off_action" model="ir.actions.act_window">
 			<field name="name">Days Off</field>
 			<field name="res_model">hr.days.off</field>
 			<field name="view_mode">form</field>
 		</record>
+
 		<record model="ir.ui.view" id="hr_salary_raise_tree">
 			<field name="name">hr.salary.raise.tree</field>
 			<field name="model">hr.salary.raise</field>
@@ -161,6 +180,7 @@
 				</tree>
 			</field>
 		</record>
+
 		<record model="ir.ui.view" id="hr_salary_raise_form">
 			<field name="name">hr.salary.raise.form</field>
 			<field name="model">hr.salary.raise</field>
@@ -177,6 +197,7 @@
 				</form>
 			</field>
 		</record>
+
 		<record id="hr_salary_raise_action" model="ir.actions.act_window">
 			<field name="name">Salary Raises</field>
 			<field name="res_model">hr.salary.raise</field>
@@ -189,8 +210,8 @@
 			<field name="arch" type="xml">
 				<form string="Employee Assessment">
 					 <header>
-                    <button name="open_monthly_tasks_assessment_table" string="Monthly Tasks Assessment Table" type="object" class="oe_highlight"/>
-                	<button name="open_evaluation_point_table"  string="Evaluation Point Table" type="object" class="oe_highlight"/>
+                    <button name="open_kpi_monthly_report" string="KPI Monthly Report" type="object" class="oe_highlight"/>
+                	<button name="open_points_credit_report"  string="Points Credit Report" type="object" class="oe_highlight"/>
                 </header>
 				</form>
 			</field>
@@ -200,90 +221,89 @@
 			<field name="res_model">hr.assessment</field>
 			<field name="view_mode">form</field>
 		</record>
-
-		<record model="ir.ui.view" id="hr_evaluation_table_form">
-			<field name="name">hr.assessment.form</field>
-			<field name="model">hr.assessment</field>
+		<record model="ir.ui.view" id="kpi_monthly_report_form">
+			<field name="name">kpi.monthly.report.form</field>
+			<field name="model">kpi.monthly.report</field>
 			<field name="arch" type="xml">
-				<form string="Employee Assessment">
-					 <header>
-                    <button name="open_monthly_tasks_assessment_table" string="Monthly Tasks Assessment Table" type="object" class="oe_highlight"/>
-                	<button name="open_evaluation_point_table"  string="Evaluation Point Table" type="object" class="oe_highlight"/>
-                </header>
-				</form>
-			</field>
-		</record>
-		<record id="hr_assessment_action" model="ir.actions.act_window">
-			<field name="name">Employee Assessment</field>
-			<field name="res_model">hr.assessment</field>
-			<field name="view_mode">form</field>
-		</record>
-
- <record model="ir.ui.view" id="tasks_table_tree">
-			<field name="name">tasks.table.tree</field>
-			<field name="model">tasks.table</field>
-			<field name="arch" type="xml">
-				<tree create="false" edit="false">
-				    <field width="15%" name="year" />
-                    <field width="15%" name="month" />
-                    <field width="15%" name="kpi" />
-				</tree>
-			</field>
-		</record>
-		<record id="tasks_table_action" model="ir.actions.act_window">
-					<field name="name">Monthly Tasks Assessment Table</field>
-					<field name="res_model">tasks.table</field>
-					<field name="view_mode">tree</field>
-		</record>
-
-
-	 <record model="ir.ui.view" id="evaluation_table_form">
-				<field name="name">evaluation.table.form</field>
-				<field name="model">evaluation.table</field>
-				<field name="arch" type="xml">
-					<form string="Evaluation Point Table">
+				<form string="KPI Monthly Report">
 						<sheet>
-							<group col="2">
 								<group col="2" name="main_group">
-									<field name="round_limit" />
-									<field name="from_month" />
-									<field name="to_month" />
+									<group col="2">
+										<field name="filter_by" string="Filter By" widget="radio" />
+										<field name="year" attrs="{'invisible':[('filter_by','!=','year')]}"/>
+										<group col="4">
+											<field   style="width: 150%%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
+											<field  name="from_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"  nolabel="1" string="&#160;" />
+											<field  style="width: 150%%"  name="to_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" />
+											<field  name="to_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" nolabel="1" string="&#160;"/>
+										</group>
+									</group>
 								</group>
-							</group>
-								 <notebook>
-                        <page string="Evaluation Point Table" name="evaluation_table">
-                            <field name="rows_ids" widget="one2many">
-                                <tree string="Evaluation Point Table" editable="top" edit="1" delete="0" create="0">
-                                    <field name="month" readonly="1"/>
-                                    <field name="account" readonly="1"/>
-                                    <field name="kpi"  readonly="1"/>
-                                    <field name="training"/>
-                                    <field name="evaluation"/>
-                                    <field name="total"  readonly="1"/>
 
-                                </tree>
-                            </field>
-                        </page>
-							  <page string="Filtered Table" name="evaluation_table">
-                            <field name="filtered_ids" widget="one2many" readonly="1">
-                                <tree string="Filtered Table" >
-                                    <field name="month" readonly="1"/>
-                                    <field name="account" readonly="1"/>
-                                    <field name="kpi"  readonly="1"/>
-                                    <field name="training"/>
-                                    <field name="evaluation"/>
-                                    <field name="total"  readonly="1"/>
+								 <notebook>
+                        <page string="KPI Monthly Report" name="kpi_monthly_report">
+                            <field name="rows_ids" widget="one2many">
+                                <tree string="KPI Monthly Report" editable="top" edit="0" delete="0" create="0">
+                                    <field name="is_hr_manager" invisible="1"/>
+									<field name="year" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+									<field name="month" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+                                    <field name="kpi" class="text-left" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
                                 </tree>
                             </field>
                         </page>
                     </notebook>
 						</sheet>
 				</form>
+			</field>
+		</record>
+		<record id="kpi_monthly_report_action" model="ir.actions.act_window">
+					<field name="name">KPI Monthly Report</field>
+					<field name="res_model">kpi.monthly.report</field>
+					<field name="view_mode">form</field>
+		</record>
+
+
+	 <record model="ir.ui.view" id="points_credit_report_form">
+				<field name="name">points.credit.report.form</field>
+				<field name="model">points.credit.report</field>
+				<field name="arch" type="xml">
+					<form string="Points Credit Report">
+						<sheet>
+								<group col="2" name="main_group">
+									<group col="2">
+										<field name="filter_by" string="Filter By" widget="radio" />
+										<field name="year" attrs="{'invisible':[('filter_by','!=','year')]}"/>
+										<group col="4">
+											<field   style="width: 150%%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
+											<field  name="from_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"  nolabel="1" string="&#160;" />
+											<field  style="width: 150%%"  name="to_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" />
+											<field  name="to_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" nolabel="1" string="&#160;"/>
+										</group>
+									</group>
+								</group>
+								 <notebook>
+									<page string="Points Credit Report" name="points_credit_report">
+										<field name="rows_ids" widget="one2many">
+											<tree string="Points Credit Report" editable="top" edit="1" delete="0" create="0">
+												<field name="is_hr_manager" invisible="1"/>
+												<field name="eval_year" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="eval_month" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="account" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="eval_kpi"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="training" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="evaluation" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="eval_total"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+											</tree>
+										</field>
+									</page>
+								</notebook>
+						</sheet>
+				</form>
 				</field>
 			</record>
-			<record id="evaluation_table_action" model="ir.actions.act_window">
-						<field name="name">Evaluation Point Table</field>
-						<field name="res_model">evaluation.table</field>
+			<record id="points_credit_report_action" model="ir.actions.act_window">
+						<field name="name">Points Credit Report</field>
+						<field name="res_model">points.credit.report</field>
 						<field name="view_mode">form</field>
 			</record>
 		</data>

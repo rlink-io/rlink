@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <record model="mail.channel" id="channel_hr_employee">
+            <field name="name">HR Employees</field>
+            <field name="description">HR Employees Channel</field>
+            <field name="public">groups</field>
+            <field name="group_public_id" ref="ALTANMYA_Attendence_Payroll_System.group_hr_employees"/>
+            <field name="group_ids" eval="[Command.link(ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees'))]"/>
+        </record>
+    </data>
+</odoo>
