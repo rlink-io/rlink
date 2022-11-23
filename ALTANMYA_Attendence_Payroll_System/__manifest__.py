@@ -39,7 +39,7 @@
              'views/employee.xml',
              'views/hr_contract_inherited.xml',
              'views/employee_top_row_views.xml',
-             'views/change_request.xml'
+             'views/change_request.xml',
 
              ],
     'demo': [],
@@ -49,7 +49,7 @@
     'application': True,
     'assets': {
     'web.assets_backend': [
-    '/ALTANMYA_Attendence_Payroll_System\static\src\css\style.css',
+    '/ALTANMYA_Attendence_Payroll_System/static/src/css/style.css',
     ]},
 
 }

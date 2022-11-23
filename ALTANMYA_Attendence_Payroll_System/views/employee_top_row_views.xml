@@ -231,6 +231,7 @@
 									<group col="2">
 										<field name="filter_by" string="Filter By" widget="radio" />
 										<field name="year" attrs="{'invisible':[('filter_by','!=','year')]}"/>
+									</group>
 										<group col="4">
 											<field   style="width: 150%%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
 											<field  name="from_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"  nolabel="1" string="&#160;" />
@@ -238,8 +239,6 @@
 											<field  name="to_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" nolabel="1" string="&#160;"/>
 										</group>
 									</group>
-								</group>
-
 								 <notebook>
                         <page string="KPI Monthly Report" name="kpi_monthly_report">
                             <field name="rows_ids" widget="one2many">
@@ -271,16 +270,19 @@
 						<sheet>
 								<group col="2" name="main_group">
 									<group col="2">
-										<field name="filter_by" string="Filter By" widget="radio" />
-										<field name="year" attrs="{'invisible':[('filter_by','!=','year')]}"/>
-										<group col="4">
-											<field   style="width: 150%%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
-											<field  name="from_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"  nolabel="1" string="&#160;" />
-											<field  style="width: 150%%"  name="to_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" />
-											<field  name="to_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" nolabel="1" string="&#160;"/>
-										</group>
+											<field name="is_hr_manager" invisible="1"/>
+											<field name="round_limit"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+											<field name="filter_by" widget="radio" />
 									</group>
-								</group>
+									<group col="4">
+										<field   style="width: 150%%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
+										<field  name="from_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"  nolabel="1" string="&#160;" />
+										<field  style="width: 150%%"  name="to_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" />
+										<field  name="to_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" nolabel="1" string="&#160;"/>
+										<field name="year" attrs="{'invisible':[('filter_by','!=','year')]}"/>
+									</group>
+									</group>
+
 								 <notebook>
 									<page string="Points Credit Report" name="points_credit_report">
 										<field name="rows_ids" widget="one2many">
@@ -293,6 +295,7 @@
 												<field name="training" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
 												<field name="evaluation" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
 												<field name="eval_total"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="round_limit_row"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
 											</tree>
 										</field>
 									</page>

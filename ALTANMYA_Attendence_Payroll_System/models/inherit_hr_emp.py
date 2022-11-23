@@ -56,7 +56,6 @@ class ExtendEmp(models.Model):
         return new
 
     def unlink(self):
-
         self.assessment_id.sudo().unlink()
         super(ExtendEmp, self).unlink()
 
@@ -73,7 +72,6 @@ class ExtendEmp(models.Model):
                  'new_title': new_title,
                  'old_department': self.department_id.id if self.department_id else '',
                  'new_department': new_dep})
-
         if 'assessment_id' in values:
             super(ExtendEmp, self).write(values)
         elif not self.env.user.has_group('hr.group_hr_manager') and self.user_id.state != 'new':
@@ -82,69 +80,53 @@ class ExtendEmp(models.Model):
         else:
             super(ExtendEmp, self).write(values)
 
-    # def check_hr_employees_group(self):
-    #     hr_department = self.env['hr.department'].search([('name', '=', 'Human Resources')])
-    #     hr_employees_group = self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees')
-    #     if hr_department and self._origin.user_id:
-    #         if self.department_id.id == hr_department.id and not self._origin.user_id.has_group(
-    #                 'ALTANMYA_Attendence_Payroll_System.group_hr_employees'):
-    #             hr_employees_group.write({'users': [(4, self._origin.user_id.id)]})
-    #
-    #         elif self.department_id.id != hr_department.id and self._origin.user_id.has_group(
-    #                 'ALTANMYA_Attendence_Payroll_System.group_hr_employees'):
-    #             hr_employees_group.write({'users': [Command.unlink(self._origin.user_id.id)]})
-
-    # first time run
-    # def _update_hr_employee_group_cron(self):
-    #
-    #     hr_department = self.env['hr.department'].search([('name', '=', 'Human Resources')])
-    #     hr_employees_group = self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees')
-    #     all_employees = self.env['hr.employee'].search([])
-    #     if hr_department:
-    #         for emp in all_employees:
-    #             if emp.department_id and emp.department_id.name == 'Human Resources' and not emp.user_id.has_group(
-    #                     'ALTANMYA_Attendence_Payroll_System.hr_employees_group'):
-    #                 hr_employees_group.write({'users': [(4, emp.user_id.id)]})
-
     def _check_employees_birthdays_cron(self):
         all_employees = self.env['hr.employee'].search([])
         notification_date = str((datetime.datetime.now() + datetime.timedelta(days=3)).date())
-        print(notification_date)
         for emp in all_employees:
             if str(emp.birthday) == notification_date:
                 message = "{name} birthday in {date}".format(name=emp.name, date=str(emp.birthday))
                 self.send_message_to_hr_employees_channel(message)
                 self.send_private_message_to_hr_manager(message)
 
+    def check_emp_continuous_employment(self, employee):
+        continuous_employment = True
+        sorted_contracts = employee.contract_ids.sorted(key=lambda r: r.date_start)
+        first_contract = sorted_contracts[0]
+        for i, contract_id in enumerate(sorted_contracts):
+            if i != len(sorted_contracts) - 1:
+                if sorted_contracts[i + 1].date_start and contract_id.date_end:
+                    if (sorted_contracts[i + 1].date_start - contract_id.date_end).days != 1:
+                        continuous_employment = False
+                        break
+                else:
+                    continuous_employment = False
+        return continuous_employment, first_contract
+
     def _check_permanent_job_date_cron(self):
         all_employees = self.env['hr.employee'].search([])
         notification_date = str((datetime.datetime.now() + datetime.timedelta(days=10)).date())
         for emp in all_employees:
-            if emp.contract_ids:
-                continous_employment = True
-                sorted_contracts = emp.contract_ids.sorted(key=lambda r: r.date_start)
-                permanent_date = sorted_contracts[0].permanent_period_start_date
-                if len(sorted_contracts) > 1:
-                    for i, contract_id in enumerate(sorted_contracts):
-                        if i != len(sorted_contracts) - 1:
-                            if sorted_contracts[i + 1].date_start and contract_id.date_end:
-                                if (sorted_contracts[i + 1].date_start - contract_id.date_end).days != 1:
-                                    continous_employment = False
-                                    break
-                            else:
-                                continous_employment = False
-                if not continous_employment and emp.contract_id:
-                    permanent_date = emp.contract_id.permanent_period_start_date
+            if emp.contract_ids and len(emp.contract_ids) > 1:
+                is_continuous_employment, first_contract = self.check_emp_continuous_employment(emp)
+                if is_continuous_employment:
+                    permanent_start_date = first_contract.permanent_period_start_date
+                    if str(permanent_start_date) == notification_date:
+                        message = "{name} should get his permanent job in {date}".format(
+                            name=emp.name, date=str(permanent_start_date),
+                        )
+                        self.send_message_to_hr_employees_channel(message)
+                        self.send_private_message_to_hr_manager(message)
 
-                if str(permanent_date) == notification_date:
-                    message = "{name} should get his permanent job in {date} according to \"{contract_name}\" contract".format(
-                        name=emp.name, date=str(contract_id.permanent_period_start_date),
-                        contract_name=contract_id.name)
-                    self.send_message_to_hr_employees_channel(message)
-                    self.send_private_message_to_hr_manager(message)
+                if not is_continuous_employment and emp.contract_id:
+                    permanent_start_date = emp.contract_id.permanent_period_start_date
 
-    def consecutive(self, date1, date2, step=datetime.timedelta(days=1)):
-        return (date1 + step) == date2
+                    if str(permanent_start_date) == notification_date:
+                        message = "{name} should get his permanent job in {date}".format(
+                            name=emp.name, date=str(permanent_start_date),
+                        )
+                        self.send_message_to_hr_employees_channel(message)
+                        self.send_private_message_to_hr_manager(message)
 
     def _check_employee_contract_end_date_cron(self):
         all_employees = self.env['hr.employee'].search([])
@@ -162,14 +144,22 @@ class ExtendEmp(models.Model):
         all_employees = self.env['hr.employee'].search([])
         notification_date = str((datetime.datetime.now() + datetime.timedelta(days=5)).date())
         for emp in all_employees:
-            if emp.contract_id:
-                contract_id = emp.contract_id
-                if contract_id.probation_period_start_date:
-
-                    if str(contract_id.probation_period_start_date + datetime.timedelta(
-                            days=375)) == notification_date:
+            if emp.contract_ids and len(emp.contract_ids) > 1:
+                is_continuous_employment, first_contract = self.check_emp_continuous_employment(emp)
+                if is_continuous_employment:
+                    probation_start_date = first_contract.probation_period_start_date
+                    if str(probation_start_date)[4:] == notification_date[4:] and \
+                            int(str(probation_start_date)[:4]) < int(notification_date[:4]):
                         message = "{name}\'s anniversary in {date} ".format(
-                            name=emp.name, date=str(contract_id.probation_period_start_date))
+                            name=emp.name, date=str(notification_date))
+                        self.send_message_to_hr_employees_channel(message)
+                        self.send_private_message_to_hr_manager(message)
+
+                if not is_continuous_employment and emp.contract_id:
+                    probation_start_date = emp.contract_id.probation_period_start_date
+                    if str(probation_start_date)[4:] == notification_date[4:] and \
+                            int(str(probation_start_date)[:4]) < int(notification_date[:4]):
+                        message = "{name}\'s anniversary in {date} ".format(name=emp.name, date=str(notification_date))
                         self.send_message_to_hr_employees_channel(message)
                         self.send_private_message_to_hr_manager(message)
 
@@ -202,7 +192,6 @@ class ExtendEmp(models.Model):
                                        )
 
     def create_change_request(self, values):
-
         previous_value = ''
         for val in values:
             field_name = str(self._fields[val]).split('.')[-1]
@@ -227,7 +216,7 @@ class ExtendEmp(models.Model):
                 new_value = values[val]
                 field_type = 'normal'
 
-            if field_name not in ['coach_id']:
+            if field_name != 'departure_description' and previous_value != new_value:
                 self.env['hr.change.request'].create({
                     'employee_id': self.id,
                     'field_type': field_type,

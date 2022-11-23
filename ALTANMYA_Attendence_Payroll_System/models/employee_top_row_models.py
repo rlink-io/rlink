@@ -457,7 +457,8 @@ class PointsCreditReport(models.Model):
     display_name = fields.Char(default='Points Credit Report')
     assessment_id = fields.Many2one('hr.assessment', 'points_report_id', required=True, ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    round_limit = fields.Integer(string='Round Limit', default=5, required=True)
+    round_limit = fields.Integer(string='Round Limit', required=True)
+    is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
     filter_by = fields.Selection([('year', 'Year'), ('year_and_month', 'Year And Month')],
                                  default='year',
@@ -487,6 +488,13 @@ class PointsCreditReport(models.Model):
                                 string='To')
     rows_ids = fields.One2many('points.report.row', 'report_id', domain=filter_rows)
 
+    def _compute_is_hr_manager(self):
+        for rec in self:
+            if self.env.user.has_group('hr.group_hr_manager'):
+                rec.is_hr_manager = True
+            else:
+                rec.is_hr_manager = False
+
     @api.model
     def create(self, vals):
         new = super(PointsCreditReport, self).create(vals)
@@ -500,15 +508,25 @@ class PointsCreditReport(models.Model):
                 "report_id": new.id,
                 "eval_month": month,
                 "eval_year": str(datetime.now().year),
-                "date": datetime.now().replace(month=months_list.index(month) + 1),
-                "month_number": months_list.index(month) + 1})
+                "month_number": months_list.index(month) + 1,
+                "round_limit_row": new.round_limit})
         return new
 
     def write(self, vals):
         if 'round_limit' in vals and vals['round_limit'] < 0:
             raise ValidationError('you can\'t enter negative value for Round Limit')
+
         else:
-            return super(PointsCreditReport, self).write(vals)
+            rec = super(PointsCreditReport, self).write(vals)
+            if 'round_limit' in vals:
+                now_year = datetime.now().year
+                now_month = datetime.now().month
+                print(now_month, now_year)
+                next_rows = self.env['points.report.row'].search(
+                    [('eval_year', '=', now_year), ('month_number', '>=', now_month)])
+                for row in next_rows:
+                    row.round_limit_row = vals['round_limit']
+                    row.compute_account_value()
 
     def _yearly_update_points_credit_report_cron(self):
         points_report_ids = self.env['points.credit.report'].search([])
@@ -525,8 +543,8 @@ class PointsCreditReport(models.Model):
                                 "report_id": points_report_id.id,
                                 "eval_month": month,
                                 "eval_year": str(datetime.now().year),
-                                "date": datetime.now().replace(month=months_list.index(month) + 1),
-                                "month_number": months_list.index(month) + 1})
+                                "month_number": months_list.index(month) + 1,
+                                "round_limit_row": points_report_id.round_limit})
 
 
 class points_report_row(models.Model):
@@ -556,13 +574,12 @@ class points_report_row(models.Model):
         string="Year",
         required=True
     )
-    date = fields.Date(string="Full Date")
     account = fields.Integer(string='Account')
     eval_kpi = fields.Integer(string='KPI')
     evaluation = fields.Integer(string='Evaluation')
     training = fields.Integer(string='Training')
     eval_total = fields.Integer(string='Total', compute='_compute_total')
-    round_limit_row = fields.Integer(string='Round Limit', default=0)
+    round_limit_row = fields.Integer(string='Round Limit')
     is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
     def _compute_is_hr_manager(self):
@@ -574,9 +591,6 @@ class points_report_row(models.Model):
 
     @api.onchange('eval_total')
     def compute_account_value(self):
-        print('sdfgbhnj', self.eval_month)
-
-        self.round_limit_row = self.report_id.round_limit
         domain_year = str(int(self.eval_year) + 1) if self.month_number == 12 else self.eval_year
         domain_month = 0 if self.month_number == 12 else self.month_number
         domain = [("month_number", ">", domain_month),
@@ -588,6 +602,16 @@ class points_report_row(models.Model):
                 previous_row_total = self.eval_total if i == 0 else next_rows[i - 1].eval_total
                 next_row.account = previous_row_total - self.round_limit_row if self.round_limit_row < previous_row_total else 0
 
+    @api.onchange('account')
+    def check_training_value(self):
+        if self.account < 0:
+            raise ValidationError('you can\'t enter negative value for account value')
+
+    @api.onchange('eval_kpi')
+    def check_eval_kpi_value(self):
+        if self.eval_kpi < 0:
+            raise ValidationError('you can\'t enter negative value for KPI value')
+
     @api.onchange('training')
     def check_training_value(self):
         if self.training < 0:
@@ -597,6 +621,11 @@ class points_report_row(models.Model):
     def check_evaluation_value(self):
         if self.evaluation < 0:
             raise ValidationError('you can\'t enter negative value for evaluation value')
+
+    @api.onchange('eval_total')
+    def check_eval_total_value(self):
+        if self.eval_total < 0:
+            raise ValidationError('you can\'t enter negative value for total value')
 
     @api.depends('account', 'eval_kpi', 'evaluation', 'training')
     def _compute_total(self):
