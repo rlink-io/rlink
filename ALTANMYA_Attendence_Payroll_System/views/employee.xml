@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="tanHrEmpAttMode_inherit" model="ir.ui.view">
+			<field name="name">
+				tanHrEmpAttMode.inherit
+			</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<header position="inside">
+					<field name="state" widget="statusbar" />
+				</header>
+				<div name="button_box" position="inside">
+					 <button name="call_bonuses_action" class="oe_stat_button" icon="fa-plus-square-o" type="object">
+						Bonuses
+					</button>
+					<button name="call_deductions_action" class="oe_stat_button" icon="fa-minus-square-o" type="object">
+						Deductions
+					</button>
+					<button name="call_violations_action" class="oe_stat_button" type="object" icon="fa-exclamation-triangle">
+						Violations</button>
+					 <button name="call_trainings_action" class="oe_stat_button" icon="fa-check-square-o" type="object">
+						Trainings
+					</button>
+					 <button name="call_days_off_action" class="oe_stat_button" icon="fa-paperclip" type="object">
+						Days Off
+					</button>
+					 <button name="call_salary_raises_action" class="oe_stat_button" icon="fa-external-link-square" type="object">
+						Salary Raise
+					</button>
+					 <button name="call_assessment_action" class="oe_stat_button" icon="fa-table" type="object">
+						Assessments
+					</button>
+					 <button name="call_rotation_action" class="oe_stat_button" icon="fa-exchange" type="object">
+						Rotation
+					</button>
+				</div>
+				<xpath expr="//field[@name='parent_id']" position="attributes">
+						  <attribute name="options">{'no_open':true}</attribute>
+				</xpath>
+				<xpath expr="//field[@name='coach_id']" position="attributes">
+					<attribute name="attrs">
+						{'invisible':1}
+					</attribute>
+				</xpath>
+				<xpath expr="//field[@name='lang']" position="attributes">
+					<attribute name="attrs">
+						{'invisible':1}
+					</attribute>
+				</xpath>
+				<xpath expr="//field[@name='pin']" position="after">
+					<field name="att_mode" />
+					<field name="studio_employee_number" />
+				</xpath>
+				<xpath expr="//field[@name='passport_id']" position="after">
+					<field name="military_status" />
+					<field name="father_name" />
+					<field name="mother_name" />
+				</xpath>
+				<xpath expr="//field[@name='phone']" position="after">
+					<field name="Landline_number" />
+				</xpath>
+				<xpath expr="//field[@name='registration_number']" position="after">
+					<field name="insurance_card_number" />
+					<field name="bank_account_number" />
+				</xpath>
+
+				<xpath expr="//field[@name='work_phone']" position="attributes">
+					<attribute name="string">
+						Mobile Phone
+					</attribute>
+				</xpath>
+					<xpath expr="//page[@name='hr_settings']" position="after">
+						<page  name="employee_files" string="Employee Files" groups="hr.group_hr_user">
+							<group col="2" string="Employee Files" >
+								<group col="2">
+									<field name="emp_file"/>
+									<field name="emp_img" widget="image"/>
+								</group>
+							</group>
+						</page>
+				</xpath>
+			</field>
+		</record>
+
+		 <record id="hr_employee_view_form_org_chart_inherited" model="ir.ui.view">
+		 <field name="name">hr.employee.view.form.org_chart.inherited</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            	<xpath expr="//field[@name='child_ids']" position="attributes">
+						  <attribute name="readonly">1</attribute>
+					  <attribute name="options">{'no_open':true}</attribute>
+				</xpath>
+
+        </field>
+    </record>
+
+		<record id="hr_action_emp_profile" model="ir.actions.server">
+          <field name="name">My Profile</field>
+          <field name="model_id" ref="model_hr_employee"/>
+          <field name="state">code</field>
+          <field name="code">action=env.get('hr.employee').open_emp_profile()</field>
+ 		</record>
+		<record id="hr_action_emp_kanban" model="ir.actions.server">
+          <field name="name">Employees</field>
+          <field name="model_id" ref="model_hr_employee"/>
+          <field name="state">code</field>
+          <field name="code">action=env.get('hr.employee').open_emp_kanban()</field>
+ 		</record>
+
+		<record id="hr.menu_hr_employee_user" model="ir.ui.menu">
+			<field name="groups_id" eval="[(5,ref('make_invisible'))]"/>
+		</record>
+<!--		   <record model="ir.rule" id="employee_view_rule_employee">-->
+<!--            <field name="name">Employee view rule</field>-->
+<!--            <field name="model_id" ref="hr.model_hr_employee"/>-->
+<!--            <field name="groups" eval="[(4, ref('base.group_user'))]" />-->
+<!--			<field name="perm_read" eval="True"/>-->
+<!--			<field name="perm_write" eval="False"/>-->
+<!--			<field name="perm_create" eval="False"/>-->
+<!--			<field name="perm_unlink" eval="False"/>-->
+<!--            <field name="domain_force">[('user_id', '=', user.id)]</field>-->
+<!--        </record>-->
+
+		<menuitem id="hr.menu_hr_employee_user" name="Employees" groups="make_invisible"/>
+		 <menuitem
+            id="menu_employee_account"
+            name="My Profile"
+			action="hr_action_emp_profile"
+			parent="hr.menu_hr_employee_payroll"
+			groups="hr.group_hr_user"
+            sequence="2"
+         />
+		 <menuitem
+            id="menu_employee_list"
+            name="Employees"
+			action="hr_action_emp_kanban"
+			parent="hr.menu_hr_employee_payroll"
+			groups="hr.group_hr_user"
+            sequence="1"
+         />
+
+	</data>
+</odoo>
