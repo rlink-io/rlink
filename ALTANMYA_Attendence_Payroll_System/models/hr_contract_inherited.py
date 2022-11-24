@@ -67,4 +67,4 @@ class AdvancedPayment(models.Model):
         if 'value' in vals_list and vals_list['value'] < 0:
             raise ValidationError('You can\'t enter negative value for Advanced Payment Value')
         else:
-            return super(AdvancedPayment, self).write(vals_list)
+            return super(AdvancedPayment, self).create(vals_list)
