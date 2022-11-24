@@ -63,6 +63,7 @@ class AdvancedPayment(models.Model):
 
     @api.model
     def create(self, vals_list):
+        print(vals_list)
         if 'value' in vals_list and vals_list['value'] < 0:
             raise ValidationError('You can\'t enter negative value for Advanced Payment Value')
         else:

@@ -295,7 +295,7 @@
 												<field name="training" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
 												<field name="evaluation" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
 												<field name="eval_total"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
-												<field name="round_limit_row"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+<!--												<field name="round_limit_row"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>-->
 											</tree>
 										</field>
 									</page>

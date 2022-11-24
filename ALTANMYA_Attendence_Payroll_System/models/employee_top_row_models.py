@@ -357,20 +357,16 @@ class KPIMonthlyReport(models.Model):
     def _yearly_update_monthly_kpi_report_cron(self):
         KPI_report_ids = self.env['kpi.monthly.report'].search([])
         for KPI_report_id in KPI_report_ids:
-            if KPI_report_id.employee_id.contract_id:
-                if KPI_report_id.employee_id.contract_id.date_end:
-                    if KPI_report_id.employee_id.contract_id.date_end > datetime.today().date():
-                        KPI_report_id.year = str(datetime.now().year)
-                        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-                                       'September',
-                                       'October', 'November', 'December']
-                        for month in months_list:
-                            new_row = self.env['kpi.report.row'].create({
-                                "report_id": KPI_report_id.id,
-                                "year": str(datetime.now().year),
-                                "month": month,
-
-                            })
+            KPI_report_id.year = str(datetime.now().year)
+            months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                           'September',
+                           'October', 'November', 'December']
+            for month in months_list:
+                new_row = self.env['kpi.report.row'].sudo().create({
+                    "report_id": KPI_report_id.id,
+                    "year": str(datetime.now().year),
+                    "month": month,
+                })
 
 
 class KPIReportRow(models.Model):
@@ -457,7 +453,7 @@ class PointsCreditReport(models.Model):
     display_name = fields.Char(default='Points Credit Report')
     assessment_id = fields.Many2one('hr.assessment', 'points_report_id', required=True, ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    round_limit = fields.Integer(string='Round Limit', required=True)
+    round_limit = fields.Integer(string='Round Limit', required=True, default=5)
     is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
     filter_by = fields.Selection([('year', 'Year'), ('year_and_month', 'Year And Month')],
@@ -503,7 +499,7 @@ class PointsCreditReport(models.Model):
                        'October', 'November', 'December']
         current_month = datetime.now().month
         for month in months_list[current_month - 1:]:
-            points_report_row = self.env['points.report.row'].create({
+            points_report_row = self.env['points.report.row'].sudo().create({
                 "account": 0,
                 "report_id": new.id,
                 "eval_month": month,
@@ -531,20 +527,17 @@ class PointsCreditReport(models.Model):
     def _yearly_update_points_credit_report_cron(self):
         points_report_ids = self.env['points.credit.report'].search([])
         for points_report_id in points_report_ids:
-            if points_report_id.employee_id.contract_id:
-                if points_report_id.employee_id.contract_id.date_end:
-                    if points_report_id.employee_id.contract_id.date_end > datetime.today().date():
-                        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-                                       'September',
-                                       'October', 'November', 'December']
-                        for month in months_list:
-                            self.env['points.report.row'].create({
-                                "account": 0,
-                                "report_id": points_report_id.id,
-                                "eval_month": month,
-                                "eval_year": str(datetime.now().year),
-                                "month_number": months_list.index(month) + 1,
-                                "round_limit_row": points_report_id.round_limit})
+            months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                           'September',
+                           'October', 'November', 'December']
+            for month in months_list:
+                self.env['points.report.row'].sudo().create({
+                    "account": 0,
+                    "report_id": points_report_id.id,
+                    "eval_month": month,
+                    "eval_year": str(datetime.now().year),
+                    "month_number": months_list.index(month) + 1,
+                    "round_limit_row": points_report_id.round_limit})
 
 
 class points_report_row(models.Model):

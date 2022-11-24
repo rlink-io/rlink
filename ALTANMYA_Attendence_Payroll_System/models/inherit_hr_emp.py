@@ -112,8 +112,8 @@ class ExtendEmp(models.Model):
                 if is_continuous_employment:
                     permanent_start_date = first_contract.permanent_period_start_date
                     if str(permanent_start_date) == notification_date:
-                        message = "{name} should get his permanent job in {date}".format(
-                            name=emp.name, date=str(permanent_start_date),
+                        message = "{name} should get his permanent job in {date} according to {contract}".format(
+                            name=emp.name, date=str(permanent_start_date), contract=first_contract.name,
                         )
                         self.send_message_to_hr_employees_channel(message)
                         self.send_private_message_to_hr_manager(message)
@@ -122,8 +122,8 @@ class ExtendEmp(models.Model):
                     permanent_start_date = emp.contract_id.permanent_period_start_date
 
                     if str(permanent_start_date) == notification_date:
-                        message = "{name} should get his permanent job in {date}".format(
-                            name=emp.name, date=str(permanent_start_date),
+                        message = "{name} should get his permanent job in {date} according to {contract}".format(
+                            name=emp.name, date=str(permanent_start_date), contract=emp.contract_id.name
                         )
                         self.send_message_to_hr_employees_channel(message)
                         self.send_private_message_to_hr_manager(message)
@@ -150,8 +150,8 @@ class ExtendEmp(models.Model):
                     probation_start_date = first_contract.probation_period_start_date
                     if str(probation_start_date)[4:] == notification_date[4:] and \
                             int(str(probation_start_date)[:4]) < int(notification_date[:4]):
-                        message = "{name}\'s anniversary in {date} ".format(
-                            name=emp.name, date=str(notification_date))
+                        message = "{name}\'s anniversary in {date} according to {contract}".format(
+                            name=emp.name, date=str(notification_date), contract=first_contract.name)
                         self.send_message_to_hr_employees_channel(message)
                         self.send_private_message_to_hr_manager(message)
 
@@ -159,7 +159,7 @@ class ExtendEmp(models.Model):
                     probation_start_date = emp.contract_id.probation_period_start_date
                     if str(probation_start_date)[4:] == notification_date[4:] and \
                             int(str(probation_start_date)[:4]) < int(notification_date[:4]):
-                        message = "{name}\'s anniversary in {date} ".format(name=emp.name, date=str(notification_date))
+                        message = "{name}\'s anniversary in {date} according to {contract} ".format(name=emp.name, date=str(notification_date), contract=emp.contract_id.name)
                         self.send_message_to_hr_employees_channel(message)
                         self.send_private_message_to_hr_manager(message)
 
@@ -392,8 +392,8 @@ class ExtendEmp(models.Model):
                                ['Work Address',
                                 self.address_id.name],
                                ['Work Location', self.work_location_id.name],
-                               ['Approves', 'sub-title'],
-                               ['Leave Manager', self.leave_manager_id.name],
+                               # ['Approves', 'sub-title'],
+                               # ['Leave Manager', self.leave_manager_id.name],
                                ['Schedule', 'sub-title'],
                                ['Working Hours', self.resource_calendar_id.name],
                                ['Timezone', self.tz],
