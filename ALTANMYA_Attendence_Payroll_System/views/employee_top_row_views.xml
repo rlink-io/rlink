@@ -233,7 +233,7 @@
 										<field name="year" attrs="{'invisible':[('filter_by','!=','year')]}"/>
 									</group>
 										<group col="4">
-											<field   style="width: 100%%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
+											<field   style="width: 100%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
 											<field  name="from_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"  nolabel="1" string="&#160;" />
 											<field  style="width: 100%%"  name="to_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" />
 											<field  name="to_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" nolabel="1" string="&#160;"/>
@@ -275,9 +275,9 @@
 											<field name="filter_by" widget="radio" />
 									</group>
 									<group col="4">
-										<field   style="width: 150%%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
+										<field   style="width: 100%%" name="from_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"/>
 										<field  name="from_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}"  nolabel="1" string="&#160;" />
-										<field  style="width: 150%%"  name="to_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" />
+										<field  style="width: 100%%"  name="to_month" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" />
 										<field  name="to_year" attrs="{'invisible':[('filter_by','!=','year_and_month')]}" nolabel="1" string="&#160;"/>
 										<field name="year" attrs="{'invisible':[('filter_by','!=','year')]}"/>
 									</group>

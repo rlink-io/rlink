@@ -598,10 +598,12 @@ class points_report_row(models.Model):
 
     @api.onchange('eval_total')
     def compute_account_value(self):
-        domain_year = str(int(self.eval_year) + 1) if self.month_number == 12 else self.eval_year
+        years_list = ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033',
+                      '2034', '2035', '2036', '2037', '2038', '2039', '2040', '2041', '2042']
+        domain_year = years_list[index(self.eval_year):]
         domain_month = 0 if self.month_number == 12 else self.month_number
         domain = [("month_number", ">", domain_month),
-                  ("eval_year", "=", domain_year),
+                  ("eval_year", "in", domain_year),
                   ("report_id", "=", self.report_id._origin.id)]
         next_rows = self.env['points.report.row'].search(domain)
         if next_rows:
