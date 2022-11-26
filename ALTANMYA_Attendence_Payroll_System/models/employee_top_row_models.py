@@ -191,13 +191,13 @@ class Rotation(models.Model):
 
 class DaysOff(models.Model):
     _name = "hr.days.off"
-    _description = 'Employee Days off'
+    _description = 'Employee Days off - paid time off leaves'
 
-    display_name = fields.Char(compute='_compute_display_name')
-    total = fields.Integer(string=" Total")
-    used = fields.Integer(string=" Used")
-    remaining = fields.Integer(string=" Remaining")
     employee_id = fields.Many2one('hr.employee', required=True)
+    display_name = fields.Char(compute='_compute_display_name')
+    total = fields.Float(string=" Total", compute='compute_total')
+    used = fields.Float(string=" Used", compute='compute_total')
+    remaining = fields.Float(string=" Remaining", compute='compute_total')
 
     @api.model
     def create(self, vals):
@@ -208,6 +208,20 @@ class DaysOff(models.Model):
     def _compute_display_name(self):
         for days_off in self:
             days_off.display_name = _("%s\'s days off", days_off.employee_id.name)
+
+    @api.depends('employee_id')
+    def compute_total(self):
+        for rec in self:
+            rec.total = rec.used = rec.remaining = 0.0
+            all_allocations = self.env['hr.leave.allocation'].search(
+                [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', 1)])
+            if all_allocations:
+                for allocation in all_allocations:
+                    if allocation.date_from <= datetime.now().date() <= allocation.date_to:
+                        rec.total = allocation.max_leaves
+                        rec.used = allocation.leaves_taken
+                        rec.remaining = allocation.max_leaves - allocation.leaves_taken
+                        break
 
 
 class Assessment(models.Model):

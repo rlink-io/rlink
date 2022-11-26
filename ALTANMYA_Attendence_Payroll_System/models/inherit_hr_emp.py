@@ -53,10 +53,15 @@ class ExtendEmp(models.Model):
                 })
                 points_report = self.env['points.credit.report'].sudo().create({"assessment_id": assessment.id})
                 api_report = self.env['kpi.monthly.report'].sudo().create({"assessment_id": assessment.id})
-        return new
+
+            if not employee.days_off_id:
+                days_off = self.env['hr.days.off'].sudo().create({
+                    "employee_id": employee.id
+                })
 
     def unlink(self):
         self.assessment_id.sudo().unlink()
+        self.days_off_id.sudo().unlink()
         super(ExtendEmp, self).unlink()
 
     def write(self, values):
@@ -159,7 +164,10 @@ class ExtendEmp(models.Model):
                     probation_start_date = emp.contract_id.probation_period_start_date
                     if str(probation_start_date)[4:] == notification_date[4:] and \
                             int(str(probation_start_date)[:4]) < int(notification_date[:4]):
-                        message = "{name}\'s anniversary in {date} according to {contract} ".format(name=emp.name, date=str(notification_date), contract=emp.contract_id.name)
+                        message = "{name}\'s anniversary in {date} according to {contract} ".format(name=emp.name,
+                                                                                                    date=str(
+                                                                                                        notification_date),
+                                                                                                    contract=emp.contract_id.name)
                         self.send_message_to_hr_employees_channel(message)
                         self.send_private_message_to_hr_manager(message)
 
@@ -176,7 +184,7 @@ class ExtendEmp(models.Model):
             )
 
     def send_message_to_hr_employees_channel(self, message):
-        hr_employees_group = self.env.ref('hr.group_hr_user')
+        hr_employees_group = self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees')
         hr_emp_channel_id = self.env['mail.channel'].search(
             [('group_public_id', 'in', [hr_employees_group.id])])
         notification_ids = [((0, 0, {
@@ -216,7 +224,7 @@ class ExtendEmp(models.Model):
                 new_value = values[val]
                 field_type = 'normal'
 
-            if field_name != 'departure_description' and previous_value != new_value:
+            if field_name != 'departure_description' and previous_value != new_value and self.id:
                 self.env['hr.change.request'].create({
                     'employee_id': self.id,
                     'field_type': field_type,
@@ -305,6 +313,10 @@ class ExtendEmp(models.Model):
 
     def call_days_off_action(self):
         self.ensure_one()
+        if not self.days_off_id:
+            self.env['hr.days.off'].sudo().create({
+                "employee_id": self.id
+            })
         action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_days_off_action")
         action['context'] = dict(self._context, default_employee_id=self.id, )
         if self.days_off_id:
@@ -323,6 +335,7 @@ class ExtendEmp(models.Model):
         return action
 
     def action_export_excel(self):
+        print(self.allocation_count, self.allocation_display, self.allocation_used_count, self.allocations_count)
         domain = []
         if self.env.context.get('active_ids'):
             domain = [('id', 'in', self.env.context.get('active_ids', []))]
@@ -572,8 +585,8 @@ class ExtendEmp(models.Model):
         evaluation_worksheet.write(0, 5, 'Evaluation', header_format)
         evaluation_worksheet.write(0, 6, 'Total', header_format)
         row = 1
-        evaluation_rows = self.env['evaluation.table.row'].search(
-            [('table_id', '=', self.assessment_id.evaluation_table_id.id)])
+        evaluation_rows = self.env['points.report.row'].search(
+            [('report_id', '=', self.assessment_id.points_report_id.id)])
         if evaluation_rows:
             for table_row in evaluation_rows:
                 evaluation_worksheet.write(row, 0, table_row.eval_year)
@@ -610,6 +623,17 @@ class ExtendEmp(models.Model):
                 rotation_worksheet.write(row, 5, rotation_row.old_salary)
                 rotation_worksheet.write(row, 6, rotation_row.new_salary)
                 row = row + 1
+
+    def _update_hr_employees_group_users_cron(self):
+
+        all_employees = self.env['hr.employee'].search([])
+        hr_employees_group = self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees')
+        print(hr_employees_group)
+        for emp in all_employees:
+            hr_department = self.env['hr.department'].search([('name', '=', 'Human Resources')])
+            if hr_department and emp.department_id == hr_department.id:
+                if not emp.user_id.has_group('ALTANMYA_Attendence_Payroll_System.group_hr_employees'):
+                    hr_employees_group.write({'users': [(4, emp.user_id.id)]})
 
 
 class ExtendEmpPub(models.Model):

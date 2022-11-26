@@ -9,7 +9,7 @@ from . import settings
 from . import att_payroll
 from . import hr_contract_inherited
 from . import employee_top_row_models
-from . import resource_calendar_leaves
+from . import leaves_inherited
 
 
 

@@ -26,7 +26,7 @@
     'author': 'ALTANMYA - TECHNOLOGY SOLUTIONS',
     'company': 'ALTANMYA - TECHNOLOGY SOLUTIONS Part of ALTANMYA GROUP',
     'website': "https://tech.altanmya.net",
-    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts'],
+    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts', 'hr_holidays'],
     'data': ['views/view_v.xml',
              'security/ir.model.access.csv',
              'security/security.xml',
