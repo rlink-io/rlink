@@ -32,14 +32,3 @@ class ResourceCalenderLeavesInherited(models.Model):
                 subtype_xmlid='mail.mt_comment',
             )
 
-
-class AllocationInherit(models.Model):
-    _inherit = 'hr.leave.allocation'
-
-    @api.depends('employee_id', 'holiday_status_id', 'taken_leave_ids.number_of_days', 'taken_leave_ids.state')
-    def _compute_leaves(self):
-        res = super(AllocationInherit, self).sudo()._compute_leaves()
-        for allocation in self:
-            if allocation.holiday_status_id.name == 'Paid Time Off':
-                allocation.employee_id.days_off_id.compute_total()
-        return res
