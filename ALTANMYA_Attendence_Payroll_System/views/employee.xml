@@ -75,8 +75,8 @@
 						<page  name="employee_files" string="Employee Files" groups="hr.group_hr_user">
 							<group col="2" string="Employee Files" >
 								<group col="2">
-<!--									<field name="employee_att"/>-->
-<!--									<field name="emp_image" widget="image"/>-->
+									<field name="employee_att"/>
+									<field name="emp_image" widget="image"/>
 								</group>
 							</group>
 						</page>

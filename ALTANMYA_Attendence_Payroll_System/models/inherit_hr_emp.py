@@ -39,8 +39,8 @@ class ExtendEmp(models.Model):
                              default='confirmed')
     change_request = fields.One2many('hr.change.request', 'employee_id')
     emp_report = fields.Many2one('ir.attachment')
-    # employee_att = fields.Binary(string='Employee Attachment')
-    # emp_image = fields.Binary(string='Image Attachment')
+    employee_att = fields.Binary(string='Employee Attachment')
+    emp_image = fields.Binary(string='Image Attachment')
 
     @api.model
     def create(self, vals):
