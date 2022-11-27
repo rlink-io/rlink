@@ -22,7 +22,7 @@ class ExtendEmp(models.Model):
                                 index=True)
     father_name = fields.Char(string='Father\'s Name')
     mother_name = fields.Char(string='Mother\'s Name')
-    Landline_number = fields.Char(string='Landline Number')
+    landline_number = fields.Char(string='Landline Number')
     military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
                                         ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
     insurance_card_number = fields.Char(string='Insurance Card Number')
@@ -39,8 +39,8 @@ class ExtendEmp(models.Model):
                              default='confirmed')
     change_request = fields.One2many('hr.change.request', 'employee_id')
     emp_report = fields.Many2one('ir.attachment')
-    emp_file = fields.Binary(string='Employee Attachment')
-    emp_img = fields.Binary(string='Image Attachment')
+    # employee_att = fields.Binary(string='Employee Attachment')
+    # emp_image = fields.Binary(string='Image Attachment')
 
     @api.model
     def create(self, vals):
@@ -420,7 +420,7 @@ class ExtendEmp(models.Model):
                                ['Address', self.address_home_id.name],
                                ['Email', self.private_email],
                                ['Phone', self.phone],
-                               ['Landline Number', self.Landline_number],
+                               ['Landline Number', self.landline_number],
                                ['Bank Account Number',
                                 self.bank_account_id.acc_number + ((
                                                                            ' - ' + self.bank_account_id.bank_id.name) if self.bank_account_id.bank_id else '') if self.bank_account_id else ""],
@@ -483,7 +483,7 @@ class ExtendEmp(models.Model):
                                ['Insurance Card Number', self.insurance_card_number],
                                ['Bank Account Number', self.bank_account_number],
                                ['Employee Files', 'sub-title'],
-                               ['Image Attachment', self.emp_img],
+                               ['Image Attachment', self.emp_image],
 
                                )
         return main_worksheet_data
@@ -667,7 +667,7 @@ class ExtendEmpPub(models.Model):
                                 index=True)
     father_name = fields.Char(string='Father\'s Name')
     mother_name = fields.Char(string='Mother\'s Name')
-    Landline_number = fields.Char(string='Landline Number')
+    landline_number = fields.Char(string='Landline Number')
     military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
                                         ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
     insurance_card_number = fields.Char(string='Insurance Card Number')
@@ -684,6 +684,6 @@ class ExtendEmpPub(models.Model):
                              default='confirmed')
     change_request = fields.One2many('hr.change.request', 'employee_id')
     emp_report = fields.Many2one('ir.attachment')
-    emp_file = fields.Binary(string='Employee Attachment')
-    emp_img = fields.Binary(string='Image Attachment')
+    # employee_att = fields.Binary(string='Employee Attachment')
+    # emp_image = fields.Binary(string='Image Attachment')
 

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+
+from . import inherit_hr_emp
 from . import fdevice
 from . import oattendance
 from . import inout
-from . import inherit_hr_emp
 from . import inherit_resource_calendar
 from . import fp_log
 from . import settings

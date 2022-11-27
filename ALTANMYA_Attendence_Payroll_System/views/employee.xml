@@ -59,7 +59,7 @@
 					<field name="mother_name" />
 				</xpath>
 				<xpath expr="//field[@name='phone']" position="after">
-					<field name="Landline_number" />
+					<field name="landline_number" />
 				</xpath>
 				<xpath expr="//field[@name='registration_number']" position="after">
 					<field name="insurance_card_number" />
@@ -75,8 +75,8 @@
 						<page  name="employee_files" string="Employee Files" groups="hr.group_hr_user">
 							<group col="2" string="Employee Files" >
 								<group col="2">
-									<field name="emp_file"/>
-									<field name="emp_img" widget="image"/>
+<!--									<field name="employee_att"/>-->
+<!--									<field name="emp_image" widget="image"/>-->
 								</group>
 							</group>
 						</page>
