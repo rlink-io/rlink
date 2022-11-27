@@ -214,14 +214,15 @@ class DaysOff(models.Model):
     def compute_total(self):
         for rec in self:
             rec.total = rec.used = rec.remaining = 0.0
-            all_allocations = self.env['hr.leave.allocation'].search(
+            all_allocations = self.env['hr.leave.allocation'].sudo().search(
                 [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', 1)])
             if all_allocations:
                 for allocation in all_allocations:
                     if allocation.date_from <= datetime.now().date() <= allocation.date_to:
-                        rec.total = allocation.max_leaves
-                        rec.used = allocation.leaves_taken
-                        rec.remaining = allocation.max_leaves - allocation.leaves_taken
+                        rec.sudo().write({'total': allocation.max_leaves,
+                                          'used': allocation.leaves_taken,
+                                          'remaining': allocation.max_leaves - allocation.leaves_taken})
+
                         break
 
 
@@ -325,7 +326,6 @@ class KPIMonthlyReport(models.Model):
                                  string='Filter By')
     from_year = fields.Selection(
         year_selection,
-
 
     )
     to_year = fields.Selection(
