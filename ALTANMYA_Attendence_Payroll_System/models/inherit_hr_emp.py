@@ -26,7 +26,7 @@ class ExtendEmp(models.Model):
     military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
                                         ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
     insurance_card_number = fields.Char(string='Insurance Card Number')
-    bank_account_number = fields.Char(string='Bank Account Number')
+    bank_account_number = fields.Char(string='Bank Account NO.')
     deduction_ids = fields.One2many('hr.deduction', 'employee_id')
     violation_ids = fields.One2many('hr.violation', 'employee_id')
     bonus_ids = fields.One2many('hr.bonus', 'employee_id')
@@ -41,7 +41,7 @@ class ExtendEmp(models.Model):
     emp_report = fields.Many2one('ir.attachment')
     employee_att = fields.Binary(string='Employee Attachment')
     emp_image = fields.Binary(string='Image Attachment')
-  
+
     @api.model
     def create(self, vals):
         new = super(ExtendEmp, self).create(vals)
@@ -479,7 +479,7 @@ class ExtendEmp(models.Model):
                                ['Job Position', self.job_id.name],
                                ['Registration Number of the Employee', self.registration_number],
                                ['Insurance Card Number', self.insurance_card_number],
-                               ['Bank Account Number', self.bank_account_number],
+                               ['Bank Account NO.', self.bank_account_number],
                                ['Employee Files', 'sub-title'],
                                ['Image Attachment', self.emp_image],
 
@@ -669,7 +669,7 @@ class ExtendEmpPub(models.Model):
     military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
                                         ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
     insurance_card_number = fields.Char(string='Insurance Card Number')
-    bank_account_number = fields.Char(string='Bank Account No.')
+    bank_account_number = fields.Char(string='Bank Account NO.')
     deduction_ids = fields.One2many('hr.deduction', 'employee_id')
     violation_ids = fields.One2many('hr.violation', 'employee_id')
     bonus_ids = fields.One2many('hr.bonus', 'employee_id')
