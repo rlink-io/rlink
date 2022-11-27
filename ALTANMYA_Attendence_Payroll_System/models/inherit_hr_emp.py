@@ -335,7 +335,6 @@ class ExtendEmp(models.Model):
         return action
 
     def action_export_excel(self):
-        print(self.allocation_count, self.allocation_display, self.allocation_used_count, self.allocations_count)
         domain = []
         if self.env.context.get('active_ids'):
             domain = [('id', 'in', self.env.context.get('active_ids', []))]
@@ -628,12 +627,27 @@ class ExtendEmp(models.Model):
 
         all_employees = self.env['hr.employee'].search([])
         hr_employees_group = self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees')
-        print(hr_employees_group)
         for emp in all_employees:
-            hr_department = self.env['hr.department'].search([('name', '=', 'Human Resources')])
-            if hr_department and emp.department_id == hr_department.id:
-                if not emp.user_id.has_group('ALTANMYA_Attendence_Payroll_System.group_hr_employees'):
-                    hr_employees_group.write({'users': [(4, emp.user_id.id)]})
+            if emp.user_id and emp.user_id.has_group('hr.group_hr_manager'):
+                hr_employees_group.write({'users': [(4, emp.user_id.id)]})
+            else:
+                hr_department = self.env['hr.department'].search([('name', '=', 'Human Resources')])
+                if hr_department and emp.department_id and emp.user_id:
+                    if emp.department_id.id == hr_department.id and not emp.user_id.has_group(
+                            'ALTANMYA_Attendence_Payroll_System.group_hr_employees'):
+                        hr_employees_group.write({'users': [(4, emp.user_id.id)]})
+                    elif emp.department_id.id != hr_department.id and emp.user_id.has_group(
+                            'ALTANMYA_Attendence_Payroll_System.group_hr_employees'):
+                        hr_employees_group.write({'users': [(3, emp.user_id.id)]})
+                        self.remove_user_from_hr_employee_channel(emp.user_id)
+
+    def remove_user_from_hr_employee_channel(self, user_id):
+        hr_employees_channel = self.env.ref('ALTANMYA_Attendence_Payroll_System.channel_hr_employee')
+        channel_member = self.env['mail.channel.partner'].sudo().search([
+            ('partner_id', '=', user_id.partner_id.id),
+            ('channel_id', '=', hr_employees_channel.id),
+        ])
+        hr_employees_channel.sudo().write({'channel_last_seen_partner_ids': [(3, channel_member.id)]})
 
 
 class ExtendEmpPub(models.Model):

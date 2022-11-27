@@ -6,7 +6,6 @@
         </record>
         <record id="group_hr_employees" model="res.groups">
             <field name="name">HR Employees</field>
-            <field name="implied_ids" eval="[(4, ref('hr.group_hr_manager'))]"/>
         </record>
     </data>
 </odoo>

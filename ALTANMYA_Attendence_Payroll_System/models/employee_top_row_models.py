@@ -251,6 +251,7 @@ class Assessment(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
             "ALTANMYA_Attendence_Payroll_System.points_credit_report_action")
+
         action['context'] = dict(self._context, default_assessment_id=self.id)
         action['domain'] = [('assessment_id', '=', self.id)]
         if self.points_report_id:
@@ -467,8 +468,9 @@ class PointsCreditReport(models.Model):
     display_name = fields.Char(default='Points Credit Report')
     assessment_id = fields.Many2one('hr.assessment', 'points_report_id', required=True, ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    round_limit = fields.Integer(string='Round Limit', required=True, default=5)
-    is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
+    round_limit = fields.Integer(string='Current Round Limit', required=True, default=5)  # for Hr manager
+    current_round_limit = fields.Integer(string='Current Round Limit', required=True, default=5)
+    is_hr_manager_profile = fields.Boolean(compute="_compute_is_hr_manager_profile", default=False)
 
     filter_by = fields.Selection([('year', 'Year'), ('year_and_month', 'Year And Month')],
                                  default='year',
@@ -498,12 +500,12 @@ class PointsCreditReport(models.Model):
                                 string='To')
     rows_ids = fields.One2many('points.report.row', 'report_id', domain=filter_rows)
 
-    def _compute_is_hr_manager(self):
+    def _compute_is_hr_manager_profile(self):
         for rec in self:
-            if self.env.user.has_group('hr.group_hr_manager'):
-                rec.is_hr_manager = True
+            if rec.employee_id.user_id and rec.employee_id.user_id.has_group('hr.group_hr_manager'):
+                rec.is_hr_manager_profile = True
             else:
-                rec.is_hr_manager = False
+                rec.is_hr_manager_profile = False
 
     @api.model
     def create(self, vals):
@@ -519,7 +521,7 @@ class PointsCreditReport(models.Model):
                 "eval_month": month,
                 "eval_year": str(datetime.now().year),
                 "month_number": months_list.index(month) + 1,
-                "round_limit_row": new.round_limit})
+                "round_limit_row": new.current_round_limit})
         return new
 
     def write(self, vals):
@@ -529,14 +531,23 @@ class PointsCreditReport(models.Model):
         else:
             rec = super(PointsCreditReport, self).write(vals)
             if 'round_limit' in vals:
-                now_year = datetime.now().year
-                now_month = datetime.now().month
-                print(now_month, now_year)
-                next_rows = self.env['points.report.row'].search(
-                    [('eval_year', '=', now_year), ('month_number', '>=', now_month)])
-                for row in next_rows:
-                    row.round_limit_row = vals['round_limit']
-                    row.compute_account_value()
+                self.update_reports_current_round_limit(vals['round_limit'])
+                self.update_reports_rows_round_limit(vals['round_limit'])
+
+    def update_reports_current_round_limit(self, new_round_limit):
+
+        points_report_ids = self.env['points.credit.report'].search([])
+        for report in points_report_ids:
+            report.write({'current_round_limit': new_round_limit})
+
+    def update_reports_rows_round_limit(self, new_round_limit):
+        current_year = datetime.now().year
+        current_month = datetime.now().month
+        updated_rows = self.env['points.report.row'].search(
+            [('eval_year', '=', current_year), ('month_number', '>=', current_month)])
+        for row in updated_rows:
+            row.round_limit_row = new_round_limit
+            row.compute_account_value()
 
     def _yearly_update_points_credit_report_cron(self):
         points_report_ids = self.env['points.credit.report'].search([])
@@ -551,7 +562,7 @@ class PointsCreditReport(models.Model):
                     "eval_month": month,
                     "eval_year": str(datetime.now().year),
                     "month_number": months_list.index(month) + 1,
-                    "round_limit_row": points_report_id.round_limit})
+                    "round_limit_row": points_report_id.current_round_limit})
 
 
 class points_report_row(models.Model):
@@ -600,11 +611,12 @@ class points_report_row(models.Model):
     def compute_account_value(self):
         years_list = ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033',
                       '2034', '2035', '2036', '2037', '2038', '2039', '2040', '2041', '2042']
-        domain_year = years_list[index(self.eval_year):]
-        domain_month = 0 if self.month_number == 12 else self.month_number
-        domain = [("month_number", ">", domain_month),
-                  ("eval_year", "in", domain_year),
-                  ("report_id", "=", self.report_id._origin.id)]
+        domain_year = str(int(self.eval_year) + 1) if self.month_number == 12 else self.eval_year
+        next_years = years_list[years_list.index(self.eval_year) + 1:]
+        domain = [("report_id", "=", self.report_id._origin.id),
+                  '|', '&', ("month_number", ">", self.month_number), ("eval_year", "=", domain_year),
+                  ("eval_year", "in", next_years)
+                  ]
         next_rows = self.env['points.report.row'].search(domain)
         if next_rows:
             for i, next_row in enumerate(next_rows):
