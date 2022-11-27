@@ -465,11 +465,21 @@ class PointsCreditReport(models.Model):
                           '&', ('eval_month', 'in', to_months_list), ('eval_year', '=', self.to_year)]
         return domain
 
+    @api.model
+    def get_current_round_limit(self):
+        reports = self.env['points.report.row'].search(
+            [('eval_year', '=', str(datetime.now().year)), ('month_number', '=', datetime.now().month)])
+        if reports:
+            return reports[0].round_limit_row
+        else:
+            return 5
+
     display_name = fields.Char(default='Points Credit Report')
     assessment_id = fields.Many2one('hr.assessment', 'points_report_id', required=True, ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    round_limit = fields.Integer(string='Current Round Limit', required=True, default=5)  # for Hr manager
-    current_round_limit = fields.Integer(string='Current Round Limit', required=True, default=5)
+    round_limit = fields.Integer(string='Current Round Limit', required=True,
+                                 default=get_current_round_limit)  # for Hr manager
+    current_round_limit = fields.Integer(string='Current Round Limit', required=True, default=get_current_round_limit)
     is_hr_manager_profile = fields.Boolean(compute="_compute_is_hr_manager_profile", default=False)
 
     filter_by = fields.Selection([('year', 'Year'), ('year_and_month', 'Year And Month')],
@@ -533,6 +543,7 @@ class PointsCreditReport(models.Model):
             if 'round_limit' in vals:
                 self.update_reports_current_round_limit(vals['round_limit'])
                 self.update_reports_rows_round_limit(vals['round_limit'])
+            return rec
 
     def update_reports_current_round_limit(self, new_round_limit):
 

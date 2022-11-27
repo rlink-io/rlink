@@ -35,16 +35,11 @@ class ResourceCalenderLeavesInherited(models.Model):
 
 class AllocationInherit(models.Model):
     _inherit = 'hr.leave.allocation'
+
     @api.depends('employee_id', 'holiday_status_id', 'taken_leave_ids.number_of_days', 'taken_leave_ids.state')
     def _compute_leaves(self):
+        res = super(AllocationInherit, self)._compute_leaves()
         for allocation in self:
-            allocation.max_leaves = allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days
-            allocation.leaves_taken = sum(
-                taken_leave.number_of_hours_display if taken_leave.leave_type_request_unit == 'hour' else taken_leave.number_of_days \
-                for taken_leave in allocation.taken_leave_ids \
-                if taken_leave.state == 'validate')
-            print(allocation.employee_id.name)
             if allocation.holiday_status_id.name == 'Paid Time Off':
                 allocation.employee_id.days_off_id.compute_total()
-                # allocation.employee_id.days_off_id.total = allocation.max_leaves
-                # allocation.employee_id.days_off_id.used = allocation.leaves_taken
+        return res

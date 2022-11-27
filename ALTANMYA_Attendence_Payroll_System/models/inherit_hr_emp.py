@@ -58,32 +58,38 @@ class ExtendEmp(models.Model):
                 days_off = self.env['hr.days.off'].sudo().create({
                     "employee_id": employee.id
                 })
+        return new
+
 
     def unlink(self):
         self.assessment_id.sudo().unlink()
         self.days_off_id.sudo().unlink()
-        super(ExtendEmp, self).unlink()
+        return super(ExtendEmp, self).unlink()
 
     def write(self, values):
-        if 'job_title' in values or 'department_id' in values:
-            new_title = values['job_title'] if 'job_title' in values else self.job_title
-            new_dep = self.env['hr.department'].sudo().search([('id', '=', values['department_id'])],
-                                                              limit=1).id if 'department_id' in values else self.department_id.id
-
-            self.env['hr.rotation'].sudo().create(
-                {'employee_id': self.id,
-                 'date': str(datetime.datetime.now().date()),
-                 'old_title': self.job_title,
-                 'new_title': new_title,
-                 'old_department': self.department_id.id if self.department_id else '',
-                 'new_department': new_dep})
-        if 'assessment_id' in values:
-            super(ExtendEmp, self).write(values)
-        elif not self.env.user.has_group('hr.group_hr_manager') and self.user_id.state != 'new':
+        # if 'assessment_id' in values:
+        #     rec = super(ExtendEmp, self).write(values)
+        if not self.env.user.has_group('hr.group_hr_manager') and self.user_id.state != 'new':
             self.create_change_request(values)
-            super(ExtendEmp, self).write({'state': 'confirmation_needed'})
+            rec = super(ExtendEmp, self).write({'state': 'confirmation_needed'})
         else:
-            super(ExtendEmp, self).write(values)
+            if 'job_title' in values or 'department_id' in values:
+                new_title = values['job_title'] if 'job_title' in values else self.job_title
+                new_dep = self.env['hr.department'].sudo().search([('id', '=', values['department_id'])],
+                                                                  limit=1).id if 'department_id' in values else self.department_id.id
+                self.create_rotation(new_title, new_dep)
+            rec = super(ExtendEmp, self).write(values)
+        return rec
+
+    def create_rotation(self,new_title, new_dep):
+        self.env['hr.rotation'].sudo().create(
+            {'employee_id': self.id,
+             'date': str(datetime.datetime.now().date()),
+             'old_title': self.job_title,
+             'new_title': new_title,
+             'old_department': self.department_id.id if self.department_id else '',
+             'new_department': new_dep})
+
 
     def _check_employees_birthdays_cron(self):
         all_employees = self.env['hr.employee'].search([])
@@ -317,6 +323,7 @@ class ExtendEmp(models.Model):
             self.env['hr.days.off'].sudo().create({
                 "employee_id": self.id
             })
+
         action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_days_off_action")
         action['context'] = dict(self._context, default_employee_id=self.id, )
         if self.days_off_id:
