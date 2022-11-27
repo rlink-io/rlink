@@ -23,7 +23,7 @@
     'summary': 'This ALTANMYA module integrates Odoo attendance with attendance devices (Suprema and Zk)',
     'description': "End to End process for Attendance Process with devices",
     'category': 'Human Resources/Employees',
-    'author': 'ALTANMYA - TECHNOLOGY SOLUTIONS',
+    'author': 'ALTANMYA - TECHNOLOGY SOLUTIONS, Momena Sukkar',
     'company': 'ALTANMYA - TECHNOLOGY SOLUTIONS Part of ALTANMYA GROUP',
     'website': "https://tech.altanmya.net",
     'license': "LGPL-3",

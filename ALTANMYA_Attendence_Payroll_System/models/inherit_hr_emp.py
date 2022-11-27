@@ -41,7 +41,7 @@ class ExtendEmp(models.Model):
     emp_report = fields.Many2one('ir.attachment')
     employee_att = fields.Binary(string='Employee Attachment')
     emp_image = fields.Binary(string='Image Attachment')
-
+  
     @api.model
     def create(self, vals):
         new = super(ExtendEmp, self).create(vals)
@@ -59,7 +59,6 @@ class ExtendEmp(models.Model):
                     "employee_id": employee.id
                 })
         return new
-
 
     def unlink(self):
         self.assessment_id.sudo().unlink()
@@ -81,7 +80,7 @@ class ExtendEmp(models.Model):
             rec = super(ExtendEmp, self).write(values)
         return rec
 
-    def create_rotation(self,new_title, new_dep):
+    def create_rotation(self, new_title, new_dep):
         self.env['hr.rotation'].sudo().create(
             {'employee_id': self.id,
              'date': str(datetime.datetime.now().date()),
@@ -89,7 +88,6 @@ class ExtendEmp(models.Model):
              'new_title': new_title,
              'old_department': self.department_id.id if self.department_id else '',
              'new_department': new_dep})
-
 
     def _check_employees_birthdays_cron(self):
         all_employees = self.env['hr.employee'].search([])
@@ -671,7 +669,7 @@ class ExtendEmpPub(models.Model):
     military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
                                         ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
     insurance_card_number = fields.Char(string='Insurance Card Number')
-    bank_account_number = fields.Char(string='Bank Account Number ')
+    bank_account_number = fields.Char(string='Bank Account No.')
     deduction_ids = fields.One2many('hr.deduction', 'employee_id')
     violation_ids = fields.One2many('hr.violation', 'employee_id')
     bonus_ids = fields.One2many('hr.bonus', 'employee_id')
@@ -686,4 +684,3 @@ class ExtendEmpPub(models.Model):
     emp_report = fields.Many2one('ir.attachment')
     # employee_att = fields.Binary(string='Employee Attachment')
     # emp_image = fields.Binary(string='Image Attachment')
-
