@@ -665,53 +665,25 @@ class ExtendEmpPub(models.Model):
     att_mode = fields.Selection([('standard', 'Standard mode'), ('daily', 'Daily mode'), ('classic', 'Classic mode'),
                                  ('sequential', 'Sequential mode'), ('shift', 'Shift mode')], string='Attendance Mode',
                                 index=True)
-    # att_mode = fields.Selection( string='Attendance Mode',compute='_att_mode')
+    father_name = fields.Char(string='Father\'s Name')
+    mother_name = fields.Char(string='Mother\'s Name')
+    Landline_number = fields.Char(string='Landline Number')
+    military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
+                                        ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
+    insurance_card_number = fields.Char(string='Insurance Card Number')
+    bank_account_number = fields.Char(string='Bank Account Number')
+    deduction_ids = fields.One2many('hr.deduction', 'employee_id')
+    violation_ids = fields.One2many('hr.violation', 'employee_id')
+    bonus_ids = fields.One2many('hr.bonus', 'employee_id')
+    training_ids = fields.One2many('hr.training', 'employee_id')
+    days_off_id = fields.Many2one('hr.days.off')
+    salary_raise_ids = fields.One2many('hr.salary.raise', 'employee_id')
+    rotation_ids = fields.One2many('hr.rotation', 'employee_id')
+    assessment_id = fields.Many2one('hr.assessment')
+    state = fields.Selection([('confirmation_needed', 'Confirmation Needed'), ('confirmed', 'Confirmed')],
+                             default='confirmed')
+    change_request = fields.One2many('hr.change.request', 'employee_id')
+    emp_report = fields.Many2one('ir.attachment')
+    emp_file = fields.Binary(string='Employee Attachment')
+    emp_img = fields.Binary(string='Image Attachment')
 
-
-#
-#     def _studio_employee_number(self):
-#         for rec in self:
-#             rec.studio_employee_number=super('ExtendEmpPub',rec).employee_id.studio_employee_number
-#
-#     def _att_mode(self):
-#         for rec in self:
-#             rec.studio_employee_number=super('ExtendEmpPub',rec).employee_id.att_mode
-
-
-class EmployeeChangeRequest(models.Model):
-    _name = "hr.change.request"
-    _description = "Employee Change Request"
-
-    employee_id = fields.Many2one('hr.employee')
-    user_id = fields.Many2one(related='employee_id.user_id')
-    field_label = fields.Char(string='Field Name')
-    field_name = fields.Char(string='Field')
-    previous_value = fields.Char(string='Previous Value')
-    previous_value_origin = fields.Char()
-    new_value = fields.Char(string='New Value')
-    new_value_origin = fields.Char()
-    field_type = fields.Char()
-    status = fields.Selection([('pending', 'Pending'), ('confirmed', 'Confirmed'), ('rejected', 'Rejected')],
-                              default='pending')
-
-    def check_emp_state(self):
-        to_be_confirmed = self.env['hr.change.request'].sudo().search(
-            [('employee_id', '=', self.employee_id.id), ('status', '=', 'pending')])
-        if not to_be_confirmed:
-            self.employee_id.write({'state': 'confirmed'})
-
-    def confirm_request(self):
-        if self.env.user.has_group('hr.group_hr_manager'):
-            if self.field_type == 'relation':
-                value = int(self.new_value_origin)
-            else:
-                value = self.new_value_origin
-            val = {self.field_name: value}
-            self.employee_id.sudo().write(val)
-            self.status = 'confirmed'
-            self.check_emp_state()
-
-    def reject_request(self):
-        if self.env.user.has_group('hr.group_hr_manager'):
-            self.status = 'rejected'
-            self.check_emp_state()

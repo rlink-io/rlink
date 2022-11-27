@@ -10,6 +10,7 @@ from . import att_payroll
 from . import hr_contract_inherited
 from . import employee_top_row_models
 from . import leaves_inherited
+from . import change_request
 
 
 
