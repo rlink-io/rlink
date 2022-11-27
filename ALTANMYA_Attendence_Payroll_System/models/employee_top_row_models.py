@@ -158,6 +158,7 @@ class Training(models.Model):
 
 class Rotation(models.Model):
     _name = 'hr.rotation'
+    _description = "Employee Rotation"
 
     employee_id = fields.Many2one('hr.employee', required=True)
     date = fields.Date(string='Rotation Date')
@@ -324,13 +325,11 @@ class KPIMonthlyReport(models.Model):
                                  string='Filter By')
     from_year = fields.Selection(
         year_selection,
-        string="Year",
+
 
     )
     to_year = fields.Selection(
         year_selection,
-        string="Year",
-
     )
     year = fields.Selection(
         year_selection,
