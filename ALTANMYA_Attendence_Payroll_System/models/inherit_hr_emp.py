@@ -671,7 +671,7 @@ class ExtendEmpPub(models.Model):
     military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
                                         ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
     insurance_card_number = fields.Char(string='Insurance Card Number')
-    bank_account_number = fields.Char(string='Bank Account Number')
+    bank_account_number = fields.Char(string='Bank Account Number ')
     deduction_ids = fields.One2many('hr.deduction', 'employee_id')
     violation_ids = fields.One2many('hr.violation', 'employee_id')
     bonus_ids = fields.One2many('hr.bonus', 'employee_id')

@@ -87,7 +87,7 @@ class SalaryRaise(models.Model):
     reason = fields.Char(string="Raise Reason")
     raise_value_type = fields.Selection([('fixed_value', 'Fixed Value'), ('percentage_value', 'Percentage Value')],
                                         string='Raise Value Type', required=True)
-    raise_value = fields.Monetary(string="Raise Value")
+    raise_value = fields.Monetary(string="Raise Value ")
     fixed_raise_value = fields.Char(string="Raise Value", compute='_compute_fixed_raise_value')
     date = fields.Date(string="Raise Date")
     employee_id = fields.Many2one('hr.employee', required=True)
@@ -476,7 +476,7 @@ class PointsCreditReport(models.Model):
     display_name = fields.Char(default='Points Credit Report')
     assessment_id = fields.Many2one('hr.assessment', 'points_report_id', required=True, ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    round_limit = fields.Integer(string='Current Round Limit', required=True,
+    round_limit = fields.Integer(string='Round Limit', required=True,
                                  default=get_current_round_limit)  # for Hr manager
     current_round_limit = fields.Integer(string='Current Round Limit', required=True, default=get_current_round_limit)
     is_hr_manager_profile = fields.Boolean(compute="_compute_is_hr_manager_profile", default=False)
