@@ -21,7 +21,7 @@
 					<button name="call_violations_action" class="oe_stat_button" type="object" icon="fa-exclamation-triangle">
 						Violations</button>
 					 <button name="call_trainings_action" class="oe_stat_button" icon="fa-check-square-o" type="object">
-						Trainings
+						Training
 					</button>
 					 <button name="call_days_off_action" class="oe_stat_button" icon="fa-paperclip" type="object">
 						Days Off
@@ -30,7 +30,7 @@
 						Salary Raise
 					</button>
 					 <button name="call_assessment_action" class="oe_stat_button" icon="fa-table" type="object">
-						Assessments
+						Assessment
 					</button>
 					 <button name="call_rotation_action" class="oe_stat_button" icon="fa-exchange" type="object">
 						Rotation

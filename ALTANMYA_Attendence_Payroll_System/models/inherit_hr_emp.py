@@ -93,7 +93,7 @@ class ExtendEmp(models.Model):
         all_employees = self.env['hr.employee'].search([])
         notification_date = str((datetime.datetime.now() + datetime.timedelta(days=3)).date())
         for emp in all_employees:
-            if str(emp.birthday) == notification_date:
+            if str(emp.birthday)[4:] == notification_date[4:]:
                 message = "{name} birthday in {date}".format(name=emp.name, date=str(emp.birthday))
                 self.send_message_to_hr_employees_channel(message)
                 self.send_private_message_to_hr_manager(message)
