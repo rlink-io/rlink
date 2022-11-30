@@ -87,11 +87,7 @@ class SalaryRaise(models.Model):
     reason = fields.Char(string="Raise Reason")
     raise_value_type = fields.Selection([('fixed_value', 'Fixed Value'), ('percentage_value', 'Percentage Value')],
                                         string='Raise Value Type', required=True)
-<<<<<<< HEAD
-    raise_value = fields.Monetary(string="Raise Value")
-=======
     raise_value = fields.Monetary(string="Raise Value ")
->>>>>>> HR
     fixed_raise_value = fields.Char(string="Raise Value", compute='_compute_fixed_raise_value')
     date = fields.Date(string="Raise Date")
     employee_id = fields.Many2one('hr.employee', required=True)
@@ -162,10 +158,7 @@ class Training(models.Model):
 
 class Rotation(models.Model):
     _name = 'hr.rotation'
-<<<<<<< HEAD
-=======
     _description = "Employee Rotation"
->>>>>>> HR
 
     employee_id = fields.Many2one('hr.employee', required=True)
     date = fields.Date(string='Rotation Date')
@@ -199,15 +192,6 @@ class Rotation(models.Model):
 
 class DaysOff(models.Model):
     _name = "hr.days.off"
-<<<<<<< HEAD
-    _description = 'Employee Days off'
-
-    display_name = fields.Char(compute='_compute_display_name')
-    total = fields.Integer(string=" Total")
-    used = fields.Integer(string=" Used")
-    remaining = fields.Integer(string=" Remaining")
-    employee_id = fields.Many2one('hr.employee', required=True)
-=======
     _description = 'Employee Days off - paid time off leaves'
 
     employee_id = fields.Many2one('hr.employee', required=True)
@@ -215,7 +199,6 @@ class DaysOff(models.Model):
     total = fields.Float(string=" Total", compute='compute_total')
     used = fields.Float(string=" Used", compute='compute_total')
     remaining = fields.Float(string=" Remaining", compute='compute_total')
->>>>>>> HR
 
     @api.model
     def create(self, vals):
@@ -227,8 +210,6 @@ class DaysOff(models.Model):
         for days_off in self:
             days_off.display_name = _("%s\'s days off", days_off.employee_id.name)
 
-<<<<<<< HEAD
-=======
     @api.depends('employee_id')
     def compute_total(self):
         for rec in self:
@@ -244,7 +225,6 @@ class DaysOff(models.Model):
 
                         break
 
->>>>>>> HR
 
 class Assessment(models.Model):
     _name = "hr.assessment"
@@ -273,10 +253,7 @@ class Assessment(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
             "ALTANMYA_Attendence_Payroll_System.points_credit_report_action")
-<<<<<<< HEAD
-=======
 
->>>>>>> HR
         action['context'] = dict(self._context, default_assessment_id=self.id)
         action['domain'] = [('assessment_id', '=', self.id)]
         if self.points_report_id:
@@ -349,19 +326,10 @@ class KPIMonthlyReport(models.Model):
                                  string='Filter By')
     from_year = fields.Selection(
         year_selection,
-<<<<<<< HEAD
-        string="Year",
-=======
->>>>>>> HR
 
     )
     to_year = fields.Selection(
         year_selection,
-<<<<<<< HEAD
-        string="Year",
-
-=======
->>>>>>> HR
     )
     year = fields.Selection(
         year_selection,
@@ -403,22 +371,6 @@ class KPIMonthlyReport(models.Model):
     def _yearly_update_monthly_kpi_report_cron(self):
         KPI_report_ids = self.env['kpi.monthly.report'].search([])
         for KPI_report_id in KPI_report_ids:
-<<<<<<< HEAD
-            if KPI_report_id.employee_id.contract_id:
-                if KPI_report_id.employee_id.contract_id.date_end:
-                    if KPI_report_id.employee_id.contract_id.date_end > datetime.today().date():
-                        KPI_report_id.year = str(datetime.now().year)
-                        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-                                       'September',
-                                       'October', 'November', 'December']
-                        for month in months_list:
-                            new_row = self.env['kpi.report.row'].create({
-                                "report_id": KPI_report_id.id,
-                                "year": str(datetime.now().year),
-                                "month": month,
-
-                            })
-=======
             KPI_report_id.year = str(datetime.now().year)
             months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
                            'September',
@@ -429,7 +381,6 @@ class KPIMonthlyReport(models.Model):
                     "year": str(datetime.now().year),
                     "month": month,
                 })
->>>>>>> HR
 
 
 class KPIReportRow(models.Model):
@@ -513,12 +464,6 @@ class PointsCreditReport(models.Model):
                           '&', ('eval_month', 'in', to_months_list), ('eval_year', '=', self.to_year)]
         return domain
 
-<<<<<<< HEAD
-    display_name = fields.Char(default='Points Credit Report')
-    assessment_id = fields.Many2one('hr.assessment', 'points_report_id', required=True, ondelete='cascade')
-    employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    round_limit = fields.Integer(string='Round Limit', default=5, required=True)
-=======
     @api.model
     def get_current_round_limit(self):
         reports = self.env['points.report.row'].search(
@@ -535,7 +480,6 @@ class PointsCreditReport(models.Model):
                                  default=get_current_round_limit)  # for Hr manager
     current_round_limit = fields.Integer(string='Current Round Limit', required=True, default=get_current_round_limit)
     is_hr_manager_profile = fields.Boolean(compute="_compute_is_hr_manager_profile", default=False)
->>>>>>> HR
 
     filter_by = fields.Selection([('year', 'Year'), ('year_and_month', 'Year And Month')],
                                  default='year',
@@ -565,8 +509,6 @@ class PointsCreditReport(models.Model):
                                 string='To')
     rows_ids = fields.One2many('points.report.row', 'report_id', domain=filter_rows)
 
-<<<<<<< HEAD
-=======
     def _compute_is_hr_manager_profile(self):
         for rec in self:
             if rec.employee_id.user_id and rec.employee_id.user_id.has_group('hr.group_hr_manager'):
@@ -574,7 +516,6 @@ class PointsCreditReport(models.Model):
             else:
                 rec.is_hr_manager_profile = False
 
->>>>>>> HR
     @api.model
     def create(self, vals):
         new = super(PointsCreditReport, self).create(vals)
@@ -583,31 +524,18 @@ class PointsCreditReport(models.Model):
                        'October', 'November', 'December']
         current_month = datetime.now().month
         for month in months_list[current_month - 1:]:
-<<<<<<< HEAD
-            points_report_row = self.env['points.report.row'].create({
-=======
             points_report_row = self.env['points.report.row'].sudo().create({
->>>>>>> HR
                 "account": 0,
                 "report_id": new.id,
                 "eval_month": month,
                 "eval_year": str(datetime.now().year),
-<<<<<<< HEAD
-                "date": datetime.now().replace(month=months_list.index(month) + 1),
-                "month_number": months_list.index(month) + 1})
-=======
                 "month_number": months_list.index(month) + 1,
                 "round_limit_row": new.current_round_limit})
->>>>>>> HR
         return new
 
     def write(self, vals):
         if 'round_limit' in vals and vals['round_limit'] < 0:
             raise ValidationError('you can\'t enter negative value for Round Limit')
-<<<<<<< HEAD
-        else:
-            return super(PointsCreditReport, self).write(vals)
-=======
 
         else:
             rec = super(PointsCreditReport, self).write(vals)
@@ -630,27 +558,10 @@ class PointsCreditReport(models.Model):
         for row in updated_rows:
             row.round_limit_row = new_round_limit
             row.compute_account_value()
->>>>>>> HR
 
     def _yearly_update_points_credit_report_cron(self):
         points_report_ids = self.env['points.credit.report'].search([])
         for points_report_id in points_report_ids:
-<<<<<<< HEAD
-            if points_report_id.employee_id.contract_id:
-                if points_report_id.employee_id.contract_id.date_end:
-                    if points_report_id.employee_id.contract_id.date_end > datetime.today().date():
-                        months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-                                       'September',
-                                       'October', 'November', 'December']
-                        for month in months_list:
-                            self.env['points.report.row'].create({
-                                "account": 0,
-                                "report_id": points_report_id.id,
-                                "eval_month": month,
-                                "eval_year": str(datetime.now().year),
-                                "date": datetime.now().replace(month=months_list.index(month) + 1),
-                                "month_number": months_list.index(month) + 1})
-=======
             months_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
                            'September',
                            'October', 'November', 'December']
@@ -662,7 +573,6 @@ class PointsCreditReport(models.Model):
                     "eval_year": str(datetime.now().year),
                     "month_number": months_list.index(month) + 1,
                     "round_limit_row": points_report_id.current_round_limit})
->>>>>>> HR
 
 
 class points_report_row(models.Model):
@@ -692,20 +602,12 @@ class points_report_row(models.Model):
         string="Year",
         required=True
     )
-<<<<<<< HEAD
-    date = fields.Date(string="Full Date")
-=======
->>>>>>> HR
     account = fields.Integer(string='Account')
     eval_kpi = fields.Integer(string='KPI')
     evaluation = fields.Integer(string='Evaluation')
     training = fields.Integer(string='Training')
     eval_total = fields.Integer(string='Total', compute='_compute_total')
-<<<<<<< HEAD
-    round_limit_row = fields.Integer(string='Round Limit', default=0)
-=======
     round_limit_row = fields.Integer(string='Round Limit')
->>>>>>> HR
     is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
     def _compute_is_hr_manager(self):
@@ -717,16 +619,6 @@ class points_report_row(models.Model):
 
     @api.onchange('eval_total')
     def compute_account_value(self):
-<<<<<<< HEAD
-        print('sdfgbhnj', self.eval_month)
-
-        self.round_limit_row = self.report_id.round_limit
-        domain_year = str(int(self.eval_year) + 1) if self.month_number == 12 else self.eval_year
-        domain_month = 0 if self.month_number == 12 else self.month_number
-        domain = [("month_number", ">", domain_month),
-                  ("eval_year", "=", domain_year),
-                  ("report_id", "=", self.report_id._origin.id)]
-=======
         years_list = ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033',
                       '2034', '2035', '2036', '2037', '2038', '2039', '2040', '2041', '2042']
         domain_year = str(int(self.eval_year) + 1) if self.month_number == 12 else self.eval_year
@@ -735,15 +627,12 @@ class points_report_row(models.Model):
                   '|', '&', ("month_number", ">", self.month_number), ("eval_year", "=", domain_year),
                   ("eval_year", "in", next_years)
                   ]
->>>>>>> HR
         next_rows = self.env['points.report.row'].search(domain)
         if next_rows:
             for i, next_row in enumerate(next_rows):
                 previous_row_total = self.eval_total if i == 0 else next_rows[i - 1].eval_total
                 next_row.account = previous_row_total - self.round_limit_row if self.round_limit_row < previous_row_total else 0
 
-<<<<<<< HEAD
-=======
     @api.onchange('account')
     def check_training_value(self):
         if self.account < 0:
@@ -754,7 +643,6 @@ class points_report_row(models.Model):
         if self.eval_kpi < 0:
             raise ValidationError('you can\'t enter negative value for KPI value')
 
->>>>>>> HR
     @api.onchange('training')
     def check_training_value(self):
         if self.training < 0:
@@ -765,14 +653,11 @@ class points_report_row(models.Model):
         if self.evaluation < 0:
             raise ValidationError('you can\'t enter negative value for evaluation value')
 
-<<<<<<< HEAD
-=======
     @api.onchange('eval_total')
     def check_eval_total_value(self):
         if self.eval_total < 0:
             raise ValidationError('you can\'t enter negative value for total value')
 
->>>>>>> HR
     @api.depends('account', 'eval_kpi', 'evaluation', 'training')
     def _compute_total(self):
         for row in self:

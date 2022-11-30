@@ -22,19 +22,11 @@ class ExtendEmp(models.Model):
                                 index=True)
     father_name = fields.Char(string='Father\'s Name')
     mother_name = fields.Char(string='Mother\'s Name')
-<<<<<<< HEAD
-    Landline_number = fields.Char(string='Landline Number')
-    military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
-                                        ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
-    insurance_card_number = fields.Char(string='Insurance Card Number')
-    bank_account_number = fields.Char(string='Bank Account Number')
-=======
     landline_number = fields.Char(string='Landline Number')
     military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
                                         ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
     insurance_card_number = fields.Char(string='Insurance Card Number')
     bank_account_number = fields.Char(string='Bank Account NO.')
->>>>>>> HR
     deduction_ids = fields.One2many('hr.deduction', 'employee_id')
     violation_ids = fields.One2many('hr.violation', 'employee_id')
     bonus_ids = fields.One2many('hr.bonus', 'employee_id')
@@ -47,13 +39,8 @@ class ExtendEmp(models.Model):
                              default='confirmed')
     change_request = fields.One2many('hr.change.request', 'employee_id')
     emp_report = fields.Many2one('ir.attachment')
-<<<<<<< HEAD
-    emp_file = fields.Binary(string='Employee Attachment')
-    emp_img = fields.Binary(string='Image Attachment')
-=======
     employee_att = fields.Binary(string='Employee Attachment')
     emp_image = fields.Binary(string='Image Attachment')
->>>>>>> HR
 
     @api.model
     def create(self, vals):
@@ -66,60 +53,6 @@ class ExtendEmp(models.Model):
                 })
                 points_report = self.env['points.credit.report'].sudo().create({"assessment_id": assessment.id})
                 api_report = self.env['kpi.monthly.report'].sudo().create({"assessment_id": assessment.id})
-<<<<<<< HEAD
-        return new
-
-    def unlink(self):
-
-        self.assessment_id.sudo().unlink()
-        super(ExtendEmp, self).unlink()
-
-    def write(self, values):
-        if 'job_title' in values or 'department_id' in values:
-            new_title = values['job_title'] if 'job_title' in values else self.job_title
-            new_dep = self.env['hr.department'].sudo().search([('id', '=', values['department_id'])],
-                                                              limit=1).id if 'department_id' in values else self.department_id.id
-
-            self.env['hr.rotation'].sudo().create(
-                {'employee_id': self.id,
-                 'date': str(datetime.datetime.now().date()),
-                 'old_title': self.job_title,
-                 'new_title': new_title,
-                 'old_department': self.department_id.id if self.department_id else '',
-                 'new_department': new_dep})
-
-        if 'assessment_id' in values:
-            super(ExtendEmp, self).write(values)
-        elif not self.env.user.has_group('hr.group_hr_manager') and self.user_id.state != 'new':
-            self.create_change_request(values)
-            super(ExtendEmp, self).write({'state': 'confirmation_needed'})
-        else:
-            super(ExtendEmp, self).write(values)
-
-    # def check_hr_employees_group(self):
-    #     hr_department = self.env['hr.department'].search([('name', '=', 'Human Resources')])
-    #     hr_employees_group = self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees')
-    #     if hr_department and self._origin.user_id:
-    #         if self.department_id.id == hr_department.id and not self._origin.user_id.has_group(
-    #                 'ALTANMYA_Attendence_Payroll_System.group_hr_employees'):
-    #             hr_employees_group.write({'users': [(4, self._origin.user_id.id)]})
-    #
-    #         elif self.department_id.id != hr_department.id and self._origin.user_id.has_group(
-    #                 'ALTANMYA_Attendence_Payroll_System.group_hr_employees'):
-    #             hr_employees_group.write({'users': [Command.unlink(self._origin.user_id.id)]})
-
-    # first time run
-    # def _update_hr_employee_group_cron(self):
-    #
-    #     hr_department = self.env['hr.department'].search([('name', '=', 'Human Resources')])
-    #     hr_employees_group = self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees')
-    #     all_employees = self.env['hr.employee'].search([])
-    #     if hr_department:
-    #         for emp in all_employees:
-    #             if emp.department_id and emp.department_id.name == 'Human Resources' and not emp.user_id.has_group(
-    #                     'ALTANMYA_Attendence_Payroll_System.hr_employees_group'):
-    #                 hr_employees_group.write({'users': [(4, emp.user_id.id)]})
-=======
 
             if not employee.days_off_id:
                 days_off = self.env['hr.days.off'].sudo().create({
@@ -155,25 +88,16 @@ class ExtendEmp(models.Model):
              'new_title': new_title,
              'old_department': self.department_id.id if self.department_id else '',
              'new_department': new_dep})
->>>>>>> HR
 
     def _check_employees_birthdays_cron(self):
         all_employees = self.env['hr.employee'].search([])
         notification_date = str((datetime.datetime.now() + datetime.timedelta(days=3)).date())
-<<<<<<< HEAD
-        print(notification_date)
-        for emp in all_employees:
-            if str(emp.birthday) == notification_date:
-=======
         for emp in all_employees:
             if str(emp.birthday)[4:] == notification_date[4:]:
->>>>>>> HR
                 message = "{name} birthday in {date}".format(name=emp.name, date=str(emp.birthday))
                 self.send_message_to_hr_employees_channel(message)
                 self.send_private_message_to_hr_manager(message)
 
-<<<<<<< HEAD
-=======
     def check_emp_continuous_employment(self, employee):
         continuous_employment = True
         sorted_contracts = employee.contract_ids.sorted(key=lambda r: r.date_start)
@@ -188,38 +112,10 @@ class ExtendEmp(models.Model):
                     continuous_employment = False
         return continuous_employment, first_contract
 
->>>>>>> HR
     def _check_permanent_job_date_cron(self):
         all_employees = self.env['hr.employee'].search([])
         notification_date = str((datetime.datetime.now() + datetime.timedelta(days=10)).date())
         for emp in all_employees:
-<<<<<<< HEAD
-            if emp.contract_ids:
-                continous_employment = True
-                sorted_contracts = emp.contract_ids.sorted(key=lambda r: r.date_start)
-                permanent_date = sorted_contracts[0].permanent_period_start_date
-                if len(sorted_contracts) > 1:
-                    for i, contract_id in enumerate(sorted_contracts):
-                        if i != len(sorted_contracts) - 1:
-                            if sorted_contracts[i + 1].date_start and contract_id.date_end:
-                                if (sorted_contracts[i + 1].date_start - contract_id.date_end).days != 1:
-                                    continous_employment = False
-                                    break
-                            else:
-                                continous_employment = False
-                if not continous_employment and emp.contract_id:
-                    permanent_date = emp.contract_id.permanent_period_start_date
-
-                if str(permanent_date) == notification_date:
-                    message = "{name} should get his permanent job in {date} according to \"{contract_name}\" contract".format(
-                        name=emp.name, date=str(contract_id.permanent_period_start_date),
-                        contract_name=contract_id.name)
-                    self.send_message_to_hr_employees_channel(message)
-                    self.send_private_message_to_hr_manager(message)
-
-    def consecutive(self, date1, date2, step=datetime.timedelta(days=1)):
-        return (date1 + step) == date2
-=======
             if emp.contract_ids and len(emp.contract_ids) > 1:
                 is_continuous_employment, first_contract = self.check_emp_continuous_employment(emp)
                 if is_continuous_employment:
@@ -240,7 +136,6 @@ class ExtendEmp(models.Model):
                         )
                         self.send_message_to_hr_employees_channel(message)
                         self.send_private_message_to_hr_manager(message)
->>>>>>> HR
 
     def _check_employee_contract_end_date_cron(self):
         all_employees = self.env['hr.employee'].search([])
@@ -258,16 +153,6 @@ class ExtendEmp(models.Model):
         all_employees = self.env['hr.employee'].search([])
         notification_date = str((datetime.datetime.now() + datetime.timedelta(days=5)).date())
         for emp in all_employees:
-<<<<<<< HEAD
-            if emp.contract_id:
-                contract_id = emp.contract_id
-                if contract_id.probation_period_start_date:
-
-                    if str(contract_id.probation_period_start_date + datetime.timedelta(
-                            days=375)) == notification_date:
-                        message = "{name}\'s anniversary in {date} ".format(
-                            name=emp.name, date=str(contract_id.probation_period_start_date))
-=======
             if emp.contract_ids and len(emp.contract_ids) > 1:
                 is_continuous_employment, first_contract = self.check_emp_continuous_employment(emp)
                 if is_continuous_employment:
@@ -287,7 +172,6 @@ class ExtendEmp(models.Model):
                                                                                                     date=str(
                                                                                                         notification_date),
                                                                                                     contract=emp.contract_id.name)
->>>>>>> HR
                         self.send_message_to_hr_employees_channel(message)
                         self.send_private_message_to_hr_manager(message)
 
@@ -304,11 +188,7 @@ class ExtendEmp(models.Model):
             )
 
     def send_message_to_hr_employees_channel(self, message):
-<<<<<<< HEAD
-        hr_employees_group = self.env.ref('hr.group_hr_user')
-=======
         hr_employees_group = self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees')
->>>>>>> HR
         hr_emp_channel_id = self.env['mail.channel'].search(
             [('group_public_id', 'in', [hr_employees_group.id])])
         notification_ids = [((0, 0, {
@@ -324,10 +204,6 @@ class ExtendEmp(models.Model):
                                        )
 
     def create_change_request(self, values):
-<<<<<<< HEAD
-
-=======
->>>>>>> HR
         previous_value = ''
         for val in values:
             field_name = str(self._fields[val]).split('.')[-1]
@@ -352,11 +228,7 @@ class ExtendEmp(models.Model):
                 new_value = values[val]
                 field_type = 'normal'
 
-<<<<<<< HEAD
-            if field_name not in ['coach_id']:
-=======
             if field_name != 'departure_description' and previous_value != new_value and self.id:
->>>>>>> HR
                 self.env['hr.change.request'].create({
                     'employee_id': self.id,
                     'field_type': field_type,
@@ -445,14 +317,11 @@ class ExtendEmp(models.Model):
 
     def call_days_off_action(self):
         self.ensure_one()
-<<<<<<< HEAD
-=======
         if not self.days_off_id:
             self.env['hr.days.off'].sudo().create({
                 "employee_id": self.id
             })
 
->>>>>>> HR
         action = self.env["ir.actions.actions"]._for_xml_id("ALTANMYA_Attendence_Payroll_System.hr_days_off_action")
         action['context'] = dict(self._context, default_employee_id=self.id, )
         if self.days_off_id:
@@ -540,13 +409,8 @@ class ExtendEmp(models.Model):
                                ['Work Address',
                                 self.address_id.name],
                                ['Work Location', self.work_location_id.name],
-<<<<<<< HEAD
-                               ['Approves', 'sub-title'],
-                               ['Leave Manager', self.leave_manager_id.name],
-=======
                                # ['Approves', 'sub-title'],
                                # ['Leave Manager', self.leave_manager_id.name],
->>>>>>> HR
                                ['Schedule', 'sub-title'],
                                ['Working Hours', self.resource_calendar_id.name],
                                ['Timezone', self.tz],
@@ -554,11 +418,7 @@ class ExtendEmp(models.Model):
                                ['Address', self.address_home_id.name],
                                ['Email', self.private_email],
                                ['Phone', self.phone],
-<<<<<<< HEAD
-                               ['Landline Number', self.Landline_number],
-=======
                                ['Landline Number', self.landline_number],
->>>>>>> HR
                                ['Bank Account Number',
                                 self.bank_account_id.acc_number + ((
                                                                            ' - ' + self.bank_account_id.bank_id.name) if self.bank_account_id.bank_id else '') if self.bank_account_id else ""],
@@ -619,15 +479,9 @@ class ExtendEmp(models.Model):
                                ['Job Position', self.job_id.name],
                                ['Registration Number of the Employee', self.registration_number],
                                ['Insurance Card Number', self.insurance_card_number],
-<<<<<<< HEAD
-                               ['Bank Account Number', self.bank_account_number],
-                               ['Employee Files', 'sub-title'],
-                               ['Image Attachment', self.emp_img],
-=======
                                ['Bank Account NO.', self.bank_account_number],
                                ['Employee Files', 'sub-title'],
                                ['Image Attachment', self.emp_image],
->>>>>>> HR
 
                                )
         return main_worksheet_data
@@ -735,13 +589,8 @@ class ExtendEmp(models.Model):
         evaluation_worksheet.write(0, 5, 'Evaluation', header_format)
         evaluation_worksheet.write(0, 6, 'Total', header_format)
         row = 1
-<<<<<<< HEAD
-        evaluation_rows = self.env['evaluation.table.row'].search(
-            [('table_id', '=', self.assessment_id.evaluation_table_id.id)])
-=======
         evaluation_rows = self.env['points.report.row'].search(
             [('report_id', '=', self.assessment_id.points_report_id.id)])
->>>>>>> HR
         if evaluation_rows:
             for table_row in evaluation_rows:
                 evaluation_worksheet.write(row, 0, table_row.eval_year)
@@ -779,8 +628,6 @@ class ExtendEmp(models.Model):
                 rotation_worksheet.write(row, 6, rotation_row.new_salary)
                 row = row + 1
 
-<<<<<<< HEAD
-=======
     def _update_hr_employees_group_users_cron(self):
 
         all_employees = self.env['hr.employee'].search([])
@@ -807,7 +654,6 @@ class ExtendEmp(models.Model):
         ])
         hr_employees_channel.sudo().write({'channel_last_seen_partner_ids': [(3, channel_member.id)]})
 
->>>>>>> HR
 
 class ExtendEmpPub(models.Model):
     _inherit = 'hr.employee.public'
@@ -817,58 +663,6 @@ class ExtendEmpPub(models.Model):
     att_mode = fields.Selection([('standard', 'Standard mode'), ('daily', 'Daily mode'), ('classic', 'Classic mode'),
                                  ('sequential', 'Sequential mode'), ('shift', 'Shift mode')], string='Attendance Mode',
                                 index=True)
-<<<<<<< HEAD
-    # att_mode = fields.Selection( string='Attendance Mode',compute='_att_mode')
-
-
-#
-#     def _studio_employee_number(self):
-#         for rec in self:
-#             rec.studio_employee_number=super('ExtendEmpPub',rec).employee_id.studio_employee_number
-#
-#     def _att_mode(self):
-#         for rec in self:
-#             rec.studio_employee_number=super('ExtendEmpPub',rec).employee_id.att_mode
-
-
-class EmployeeChangeRequest(models.Model):
-    _name = "hr.change.request"
-    _description = "Employee Change Request"
-
-    employee_id = fields.Many2one('hr.employee')
-    user_id = fields.Many2one(related='employee_id.user_id')
-    field_label = fields.Char(string='Field Name')
-    field_name = fields.Char(string='Field')
-    previous_value = fields.Char(string='Previous Value')
-    previous_value_origin = fields.Char()
-    new_value = fields.Char(string='New Value')
-    new_value_origin = fields.Char()
-    field_type = fields.Char()
-    status = fields.Selection([('pending', 'Pending'), ('confirmed', 'Confirmed'), ('rejected', 'Rejected')],
-                              default='pending')
-
-    def check_emp_state(self):
-        to_be_confirmed = self.env['hr.change.request'].sudo().search(
-            [('employee_id', '=', self.employee_id.id), ('status', '=', 'pending')])
-        if not to_be_confirmed:
-            self.employee_id.write({'state': 'confirmed'})
-
-    def confirm_request(self):
-        if self.env.user.has_group('hr.group_hr_manager'):
-            if self.field_type == 'relation':
-                value = int(self.new_value_origin)
-            else:
-                value = self.new_value_origin
-            val = {self.field_name: value}
-            self.employee_id.sudo().write(val)
-            self.status = 'confirmed'
-            self.check_emp_state()
-
-    def reject_request(self):
-        if self.env.user.has_group('hr.group_hr_manager'):
-            self.status = 'rejected'
-            self.check_emp_state()
-=======
     father_name = fields.Char(string='Father\'s Name')
     mother_name = fields.Char(string='Mother\'s Name')
     landline_number = fields.Char(string='Landline Number')
@@ -890,4 +684,3 @@ class EmployeeChangeRequest(models.Model):
     emp_report = fields.Many2one('ir.attachment')
     # employee_att = fields.Binary(string='Employee Attachment')
     # emp_image = fields.Binary(string='Image Attachment')
->>>>>>> HR

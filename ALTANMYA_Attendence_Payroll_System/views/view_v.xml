@@ -127,17 +127,6 @@
                     <field name="employee_id"/>
                     <field name="date_in"  />
                     <field name="diff_entry"  />
-<<<<<<< HEAD
-                    <button name="btn_ok" class="fa fa-check" type="object" attrs="{'invisible': [('show_in','=',False)]}" />
-<!--                    <button name="btn_ok_u2" class="fa fa-check" type="object" attrs="{'invisible': [('status_u2','not in',('draft'))]}" />-->
-                    <button name="btn_no" class="fa fa-times"  type="object" attrs="{'invisible': [('show_in','=',False)]}"  />
-<!--                    <button name="btn_no_u2" class="fa fa-times"  type="object" attrs="{'invisible': [('status_u2','not in',('draft'))]}"  />-->
-                    <field name="date_out"   />
-                    <field name="diff_Exit"  />
-                    <button name="btn_ok2" class="fa fa-check" type="object" attrs="{'invisible': [('show_out','=',False)]}" />
-<!--                    <button name="btn_ok2_u2" class="fa fa-check" type="object" attrs="{'invisible': [('status2_u2','not in',('draft'))]}" />-->
-                    <button name="btn_no2" class="fa fa-times"  type="object" attrs="{'invisible': [('show_out','=',False)]}"  />
-=======
                     <button name="btn_ok" icon="fa-check" type="object" attrs="{'invisible': [('show_in','=',False)]}" />
 <!--                    <button name="btn_ok_u2" class="fa fa-check" type="object" attrs="{'invisible': [('status_u2','not in',('draft'))]}" />-->
                     <button name="btn_no" icon="fa-times"  type="object" attrs="{'invisible': [('show_in','=',False)]}"  />
@@ -147,7 +136,6 @@
                     <button name="btn_ok2" icon="fa-check" type="object" attrs="{'invisible': [('show_out','=',False)]}" />
 <!--                    <button name="btn_ok2_u2" class="fa fa-check" type="object" attrs="{'invisible': [('status2_u2','not in',('draft'))]}" />-->
                     <button name="btn_no2" icon="fa-times"  type="object" attrs="{'invisible': [('show_out','=',False)]}"  />
->>>>>>> HR
 <!--                    <button name="btn_no2_u2" class="fa fa-times"  type="object" attrs="{'invisible': [('status2_u2','not in',('draft'))]}"  />-->
                     <field name="shift_id"/>
                     <field name="show_in" invisible="1"/>

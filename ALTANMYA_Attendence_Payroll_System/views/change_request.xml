@@ -4,11 +4,7 @@
 			<field name="name">hr.change.request.tree</field>
 			<field name="model">hr.change.request</field>
 			<field name="arch" type="xml">
-<<<<<<< HEAD
-				<tree create="0" edit="0" delete="1">
-=======
 				<tree create="0" edit="0" delete="1" default_order='id desc'>
->>>>>>> HR
 				    <field  name="employee_id" />
 					 <field  name="field_label" />
 <!--                    <field  name="field_name" />-->

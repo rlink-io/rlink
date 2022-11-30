@@ -4,13 +4,8 @@
             <field name="name">HR Employees</field>
             <field name="description">HR Employees Channel</field>
             <field name="public">groups</field>
-<<<<<<< HEAD
-            <field name="group_public_id" ref="ALTANMYA_Attendence_Payroll_System.group_hr_employees"/>
-            <field name="group_ids" eval="[Command.link(ref('ALTANMYA_Attendence_Payroll_System.group_hr_employees'))]"/>
-=======
             <field name="group_public_id" ref="group_hr_employees"/>
             <field name="group_ids" eval="[Command.link(ref('group_hr_employees'))]"/>
->>>>>>> HR
         </record>
     </data>
 </odoo>

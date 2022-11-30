@@ -23,12 +23,6 @@
     'summary': 'This ALTANMYA module integrates Odoo attendance with attendance devices (Suprema and Zk)',
     'description': "End to End process for Attendance Process with devices",
     'category': 'Human Resources/Employees',
-
-    'author': 'ALTANMYA - TECHNOLOGY SOLUTIONS',
-    'company': 'ALTANMYA - TECHNOLOGY SOLUTIONS Part of ALTANMYA GROUP',
-    'website': "https://tech.altanmya.net",
-    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts'],
-
     'author': 'ALTANMYA - TECHNOLOGY SOLUTIONS, Momena Sukkar',
     'company': 'ALTANMYA - TECHNOLOGY SOLUTIONS Part of ALTANMYA GROUP',
     'website': "https://tech.altanmya.net",
@@ -46,9 +40,6 @@
              'views/employee.xml',
              'views/hr_contract_inherited.xml',
              'views/employee_top_row_views.xml',
-
-             'views/change_request.xml'
-
              'views/change_request.xml',
 
              ],
@@ -59,10 +50,7 @@
     'application': True,
     'assets': {
     'web.assets_backend': [
-    '/ALTANMYA_Attendence_Payroll_System\static\src\css\style.css',
-
     '/ALTANMYA_Attendence_Payroll_System/static/src/css/style.css',
-
     ]},
 
 }
