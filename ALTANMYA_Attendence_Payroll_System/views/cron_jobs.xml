@@ -91,6 +91,23 @@
             <field name="code">model._check_employee_anniversary_cron()</field>
         </record>
 
+<<<<<<< HEAD
+=======
+           <record id="_update_hr_employees_group_users_cron" model="ir.cron">
+            <field name="name">Update HR Employees Group Users Cron</field>
+            <field name="numbercall">-1</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="doall">False</field>
+            <field name="active">True</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>minutes</field>
+            <field name="model_id" ref="model_hr_employee"></field>
+            <field name="state">code</field>
+            <field name="code">model._update_hr_employees_group_users_cron()</field>
+        </record>
+
+
+>>>>>>> HR
 
 
     </data>
