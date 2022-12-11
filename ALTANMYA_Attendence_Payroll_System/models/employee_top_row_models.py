@@ -128,10 +128,11 @@ class Training(models.Model):
     _name = "hr.training"
     _description = 'Training'
 
-    training_type = fields.Selection([('internal', 'Internal'), ('external', 'External')], string="Training Type")
+    training_type = fields.Selection([('internal', 'Internal'), ('external', 'External'), ('online', 'Online')], string="Training Type")
     hours = fields.Integer(string=" Hours")
     cost = fields.Monetary(string="Cost")
     trainer = fields.Char(string="Trainer")
+    training_course = fields.Char(string="Training Course")
     training_entity = fields.Many2one('res.partner', string='Training Entity', required=True)
     employee_id = fields.Many2one('hr.employee', required=True)
     company_id = fields.Many2one('res.company', related='employee_id.company_id', readonly=False,
