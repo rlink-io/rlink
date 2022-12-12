@@ -1,9 +1,10 @@
 th[data-name="value"] {text-align:left !important}
-th[data-name="hours"] {text-align:left !important; width: 20% }
-th[data-name="cost"] {text-align:left !important; width: 20% }
-th[data-name="training_type"] { width: 20% }
-th[data-name="trainer"] {width: 20% }
-th[data-name="training_entity"] {width: 20% }
+th[data-name="hours"] {text-align:left !important; width: 16% }
+th[data-name="cost"] {text-align:left !important; width: 16% }
+th[data-name="training_type"] { width: 16% }
+th[data-name="trainer"] {width: 16% }
+th[data-name="training_entity"] {width: 16% }
+th[data-name="training_course"] {width: 16% }
 th[data-name="account"] {width: 14% }
 th[data-name="training"] {width: 14% }
 th[data-name="eval_year"] {width: 14% }

@@ -117,8 +117,8 @@
                     <field  name="hours" class="text-left"/>
                     <field  name="cost" class="text-left"/>
 					<field  name="trainer"/>
+					<field  name="training_course"/>
 					<field  name="training_entity"/>
-
 				</tree>
 			</field>
 		</record>
