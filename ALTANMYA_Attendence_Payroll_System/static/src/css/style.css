@@ -1,0 +1,18 @@
+th[data-name="value"] {text-align:left !important}
+th[data-name="hours"] {text-align:left !important; width: 16% }
+th[data-name="cost"] {text-align:left !important; width: 16% }
+th[data-name="training_type"] { width: 16% }
+th[data-name="trainer"] {width: 16% }
+th[data-name="training_entity"] {width: 16% }
+th[data-name="training_course"] {width: 16% }
+th[data-name="account"] {width: 14% }
+th[data-name="training"] {width: 14% }
+th[data-name="eval_year"] {width: 14% }
+th[data-name="eval_kpi"] {width: 14% }
+th[data-name="evaluation"] {width: 14% }
+th[data-name="eval_total"] {width: 14% }
+th[data-name="eval_month"] {width: 14% }
+th[data-name="kpi"] {text-align:left !important; }
+th[data-name="old_salary"] {text-align:left !important; }
+th[data-name="new_salary"] {text-align:left !important; }
+
