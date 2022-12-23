@@ -66,9 +66,10 @@ class ProjectTaskInherited(models.Model):
 
     @api.constrains('description')
     def _check_len_html(self):
-        print(self.description, len(self.description))
-        if len(self.description) < 25 + 7:
-            raise ValidationError("Description should be more than 25 character")
+
+        for rec in self:
+            if len(self.description) < 25 + 7:
+                raise ValidationError("Description should be more than 25 character")
 
     @api.depends('user_ids')
     def _compute_department_id(self):
@@ -87,9 +88,10 @@ class account_analytic_line_inherited(models.Model):
 
     @api.constrains('name')
     def _check_name_len(self):
-        if len(self.name) < 25:
-            raise ValidationError(
-                "The Description of timesheet line cannot be empty and should be more than 25 characters.")
+        for rec in self:
+            if len(self.name) < 25:
+                raise ValidationError(
+                    "The Description of timesheet line cannot be empty and should be more than 25 characters.")
 
 
 class ReportProjectTaskUserInherited(models.Model):
