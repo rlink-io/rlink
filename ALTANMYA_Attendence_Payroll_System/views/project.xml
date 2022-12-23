@@ -18,6 +18,7 @@
              </xpath>
             <xpath expr="//field[@name='user_ids']" position="after">
 					<field name="requested_by" widget = "many2many_tags"/>
+                <field name = "department_id" invisible="1"/>
              </xpath>
             <xpath expr="//page[@name='extra_info']" position="after">
                 <page name="assessments" string="Assessments">
@@ -30,17 +31,45 @@
                     </group>
                 </page>
             </xpath>
+               <xpath expr="//label[@for='planned_date_begin']" position="replace">
+            <label for="planned_date_from" string="Planned Date"/>
+               </xpath>
+            <xpath expr="//div[hasclass('o_row')]" position="replace">
+                    <div class="o_row">
+                        <field name="planned_date_from" widget="daterange" options='{"related_end_date": "planned_date_to"}'/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('planned_date_from', '=', False), ('planned_date_to', '=', False)]}"/>
+                        <field name="planned_date_to" widget="daterange" options='{"related_start_date": "planned_date_from"}'/>
+                    </div>
+
+               </xpath>
         </field>
     </record>
-<!--     <record id="quick_create_task_inherited_form" model="ir.ui.view">-->
-<!--            <field name="name">project.task.form.quick_create.inherited</field>-->
-<!--            <field name="model">project.task</field>-->
-<!--             <field name="inherit_id" ref="project.quick_create_task_form"/>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <xpath expr="//field[@name='user_ids']" position="after">-->
-<!--					<field name="description"></field>-->
-<!--           </xpath>-->
-<!--            </field>-->
-<!--        </record>-->
+
+    <record id="view_task_project_user_search_inherited" model="ir.ui.view">
+            <field name="name">report.project.task.user.search.inherited</field>
+            <field name="model">report.project.task.user</field>
+             <field name="inherit_id" ref="project.view_task_project_user_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='User']" position="after">
+					 <filter string="Departments" name="Department" context="{'group_by': 'department_id'}"/>
+                </xpath>
+            </field>
+    </record>
+
+
+     <record id="quick_create_task_inherited_form" model="ir.ui.view">
+            <field name="name">project.task.form.quick_create.inherited</field>
+            <field name="model">project.task</field>
+             <field name="inherit_id" ref="project.quick_create_task_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_ids']" position="after">
+					<field name="description"></field>
+           </xpath>
+            </field>
+        </record>
+
+
+
 </data>
 </odoo>
