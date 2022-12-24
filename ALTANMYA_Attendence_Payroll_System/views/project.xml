@@ -61,13 +61,34 @@
      <record id="quick_create_task_inherited_form" model="ir.ui.view">
             <field name="name">project.task.form.quick_create.inherited</field>
             <field name="model">project.task</field>
-             <field name="inherit_id" ref="project.quick_create_task_form"/>
+            <field name="inherit_id" ref="project.quick_create_task_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_ids']" position="after">
 					<field name="description"></field>
-           </xpath>
+                </xpath>
             </field>
-        </record>
+     </record>
+
+     <record id="project.action_view_all_task" model="ir.actions.act_window">
+            <field name="context">{'search_default_my_tasks': 1, 'search_default_stage': 1, 'all_task': 0}</field>
+     </record>
+      <record id="view_task_kanban_inherited_" model="ir.ui.view">
+            <field name="name">project.task.timesheet.kanban.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+             <field name="arch" type="xml">
+                      <xpath expr="//t[@name='planned_hours']" position="replace">
+                              <t name="effective_hours">
+                        <t t-set="badge" t-value=""/>
+                       <t t-set="title" t-value="'Effective hours'"/>
+                        <div t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title">
+                          <field name="effective_hours" widget="timesheet_uom"/>
+                        </div>
+                   </t>
+                      </xpath>
+             </field>
+      </record>
+
 
 
 

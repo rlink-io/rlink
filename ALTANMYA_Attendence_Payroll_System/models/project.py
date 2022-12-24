@@ -1,6 +1,7 @@
 from odoo import api, models, fields, _
 from datetime import datetime, timedelta
 from odoo.exceptions import UserError, ValidationError
+import html2text
 
 
 class ProjectInherited(models.Model):
@@ -66,9 +67,11 @@ class ProjectTaskInherited(models.Model):
 
     @api.constrains('description')
     def _check_len_html(self):
-
+        h = html2text.HTML2Text()
+        h.ignore_links = False
         for rec in self:
-            if len(self.description) < 25 + 7:
+            print(h.handle(rec.description))
+            if len(rec.description) < 32:
                 raise ValidationError("Description should be more than 25 character")
 
     @api.depends('user_ids')
