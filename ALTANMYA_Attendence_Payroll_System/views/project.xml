@@ -18,7 +18,7 @@
              </xpath>
             <xpath expr="//field[@name='user_ids']" position="after">
 					<field name="requested_by" widget = "many2many_tags"/>
-                <field name = "department_id" invisible="1"/>
+                <field name = "department_id" />
              </xpath>
             <xpath expr="//page[@name='extra_info']" position="after">
                 <page name="assessments" string="Assessments">

@@ -1,7 +1,7 @@
 from odoo import api, models, fields, _
 from datetime import datetime, timedelta
 from odoo.exceptions import UserError, ValidationError
-import html2text
+from bs4 import BeautifulSoup
 
 
 class ProjectInherited(models.Model):
@@ -67,16 +67,28 @@ class ProjectTaskInherited(models.Model):
 
     @api.constrains('description')
     def _check_len_html(self):
-        h = html2text.HTML2Text()
-        h.ignore_links = False
+
         for rec in self:
-            print(h.handle(rec.description))
-            if len(rec.description) < 32:
-                raise ValidationError("Description should be more than 25 character")
+            if rec.description:
+                soup = BeautifulSoup(rec.description)
+                soup_text = soup.text.replace('\n', ' ')
+                if len(soup_text) < 25:
+                    raise ValidationError("Description should be more than 25 character")
 
     @api.depends('user_ids')
     def _compute_department_id(self):
         for rec in self:
+            rec.department_id = False
+            if rec.user_ids:
+                for user_id in rec.user_ids:
+                    if user_id.employee_id:
+                        if user_id.employee_id.department_id:
+                            rec.department_id = user_id.employee_id.department_id.id
+                            break
+
+    def _set_department_for_tasks_cron(self):
+        all_tasks = self.env['project.task'].search([])
+        for rec in all_tasks:
             rec.department_id = False
             if rec.user_ids:
                 for user_id in rec.user_ids:
