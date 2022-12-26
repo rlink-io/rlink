@@ -67,7 +67,6 @@ class ProjectTaskInherited(models.Model):
 
     @api.constrains('description')
     def _check_len_html(self):
-
         for rec in self:
             if rec.description:
                 soup = BeautifulSoup(rec.description)
@@ -106,7 +105,7 @@ class account_analytic_line_inherited(models.Model):
     @api.constrains('name')
     def _check_name_len(self):
         for rec in self:
-            if len(self.name) < 25:
+            if len(rec.name) < 25:
                 raise ValidationError(
                     "The Description of timesheet line cannot be empty and should be more than 25 characters.")
 
