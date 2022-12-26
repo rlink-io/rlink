@@ -39,8 +39,8 @@ class ProjectTaskInherited(models.Model):
     requested_by = fields.Many2many('res.users', readonly=True, related='user_ids', string="Requested By")
     department_id = fields.Many2one('hr.department', compute="_compute_department_id", store=True)
     description = fields.Html(required=True)
-    planned_date_from = fields.Date("Start date")
-    planned_date_to = fields.Date("End date")
+    planned_date_from = fields.Date("Start date ")
+    planned_date_to = fields.Date("End date ")
 
     planned_date_begin = fields.Datetime("Start date", tracking=True, task_dependency_tracking=True,
                                          compute="_compute_planned_date_begin")
