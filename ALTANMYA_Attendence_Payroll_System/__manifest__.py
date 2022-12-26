@@ -27,7 +27,7 @@
     'company': 'ALTANMYA - TECHNOLOGY SOLUTIONS Part of ALTANMYA GROUP',
     'website': "https://tech.altanmya.net",
     'license': "LGPL-3",
-    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts', 'hr_holidays', 'project'],
+    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts', 'hr_holidays', 'project', 'project_enterprise'],
     'data': ['views/view_v.xml',
              'security/ir.model.access.csv',
              'security/security.xml',
