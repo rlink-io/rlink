@@ -41,8 +41,10 @@
                         <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('planned_date_from', '=', False), ('planned_date_to', '=', False)]}"/>
                         <field name="planned_date_to" widget="daterange" options='{"related_start_date": "planned_date_from"}'/>
                     </div>
-
                </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
+                <field name="document_attachment"/>
+            </xpath>
         </field>
     </record>
 
@@ -89,8 +91,26 @@
              </field>
       </record>
 
+    		<record model="ir.ui.view" id="project_users_management_form">
+			<field name="name">project.users.management.form</field>
+			<field name="model">project.users.management</field>
+			<field name="arch" type="xml">
+				<form string="Timesheet Document Logging Upload" create="false" delete="false">
+					<group col="2">
+						<group col="2" name="main_group">
+							<field name="optional_users" widget="many2many_avatar_user"/>
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
 
-
-
+    	<record id="project_users_management_window_action" model="ir.actions.act_window">
+			<field name="name">Timesheet Document Logging Upload</field>
+			<field name="res_model">project.users.management</field>
+			<field name="view_mode">form</field>
+            <field name="res_id">1</field>
+		</record>
+   <menuitem action="project_users_management_window_action" id="menu_users_management" name="Users Management" parent="project.menu_project_config" sequence="30" />
 </data>
 </odoo>

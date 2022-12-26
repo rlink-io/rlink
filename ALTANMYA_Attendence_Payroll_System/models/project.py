@@ -101,6 +101,8 @@ class ProjectTaskInherited(models.Model):
 class account_analytic_line_inherited(models.Model):
     _inherit = 'account.analytic.line'
 
+    document_attachment = fields.Binary(string="Document")
+
     @api.constrains('name')
     def _check_name_len(self):
         for rec in self:
@@ -118,3 +120,13 @@ class ReportProjectTaskUserInherited(models.Model):
 
     def _group_by(self):
         return super()._group_by() + ", t.department_id"
+
+
+class UsersManagement(models.Model):
+    _name = "project.users.management"
+    display_name = fields.Char(default='Timesheet Document Logging Upload')
+
+    optional_users = fields.Many2many('res.users')
+
+
+
