@@ -36,7 +36,7 @@ class ProjectTaskInherited(models.Model):
                                 ('4', '4'), ('5', '5')], string='Quality')
     no_repeated_errors = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'),
                                            ('4', '4'), ('5', '5')], string='No Repeated Error')
-    requested_by = fields.Many2many('res.users', readonly=True, related='user_ids', string="Requested By")
+    requested_by = fields.Many2one('hr.employee', compute="_compute_department_id", store=True, string="Requested By", readonly=True)
     department_id = fields.Many2one('hr.department', compute="_compute_department_id", store=True)
     description = fields.Html(required=True)
     planned_date_from = fields.Date("Start date ")
@@ -78,12 +78,14 @@ class ProjectTaskInherited(models.Model):
     def _compute_department_id(self):
         for rec in self:
             rec.department_id = False
+            rec.requested_by = False
             if rec.user_ids:
                 for user_id in rec.user_ids:
                     if user_id.employee_id:
                         if user_id.employee_id.department_id:
                             rec.department_id = user_id.employee_id.department_id.id
-                            break
+                        if user_id.employee_id.parent_id:
+                            rec.requested_by = user_id.employee_id.parent_id.id
 
     def _set_department_for_tasks_cron(self):
         all_tasks = self.env['project.task'].search([])
@@ -94,21 +96,12 @@ class ProjectTaskInherited(models.Model):
                     if user_id.employee_id:
                         if user_id.employee_id.department_id:
                             rec.department_id = user_id.employee_id.department_id.id
-                            break
+                        if user_id.employee_id.parent_id:
+                            rec.requested_by = user_id.employee_id.parent_id.id
 
 
 class account_analytic_line_inherited(models.Model):
     _inherit = 'account.analytic.line'
-
-    # @api.model
-    # def check_if_required(self):
-    #     print('dddddddddddddddd', self)
-    #     optional_users = self.env['project.users.management'].search([('id', '=', 1)]).optional_users
-    #     print(optional_users)
-    #     if optional_users and self.env.user in optional_users.ids:
-    #         return false
-    #     else:
-    #         return true
 
     document_attachment = fields.Binary(string="Document")
     is_document_required = fields.Boolean(default=True)

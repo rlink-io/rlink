@@ -17,7 +17,7 @@
 					</attribute>
              </xpath>
             <xpath expr="//field[@name='user_ids']" position="after">
-					<field name="requested_by" widget = "many2many_tags"/>
+					<field name="requested_by"/>
                 <field name = "department_id" invisible="1"/>
              </xpath>
             <xpath expr="//page[@name='extra_info']" position="after">
@@ -68,7 +68,7 @@
             <field name="inherit_id" ref="project.quick_create_task_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_ids']" position="after">
-					<field name="description" style="height:110px"></field>
+					<field name="description" style="height:110px; width:100%"></field>
                 </xpath>
             </field>
      </record>
