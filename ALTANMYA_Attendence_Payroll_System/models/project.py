@@ -100,7 +100,27 @@ class ProjectTaskInherited(models.Model):
 class account_analytic_line_inherited(models.Model):
     _inherit = 'account.analytic.line'
 
+    # @api.model
+    # def check_if_required(self):
+    #     print('dddddddddddddddd', self)
+    #     optional_users = self.env['project.users.management'].search([('id', '=', 1)]).optional_users
+    #     print(optional_users)
+    #     if optional_users and self.env.user in optional_users.ids:
+    #         return false
+    #     else:
+    #         return true
+
     document_attachment = fields.Binary(string="Document")
+    is_document_required = fields.Boolean(default=True)
+
+    @api.onchange('employee_id')
+    def _check_if_optional_users(self):
+        optional_users_ids = self.env['project.users.management'].search([('id', '=', 1)]).optional_users.ids
+        for rec in self:
+            if rec.employee_id.user_id.id in optional_users_ids:
+                rec.is_document_required = False
+            else:
+                rec.is_document_required = True
 
     @api.constrains('name')
     def _check_name_len(self):
@@ -123,9 +143,8 @@ class ReportProjectTaskUserInherited(models.Model):
 
 class UsersManagement(models.Model):
     _name = "project.users.management"
+    _description = "Project Users Management"
+
     display_name = fields.Char(default='Timesheet Document Logging Upload')
 
     optional_users = fields.Many2many('res.users')
-
-
-

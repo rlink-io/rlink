@@ -37,4 +37,4 @@ points_report_manager_row,points.report.row,model_points_report_row,hr.group_hr_
 access_hr_change_Request_employee,hr.change.request,model_hr_change_request,hr.group_hr_user,1,1,1,1
 hr.access_hr_employee_user,hr.employee user,model_hr_employee,hr.group_hr_user,1,1,0,0
 access_hr_employee_manger,hr.employee manager,model_hr_employee,hr.group_hr_manager,1,1,1,1
-access_project_users_management,project.users.management,model_project_users_management,project.group_project_user,1,1,1,1
+access_project_users_management,project.users.management,model_project_users_management,project.group_project_manager,1,1,0,0

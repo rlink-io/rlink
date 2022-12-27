@@ -120,9 +120,9 @@
             <field name="setting_value">-1</field>
          </record>
 
-<!--          <record id="project_user_management_id" model="project.users.management">-->
-<!--              <field name="name">Timesheet Document Logging Upload</field>-->
-<!--          </record>-->
+          <record id="project_user_management_id" model="project.users.management">
+              <field name="display_name">Timesheet Document Logging Upload</field>
+          </record>
 
     </data>
 

@@ -18,7 +18,7 @@
              </xpath>
             <xpath expr="//field[@name='user_ids']" position="after">
 					<field name="requested_by" widget = "many2many_tags"/>
-                <field name = "department_id" />
+                <field name = "department_id" invisible="1"/>
              </xpath>
             <xpath expr="//page[@name='extra_info']" position="after">
                 <page name="assessments" string="Assessments">
@@ -43,7 +43,9 @@
                     </div>
                </xpath>
             <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
-                <field name="document_attachment"/>
+                 <field name ="is_document_required" invisible="1"/>
+                <field name="document_attachment" widget="binary" attrs="{'required': [('is_document_required','=', True)]}"/>
+
             </xpath>
         </field>
     </record>
@@ -66,7 +68,7 @@
             <field name="inherit_id" ref="project.quick_create_task_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_ids']" position="after">
-					<field name="description"></field>
+					<field name="description" style="height:110px"></field>
                 </xpath>
             </field>
      </record>
