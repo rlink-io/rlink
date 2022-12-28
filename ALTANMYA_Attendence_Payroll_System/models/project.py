@@ -36,7 +36,9 @@ class ProjectTaskInherited(models.Model):
                                 ('4', '4'), ('5', '5')], string='Quality')
     no_repeated_errors = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'),
                                            ('4', '4'), ('5', '5')], string='No Repeated Error')
-    requested_by = fields.Many2one('hr.employee', compute="_compute_department_id", store=True, string="Requested By", readonly=True)
+
+    requested_by = fields.Many2one('hr.employee',
+                                   string="Requested By")
     department_id = fields.Many2one('hr.department', compute="_compute_department_id", store=True)
     description = fields.Html(required=True)
     planned_date_from = fields.Date("Start date ")
@@ -74,18 +76,26 @@ class ProjectTaskInherited(models.Model):
                 if len(soup_text) < 25:
                     raise ValidationError("Description should be more than 25 character")
 
+    def write(self, vals):
+        rec = super(ProjectTaskInherited, self).write(vals)
+        if 'user_ids' in vals and 'requested_by' not in vals:
+            for user_id in self.user_ids:
+                if user_id.employee_id:
+                    if user_id.employee_id.parent_id:
+                        self.requested_by = user_id.employee_id.parent_id.id
+                        break
+        return rec
+
     @api.depends('user_ids')
     def _compute_department_id(self):
         for rec in self:
             rec.department_id = False
-            rec.requested_by = False
             if rec.user_ids:
                 for user_id in rec.user_ids:
                     if user_id.employee_id:
                         if user_id.employee_id.department_id:
                             rec.department_id = user_id.employee_id.department_id.id
-                        if user_id.employee_id.parent_id:
-                            rec.requested_by = user_id.employee_id.parent_id.id
+                            break
 
     def _set_department_for_tasks_cron(self):
         all_tasks = self.env['project.task'].search([])
