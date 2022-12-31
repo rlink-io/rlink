@@ -36,7 +36,6 @@ class ProjectTaskInherited(models.Model):
                                 ('4', '4'), ('5', '5')], string='Quality')
     no_repeated_errors = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'),
                                            ('4', '4'), ('5', '5')], string='No Repeated Error')
-
     requested_by = fields.Many2one('hr.employee',
                                    string="Requested By")
     department_id = fields.Many2one('hr.department', compute="_compute_department_id", store=True)
@@ -47,6 +46,8 @@ class ProjectTaskInherited(models.Model):
     planned_date_begin = fields.Datetime("Start date", tracking=True, task_dependency_tracking=True,
                                          compute="_compute_planned_date_begin")
     planned_date_end = fields.Datetime("End date", compute="_compute_planned_date_end")
+    direct_manager_id = fields.Many2one('res.users', compute="_compute_department_id", store=True)
+    is_direct_manager = fields.Boolean(compute="_compute_is_direct_manager")
 
     @api.depends('planned_date_from')
     def _compute_planned_date_begin(self):
@@ -77,6 +78,8 @@ class ProjectTaskInherited(models.Model):
                     raise ValidationError("Description should be more than 25 character")
 
     def write(self, vals):
+        if 'stage_id' in vals:
+            self.check_stage_restrictions(vals)
         rec = super(ProjectTaskInherited, self).write(vals)
         if 'user_ids' in vals and 'requested_by' not in vals:
             for user_id in self.user_ids:
@@ -86,16 +89,59 @@ class ProjectTaskInherited(models.Model):
                         break
         return rec
 
+    @api.model
+    def create(self, vals_list):
+        rec = super(ProjectTaskInherited, self).create(vals_list)
+        if 'user_ids' in vals_list and not 'requested_by' in vals_list:
+            for user_id in rec.user_ids:
+                if user_id.employee_id:
+                    if user_id.employee_id.parent_id:
+                        rec.requested_by = user_id.employee_id.parent_id.id
+                        break
+        return rec
+
+    def check_stage_restrictions(self, vals):
+        if self.stage_id.name == 'Done' and not self.env.user.has_group('hr.group_hr_manager'):
+            raise UserError(
+                _("You are not allowed to change the stage of task please contact with the HR manager!"))
+        if self.stage_id.name == 'To Check':
+            new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
+            # direct_manager = self.get_direct_manager_user()
+            if new_stage.name == "Done" and self.env.user.id != self.direct_manager_id.id:
+                raise UserError(
+                    _("You are not allowed to change the stage of task please contact with the Direct Manager!"))
+
+    # def get_direct_manager_user(self):
+    #     for user_id in self.user_ids:
+    #         if user_id.employee_id:
+    #             if user_id.employee_id.parent_id and user_id.employee_id.parent_id.user_id:
+    #                 return user_id.employee_id.parent_id.user_id
+    #                 break
+    #             else:
+    #                 return False
+    #         else:
+    #             return False
+
     @api.depends('user_ids')
     def _compute_department_id(self):
         for rec in self:
             rec.department_id = False
+            rec.direct_manager_id = False
             if rec.user_ids:
                 for user_id in rec.user_ids:
                     if user_id.employee_id:
                         if user_id.employee_id.department_id:
                             rec.department_id = user_id.employee_id.department_id.id
-                            break
+                        if user_id.employee_id.parent_id and user_id.employee_id.parent_id.user_id:
+                            rec.direct_manager_id = user_id.employee_id.parent_id.user_id.id
+
+    @api.depends('direct_manager_id')
+    def _compute_is_direct_manager(self):
+        for rec in self:
+            if self.env.user.id == rec.direct_manager_id.id:
+                rec.is_direct_manager = True
+            else:
+                rec.is_direct_manager = False
 
     def _set_department_for_tasks_cron(self):
         all_tasks = self.env['project.task'].search([])
