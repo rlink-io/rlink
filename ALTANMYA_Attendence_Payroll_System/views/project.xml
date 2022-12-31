@@ -26,8 +26,8 @@
                         <group>
                             <field name="is_direct_manager" invisible="1"/>
                             <field name="speed" attrs="{'readonly': [('is_direct_manager','=', False)]}"/>
-                            <field name="quality"/>
-                            <field name="no_repeated_errors"/>
+                            <field name="quality" attrs="{'readonly': [('is_direct_manager','=', False)]}"/>
+                            <field name="no_repeated_errors" attrs="{'readonly': [('is_direct_manager','=', False)]}"/>
                         </group>
                     </group>
                 </page>
