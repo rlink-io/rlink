@@ -36,7 +36,7 @@ class ProjectTaskInherited(models.Model):
                                 ('4', '4'), ('5', '5')], string='Quality')
     no_repeated_errors = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'),
                                            ('4', '4'), ('5', '5')], string='No Repeated Error')
-    requested_by = fields.Many2one('hr.employee',
+    requested_by = fields.Many2one('res.users',
                                    string="Requested By")
     department_id = fields.Many2one('hr.department', compute="_compute_department_id", store=True)
     description = fields.Html(required=True)
@@ -85,7 +85,7 @@ class ProjectTaskInherited(models.Model):
             for user_id in self.user_ids:
                 if user_id.employee_id:
                     if user_id.employee_id.parent_id:
-                        self.requested_by = user_id.employee_id.parent_id.id
+                        self.requested_by = user_id.employee_id.parent_id.user_id.id
                         break
         return rec
 
@@ -96,7 +96,7 @@ class ProjectTaskInherited(models.Model):
             for user_id in rec.user_ids:
                 if user_id.employee_id:
                     if user_id.employee_id.parent_id:
-                        rec.requested_by = user_id.employee_id.parent_id.id
+                        rec.requested_by = user_id.employee_id.parent_id.user_id.id
                         break
         return rec
 
@@ -153,7 +153,7 @@ class ProjectTaskInherited(models.Model):
                         if user_id.employee_id.department_id:
                             rec.department_id = user_id.employee_id.department_id.id
                         if user_id.employee_id.parent_id:
-                            rec.requested_by = user_id.employee_id.parent_id.id
+                            rec.requested_by = user_id.employee_id.parent_id.user_id.id
 
 
 class account_analytic_line_inherited(models.Model):
