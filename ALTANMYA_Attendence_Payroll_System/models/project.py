@@ -10,18 +10,18 @@ class ProjectInherited(models.Model):
     @api.model
     def create(self, vals):
         rec = super(ProjectInherited, self).create(vals)
-        to_do = self.env['project.task.type'].search([('name', '=', 'To Do')], limit=1)
-        doing = self.env['project.task.type'].search([('name', '=', 'Doing')], limit=1)
-        to_check = self.env['project.task.type'].search([('name', '=', 'To Check')], limit=1)
-        done = self.env['project.task.type'].search([('name', '=', 'Done')], limit=1)
-        if not to_do:
-            to_do = self.env['project.task.type'].create({'name': 'To Do', 'sequence': 1})
-        if not doing:
-            doing = self.env['project.task.type'].create({'name': 'Doing', 'sequence': 2})
-        if not to_check:
-            to_check = self.env['project.task.type'].create({'name': 'To Check', 'sequence': 3})
-        if not done:
-            done = self.env['project.task.type'].create({'name': 'Done', 'sequence': 4})
+        # to_do = self.env['project.task.type'].search([('name', '=', 'To Do')], limit=1)
+        # doing = self.env['project.task.type'].search([('name', '=', 'Doing')], limit=1)
+        # to_check = self.env['project.task.type'].search([('name', '=', 'To Check')], limit=1)
+        # done = self.env['project.task.type'].search([('name', '=', 'Done')], limit=1)
+        # if not to_do:
+        to_do = self.env['project.task.type'].create({'name': 'To Do', 'sequence': 1})
+        # if not doing:
+        doing = self.env['project.task.type'].create({'name': 'Doing', 'sequence': 2})
+        # if not to_check:
+        to_check = self.env['project.task.type'].create({'name': 'To Check', 'sequence': 3})
+        # if not done:
+        done = self.env['project.task.type'].create({'name': 'Done', 'sequence': 4})
         type_ids = [to_do.id, doing.id, to_check.id, done.id]
         rec.type_ids = type_ids
         return rec
