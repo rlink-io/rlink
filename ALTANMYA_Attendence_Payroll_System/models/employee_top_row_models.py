@@ -403,6 +403,7 @@ class KPIReportRow(models.Model):
         string="Year",
         required=True
     )
+    
     month = fields.Selection([('January', 'January'), ('February', 'February'),
                               ('March', 'March'), ('April', 'April'),
                               ('May', 'May'), ('June', 'June'),
