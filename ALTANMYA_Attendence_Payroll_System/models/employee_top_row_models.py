@@ -411,7 +411,7 @@ class KPIReportRow(models.Model):
                               ('November', 'November'), ('December', 'December')],
                              required=True, string='Month')
 
-    kpi = fields.Integer(string='KPI', default=0)
+    kpi = fields.Float(string='KPI', default=0)
     is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
     def _compute_is_hr_manager(self):
@@ -603,11 +603,11 @@ class points_report_row(models.Model):
         string="Year",
         required=True
     )
-    account = fields.Integer(string='Account')
-    eval_kpi = fields.Integer(string='KPI')
-    evaluation = fields.Integer(string='Evaluation')
-    training = fields.Integer(string='Training')
-    eval_total = fields.Integer(string='Total', compute='_compute_total')
+    account = fields.Float(string='Account')
+    eval_kpi = fields.Float(string='KPI')
+    evaluation = fields.Float(string='Evaluation')
+    training = fields.Float(string='Training')
+    eval_total = fields.Float(string='Total', compute='_compute_total')
     round_limit_row = fields.Integer(string='Round Limit')
     is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 

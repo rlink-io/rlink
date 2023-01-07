@@ -36,6 +36,8 @@ class ProjectTaskInherited(models.Model):
                                 ('4', '4'), ('5', '5')], string='Quality')
     no_repeated_errors = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'),
                                            ('4', '4'), ('5', '5')], string='No Repeated Error')
+    total = fields.Float(string='Total')
+    task_number = fields.Integer(string='task.No')
     requested_by = fields.Many2one('res.users',
                                    string="Requested By")
     department_id = fields.Many2one('hr.department', compute="_compute_department_id", store=True)
@@ -106,21 +108,14 @@ class ProjectTaskInherited(models.Model):
                 _("You are not allowed to change the stage of task please contact with the HR manager!"))
         if self.stage_id.name == 'To Check':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
-            # direct_manager = self.get_direct_manager_user()
-            if new_stage.name == "Done" and self.env.user.id != self.direct_manager_id.id:
-                raise UserError(
-                    _("You are not allowed to change the stage of task please contact with the Direct Manager!"))
-
-    # def get_direct_manager_user(self):
-    #     for user_id in self.user_ids:
-    #         if user_id.employee_id:
-    #             if user_id.employee_id.parent_id and user_id.employee_id.parent_id.user_id:
-    #                 return user_id.employee_id.parent_id.user_id
-    #                 break
-    #             else:
-    #                 return False
-    #         else:
-    #             return False
+            if new_stage.name == "Done":
+                if self.env.user.id != self.direct_manager_id.id:
+                    raise UserError(
+                        _("You are not allowed to change the stage of task please contact with the Direct Manager!"))
+                else:
+                    if not self.speed or not self.quality or not self.no_repeated_errors:
+                        raise UserError(
+                            _("Please fill the task assessments before moving it to Done stage."))
 
     @api.depends('user_ids')
     def _compute_department_id(self):
@@ -142,6 +137,7 @@ class ProjectTaskInherited(models.Model):
                 rec.is_direct_manager = True
             else:
                 rec.is_direct_manager = False
+
 
     def _set_department_for_tasks_cron(self):
         all_tasks = self.env['project.task'].search([])
@@ -174,7 +170,7 @@ class account_analytic_line_inherited(models.Model):
     @api.constrains('name')
     def _check_name_len(self):
         for rec in self:
-            if len(rec.name) < 25:
+            if rec.project_id and len(rec.name) < 25:
                 raise ValidationError(
                     "The Description of timesheet line cannot be empty and should be more than 25 characters.")
 

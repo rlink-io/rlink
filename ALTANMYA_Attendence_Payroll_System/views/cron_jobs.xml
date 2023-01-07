@@ -104,6 +104,20 @@
             <field name="code">model._update_hr_employees_group_users_cron()</field>
         </record>
 
+      <record id="_create_monthly_project_employee_report_cron" model="ir.cron">
+            <field name="name">Create Monthly Employees Report </field>
+            <field name="numbercall">-1</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="doall">False</field>
+            <field name="active">True</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>months</field>
+             <field name="nextcall">2023-02-01 01:00:00</field>
+            <field name="model_id" ref="model_project_employees_reports"></field>
+            <field name="state">code</field>
+            <field name="code">model._create_monthly_project_employee_report_cron()</field>
+        </record>
+
       <record id="_set_department_for_tasks_cron" model="ir.cron">
             <field name="name">Set Tasks Department</field>
             <field name="numbercall">1</field>
