@@ -3,6 +3,8 @@ from datetime import datetime, timedelta, date
 from odoo.exceptions import UserError, ValidationError
 import locale
 
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
 
 class ProjectEmployeesReports(models.Model):
     _name = 'project.employees.reports'
@@ -52,7 +54,7 @@ class ProjectEmployeesReports(models.Model):
         return task_ids, monthly_total
 
     def _create_monthly_project_employee_report_cron(self):
-        locale.setlocale(locale.LC_ALL, 'en_US')
+
         all_users = self.env['res.users'].sudo().search([('share', '=', False)])
         yesterday_date = date.today() - timedelta(days=1)
         print(yesterday_date.strftime("%B"))
