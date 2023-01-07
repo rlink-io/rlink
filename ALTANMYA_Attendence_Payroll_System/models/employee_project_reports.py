@@ -3,8 +3,6 @@ from datetime import datetime, timedelta, date
 from odoo.exceptions import UserError, ValidationError
 import locale
 
-locale.setlocale(locale.LC_ALL, 'en_US')
-
 
 class ProjectEmployeesReports(models.Model):
     _name = 'project.employees.reports'
@@ -25,7 +23,9 @@ class ProjectEmployeesReports(models.Model):
 
     def _compute_display_name(self):
         for report in self:
-            report.display_name = "{user_name}-{month}-{year}".format(user_name=report.user_id.name, month=dict(report._fields['month'].selection).get(report.month),
+            report.display_name = "{user_name}-{month}-{year}".format(user_name=report.user_id.name,
+                                                                      month=dict(report._fields['month'].selection).get(
+                                                                          report.month),
                                                                       year=report.year)
 
     def compute_task_ids(self, user_id):
@@ -52,6 +52,7 @@ class ProjectEmployeesReports(models.Model):
         return task_ids, monthly_total
 
     def _create_monthly_project_employee_report_cron(self):
+        locale.setlocale(locale.LC_ALL, 'en_US')
         all_users = self.env['res.users'].sudo().search([('share', '=', False)])
         yesterday_date = date.today() - timedelta(days=1)
         print(yesterday_date.strftime("%B"))
@@ -69,7 +70,9 @@ class ProjectEmployeesReports(models.Model):
 
             self.env['project.employees.reports'].sudo().create(vals)
 
-    def fill_Kpi_in_employees_reports(self, user, yesterday_date,monthly_total):
+    def fill_Kpi_in_employees_reports(self, user, yesterday_date, monthly_total):
+
+
         if user.employee_ids:
             for employee_id in user.employee_ids:
                 kpi_report_id = self.env['kpi.monthly.report'].search([('employee_id', '=', employee_id.id)],
