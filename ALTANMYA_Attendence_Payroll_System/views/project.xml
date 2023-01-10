@@ -24,7 +24,7 @@
                                 <group>
                                     <field name="speed" />
                                     <field name="quality" />
-                                    <field name="no_repeated_errors"/>
+                                    <field  name="no_repeated_errors"/>
                                     </group>
                             </group>
                         </page>
