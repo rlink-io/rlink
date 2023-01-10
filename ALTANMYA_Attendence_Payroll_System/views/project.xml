@@ -31,6 +31,26 @@
                         </group>
                     </group>
                 </page>
+                <page name="notes" string="Notes">
+                            <field name="message_ids" readonly="1">
+                                    <tree>
+                                        <field name ="author_id"></field>
+                                        <field name ="date"></field>
+                                        <field name="body"></field>
+                                    </tree>
+                            </field>
+
+                </page>
+                 <page name="messages" string="Messages">
+                             <field name="message_ids" readonly="1" domain="[('subtype_id','=','1')]">
+                                <tree>
+                                        <field name ="author_id"></field>
+                                        <field name ="date"></field>
+                                        <field name="body"></field>
+                                    </tree>
+                            </field>
+
+                </page>
             </xpath>
                <xpath expr="//label[@for='planned_date_begin']" position="replace">
             <label for="planned_date_from" string="Planned Date"/>
@@ -44,8 +64,7 @@
                     </div>
                </xpath>
             <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
-                 <field name ="is_document_required" invisible="1"/>
-                <field name="document_attachment" widget="binary" attrs="{'required': [('is_document_required','=', True)]}"/>
+                <field name="document_attachment" widget="binary" />
             </xpath>
             <xpath  expr="//page[@name='task_dependencies']//field//tree//button[@name='action_open_task']" position="attributes" >
                 <attribute name="attrs">

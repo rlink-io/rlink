@@ -70,6 +70,18 @@ class ProjectTaskInherited(models.Model):
             else:
                 rec.planned_date_end = False
 
+    @api.constrains('timesheet_ids')
+    def _check_timesheet_name_len(self):
+        for rec in self:
+            for timesheet in rec.timesheet_ids:
+                if len(timesheet.name) < 25:
+                    raise ValidationError(
+                        "The Description of timesheet line cannot be empty and should be more than 25 characters.")
+                optional_users_ids = self.env['project.users.management'].search([('id', '=', 1)]).optional_users.ids
+                if timesheet.employee_id.user_id.id not in optional_users_ids and timesheet.document_attachment == False:
+                    raise ValidationError(
+                        "The Document in timesheet line is required.")
+
     @api.constrains('description')
     def _check_len_html(self):
         for rec in self:
@@ -138,7 +150,6 @@ class ProjectTaskInherited(models.Model):
             else:
                 rec.is_direct_manager = False
 
-
     def _set_department_for_tasks_cron(self):
         all_tasks = self.env['project.task'].search([])
         for rec in all_tasks:
@@ -156,23 +167,6 @@ class account_analytic_line_inherited(models.Model):
     _inherit = 'account.analytic.line'
 
     document_attachment = fields.Binary(string="Document")
-    is_document_required = fields.Boolean(default=True)
-
-    @api.onchange('employee_id')
-    def _check_if_optional_users(self):
-        optional_users_ids = self.env['project.users.management'].search([('id', '=', 1)]).optional_users.ids
-        for rec in self:
-            if rec.employee_id.user_id.id in optional_users_ids:
-                rec.is_document_required = False
-            else:
-                rec.is_document_required = True
-
-    @api.constrains('name')
-    def _check_name_len(self):
-        for rec in self:
-            if rec.project_id and len(rec.name) < 25:
-                raise ValidationError(
-                    "The Description of timesheet line cannot be empty and should be more than 25 characters.")
 
 
 class ReportProjectTaskUserInherited(models.Model):

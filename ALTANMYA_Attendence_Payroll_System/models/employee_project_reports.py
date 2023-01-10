@@ -45,7 +45,7 @@ class ProjectEmployeesReports(models.Model):
                     and task.date_last_stage_update.year == yesterday_date.year:
                 task_number = task_number + 1
                 task.task_number = task_number
-                task.total = (int(task.speed) * 1.5 + int(task.quality) * 2 + int(task.no_repeated_errors)) / 4.5
+                task.total = ((int(task.speed) * 1.5) + (int(task.quality) * 2) + (int(task.no_repeated_errors))) / 4.5
                 sum_total += task.total
                 task_ids.append(task.id)
         if task_ids:
@@ -73,7 +73,6 @@ class ProjectEmployeesReports(models.Model):
             self.env['project.employees.reports'].sudo().create(vals)
 
     def fill_Kpi_in_employees_reports(self, user, yesterday_date, monthly_total):
-
 
         if user.employee_ids:
             for employee_id in user.employee_ids:
