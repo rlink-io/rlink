@@ -123,23 +123,7 @@
 			</field>
 		</record>
 
-<!--        <record model="ir.ui.view" id="hr_training_form">-->
-<!--			<field name="name">hr.training.form</field>-->
-<!--			<field name="model">hr.training</field>-->
-<!--			<field name="arch" type="xml">-->
-<!--				<form string="Training">-->
-<!--					<group col="2">-->
-<!--						<group col="2" name="main_group">-->
-<!--							<field name="training_type" />-->
-<!--							<field name="hours" />-->
-<!--							<field name="cost" />-->
-<!--							<field name="trainer" />-->
-<!--                            <field name="training_entity" />-->
-<!--						</group>-->
-<!--					</group>-->
-<!--				</form>-->
-<!--			</field>-->
-<!--		</record>-->
+
 
 		<record id="hr_training_action" model="ir.actions.act_window">
 			<field name="name">Training</field>

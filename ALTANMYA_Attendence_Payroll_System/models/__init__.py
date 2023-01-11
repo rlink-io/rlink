@@ -13,6 +13,7 @@ from . import employee_top_row_models
 from . import leaves_inherited
 from . import change_request
 from . import project
+from . import employee_project_reports
 
 
 

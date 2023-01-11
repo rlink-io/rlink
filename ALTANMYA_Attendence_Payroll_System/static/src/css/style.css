@@ -15,4 +15,6 @@ th[data-name="eval_month"] {width: 14% }
 th[data-name="kpi"] {text-align:left !important; }
 th[data-name="old_salary"] {text-align:left !important; }
 th[data-name="new_salary"] {text-align:left !important; }
-
+th[data-name="total"] {text-align:left !important; }
+th[data-name="task_number"] {text-align:left !important; }
+.o_form_view.o_xxs_form_view .o_group.o_inner_group > tbody > tr > td {width: 100% !important;}
