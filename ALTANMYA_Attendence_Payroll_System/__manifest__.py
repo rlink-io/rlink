@@ -29,7 +29,6 @@
     'license': "LGPL-3",
     'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts', 'hr_holidays', 'project', 'project_enterprise', 'hr_timesheet'],
     'data': ['views/view_v.xml',
-             'security/ir.model.access.csv',
              'security/security.xml',
              'security/ir.model.access.csv',
              'views/cron_jobs.xml',
