@@ -10,17 +10,13 @@ class ProjectInherited(models.Model):
     @api.model
     def create(self, vals):
         rec = super(ProjectInherited, self).create(vals)
-        # to_do = self.env['project.task.type'].search([('name', '=', 'To Do')], limit=1)
-        # doing = self.env['project.task.type'].search([('name', '=', 'Doing')], limit=1)
-        # to_check = self.env['project.task.type'].search([('name', '=', 'To Check')], limit=1)
-        # done = self.env['project.task.type'].search([('name', '=', 'Done')], limit=1)
-        # if not to_do:
+
         to_do = self.env['project.task.type'].create({'name': 'To Do', 'sequence': 1})
-        # if not doing:
+
         doing = self.env['project.task.type'].create({'name': 'Doing', 'sequence': 2})
-        # if not to_check:
+
         to_check = self.env['project.task.type'].create({'name': 'To Check', 'sequence': 3})
-        # if not done:
+
         done = self.env['project.task.type'].create({'name': 'Done', 'sequence': 4})
         type_ids = [to_do.id, doing.id, to_check.id, done.id]
         rec.type_ids = type_ids
@@ -50,6 +46,23 @@ class ProjectTaskInherited(models.Model):
     planned_date_end = fields.Datetime("End date", compute="_compute_planned_date_end")
     direct_manager_id = fields.Many2one('res.users', compute="_compute_department_id", store=True)
     is_direct_manager = fields.Boolean(compute="_compute_is_direct_manager")
+    notes_ids = fields.One2many('mail.message', compute="_compute_notes")
+    messages_ids = fields.One2many('mail.message', compute="_compute_notes")
+
+    @api.depends('message_ids')
+    def _compute_notes(self):
+        notes = []
+        messages = []
+        for rec in self:
+            if rec.message_ids:
+                for message in rec.message_ids:
+                    if message.subtype_id.name == 'Discussions':
+                        messages.append(message.id)
+                    else:
+                        notes.append(message.id)
+        print(notes, messages)
+        rec.notes_ids = [(6, 0, notes)]
+        rec.messages_ids = [(6, 0, messages)]
 
     @api.depends('planned_date_from')
     def _compute_planned_date_begin(self):

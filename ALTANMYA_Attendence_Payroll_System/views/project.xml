@@ -32,20 +32,22 @@
                     </group>
                 </page>
                 <page name="notes" string="Notes">
-                            <field name="message_ids" readonly="1">
+                            <field name="notes_ids" readonly="1">
                                     <tree>
                                         <field name ="author_id"></field>
                                         <field name ="date"></field>
+                                        <field name ="subject"></field>
                                         <field name="body"> </field>
                                     </tree>
                             </field>
 
                 </page>
                  <page name="messages" string="Messages">
-                             <field name="message_ids" readonly="1" domain="[('subtype_id','=','1')]">
+                              <field name="messages_ids" readonly="1">
                                 <tree>
                                         <field name ="author_id"></field>
                                         <field name ="date"></field>
+                                     <field name ="subject"></field>
                                         <field name="body"></field>
                                     </tree>
                             </field>
