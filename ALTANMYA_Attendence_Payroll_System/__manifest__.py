@@ -41,11 +41,16 @@
              'views/hr_contract_inherited.xml',
              'views/employee_top_row_views.xml',
              'views/change_request.xml',
-             'views/project.xml'
+             'views/project.xml',
+             'views/employee_project_reports.xml'
 
              ],
     'demo': [],
     'qweb': [],
+    'web.assets_qweb': [
+        'mail/static/src/xml/*.xml',
+
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,
