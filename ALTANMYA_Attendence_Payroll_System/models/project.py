@@ -49,7 +49,6 @@ class ProjectTaskInherited(models.Model):
     notes_ids = fields.One2many('mail.message', compute="_compute_notes")
     messages_ids = fields.One2many('mail.message', compute="_compute_notes")
 
-    @api.depends('message_ids')
     def _compute_notes(self):
         notes = []
         messages = []
@@ -60,7 +59,6 @@ class ProjectTaskInherited(models.Model):
                         messages.append(message.id)
                     else:
                         notes.append(message.id)
-        print(notes, messages)
         rec.notes_ids = [(6, 0, notes)]
         rec.messages_ids = [(6, 0, messages)]
 
@@ -200,3 +198,52 @@ class UsersManagement(models.Model):
     display_name = fields.Char(default='Timesheet Document Logging Upload')
 
     optional_users = fields.Many2many('res.users')
+
+
+class mail_message_inherited(models.Model):
+    _inherit = 'mail.message'
+
+    note = fields.Html(string='Note')
+
+    @api.model
+    def create(self, vals_list):
+        rec = super(mail_message_inherited, self).create(vals_list)
+        if rec.model == 'project.task':
+            if rec.subtype_id.name != 'Discussions':
+                self.get_message_note(rec)
+            task_id = self.env['project.task'].search([('id', '=', int(rec.res_id))])
+
+            for user in task_id.user_ids:
+                if user.partner_id.id != rec.author_id.id:
+                    channel = self.env['mail.channel'].channel_get(
+                        [user.partner_id.id])
+                    channel_id = self.env['mail.channel'].browse(channel["id"])
+                    channel_id.message_post(
+                        body=('Task :{name}\n message: {message} '.format(
+                            name=task_id.name,
+                            message=rec.body if rec.subtype_id.name == 'Discussions' else rec.note,
+                            message_type='comment',
+                            subtype_xmlid='mail.mt_comment',
+                        )))
+        return rec
+    def get_message_note(self, message):
+        if message.body:
+            message.note = message.body
+        else:
+            message.note = message.subtype_id.description if message.subtype_id.description else ''
+            if message.sudo().tracking_value_ids:
+                for value in message.tracking_value_ids:
+                    message.note = message.note + '   ' + value.field_desc + ": "
+                    if value.field_type == 'datetime':
+                        message.note = message.note + str(value.old_value_datetime) + ' => ' + str(
+                            value.new_value_datetime)
+                    elif value.field_type == "float":
+                        message.note = message.note + str(value.old_value_float) + ' => ' + str(
+                            value.new_value_float)
+                    elif value.field_type == "integer":
+                        message.note = message.note + str(value.old_value_integer) + ' => ' + str(
+                            value.new_value_integer)
+                    else:
+                        message.note = message.note + str(value.old_value_char) + ' => ' + str(
+                            value.new_value_char)
+        return message.note

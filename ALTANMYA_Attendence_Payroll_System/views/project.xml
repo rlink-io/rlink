@@ -32,26 +32,23 @@
                     </group>
                 </page>
                 <page name="notes" string="Notes">
-                            <field name="notes_ids" readonly="1">
+                            <field name="notes_ids" readonly="1" style="pointer-events:none;">
                                     <tree>
                                         <field name ="author_id"></field>
                                         <field name ="date"></field>
                                         <field name ="subject"></field>
-                                        <field name="body"> </field>
+                                        <field name="note"> </field>
                                     </tree>
                             </field>
-
                 </page>
                  <page name="messages" string="Messages">
-                              <field name="messages_ids" readonly="1">
+                              <field name="messages_ids" readonly="1" style="pointer-events:none;">
                                 <tree>
                                         <field name ="author_id"></field>
                                         <field name ="date"></field>
-                                     <field name ="subject"></field>
-                                        <field name="body"></field>
+                                        <field name="body" ></field>
                                     </tree>
                             </field>
-
                 </page>
             </xpath>
                <xpath expr="//label[@for='planned_date_begin']" position="replace">
