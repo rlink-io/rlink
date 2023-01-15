@@ -46,8 +46,8 @@ class ProjectTaskInherited(models.Model):
     planned_date_end = fields.Datetime("End date", compute="_compute_planned_date_end")
     direct_manager_id = fields.Many2one('res.users', compute="_compute_department_id", store=True)
     is_direct_manager = fields.Boolean(compute="_compute_is_direct_manager")
-    notes_log_ids = fields.One2many('mail.message', 'res_id', string="Notes", domain=[('subtype_id', '!=', 1)])
-    messages_log_ids = fields.One2many('mail.message', 'res_id', string='Messages', domain=[('subtype_id', '=', 1)])
+    notes_ids = fields.One2many('mail.message', 'res_id', string="Notes", domain=[('subtype_id', '!=', 1)])
+    messages_ids = fields.One2many('mail.message', 'res_id', string='Messages', domain=[('subtype_id', '=', 1)])
 
     @api.depends('planned_date_from')
     def _compute_planned_date_begin(self):
