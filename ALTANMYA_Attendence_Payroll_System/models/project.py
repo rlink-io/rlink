@@ -46,21 +46,8 @@ class ProjectTaskInherited(models.Model):
     planned_date_end = fields.Datetime("End date", compute="_compute_planned_date_end")
     direct_manager_id = fields.Many2one('res.users', compute="_compute_department_id", store=True)
     is_direct_manager = fields.Boolean(compute="_compute_is_direct_manager")
-    notes_ids = fields.One2many('mail.message', compute="_compute_notes")
-    messages_ids = fields.One2many('mail.message', compute="_compute_notes")
-
-    def _compute_notes(self):
-        notes = []
-        messages = []
-        for rec in self:
-            if rec.message_ids:
-                for message in rec.message_ids:
-                    if message.subtype_id.name == 'Discussions':
-                        messages.append(message.id)
-                    else:
-                        notes.append(message.id)
-        rec.notes_ids = [(6, 0, notes)]
-        rec.messages_ids = [(6, 0, messages)]
+    notes_log_ids = fields.One2many('mail.message', 'res_id', string="Notes", domain=[('subtype_id', '!=', 1)])
+    messages_log_ids = fields.One2many('mail.message', 'res_id', string='Messages', domain=[('subtype_id', '=', 1)])
 
     @api.depends('planned_date_from')
     def _compute_planned_date_begin(self):
@@ -212,38 +199,54 @@ class mail_message_inherited(models.Model):
             if rec.subtype_id.name != 'Discussions':
                 self.get_message_note(rec)
             task_id = self.env['project.task'].search([('id', '=', int(rec.res_id))])
+            for user in task_id.message_partner_ids:
+                if user.id != rec.author_id.id:
 
-            for user in task_id.user_ids:
-                if user.partner_id.id != rec.author_id.id:
                     channel = self.env['mail.channel'].channel_get(
-                        [user.partner_id.id])
+                        [user.id])
                     channel_id = self.env['mail.channel'].browse(channel["id"])
-                    channel_id.message_post(
-                        body=('Task :{name}\n message: {message} '.format(
+                    if rec.subtype_id.name == 'Discussions':
+                        body = ('{author} sent a message In {name} Task chatter with content: {message} '.format(
+                            author=rec.author_id.name,
                             name=task_id.name,
-                            message=rec.body if rec.subtype_id.name == 'Discussions' else rec.note,
+                            message=rec.body,
                             message_type='comment',
-                            subtype_xmlid='mail.mt_comment',
-                        )))
+                            subtype_xmlid='mail.mt_comment'))
+                    else:
+                        body = ('{author} wrote a note In {name} Task chatter with content: {note} '.format(
+                            author=rec.author_id.name,
+                            name=task_id.name,
+                            note=rec.note,
+                            message_type='comment',
+                            subtype_xmlid='mail.mt_comment'))
+
+                    channel_id.message_post(body=body)
         return rec
+
     def get_message_note(self, message):
         if message.body:
             message.note = message.body
         else:
-            message.note = message.subtype_id.description if message.subtype_id.description else ''
+            message.note = (
+                    """<div><p>""" + message.subtype_id.description + """</p></div>""") if message.subtype_id.description else """"""
             if message.sudo().tracking_value_ids:
                 for value in message.tracking_value_ids:
-                    message.note = message.note + '   ' + value.field_desc + ": "
+                    message.note = """<div>""" + str(message.note) + """</div><span>""" + str(
+                        value.field_desc) + """<span>:  </span> </span>"""
                     if value.field_type == 'datetime':
-                        message.note = message.note + str(value.old_value_datetime) + ' => ' + str(
-                            value.new_value_datetime)
+                        message.note = str(message.note) + """<span>""" + str(
+                            value.old_value_datetime) + """</span><span>  =>  """ + str(
+                            value.new_value_datetime) + """</span>"""
                     elif value.field_type == "float":
-                        message.note = message.note + str(value.old_value_float) + ' => ' + str(
-                            value.new_value_float)
+                        message.note = str(message.note) + """<span>""" + str(
+                            value.old_value_float) + """</span><span>  =>  """ + str(
+                            value.new_value_float) + + """</span>"""
                     elif value.field_type == "integer":
-                        message.note = message.note + str(value.old_value_integer) + ' => ' + str(
-                            value.new_value_integer)
+                        message.note = str(message.note) + """<span>""" + str(
+                            value.old_value_integer) + """</span><span>  =>  """ + str(
+                            value.new_value_integer) + """</span>"""
                     else:
-                        message.note = message.note + str(value.old_value_char) + ' => ' + str(
-                            value.new_value_char)
+                        message.note = str(message.note) + """<span>""" + str(
+                            value.old_value_char) + """</span><span>  =>  """ + str(
+                            value.new_value_char) + """</span>"""
         return message.note

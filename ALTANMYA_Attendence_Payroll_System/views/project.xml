@@ -32,21 +32,21 @@
                     </group>
                 </page>
                 <page name="notes" string="Notes">
-                            <field name="notes_ids" readonly="1" style="pointer-events:none;">
+                            <field name="notes_log_ids" readonly="1" style="pointer-events:none;">
                                     <tree>
                                         <field name ="author_id"></field>
                                         <field name ="date"></field>
-                                        <field name ="subject"></field>
-                                        <field name="note"> </field>
+<!--                                        <field name ="subject"></field>-->
+                                        <field name="note" style="white-space: normal;"> </field>
                                     </tree>
                             </field>
                 </page>
                  <page name="messages" string="Messages">
-                              <field name="messages_ids" readonly="1" style="pointer-events:none;">
+                              <field name="messages_log_ids" readonly="1" style="pointer-events:none;">
                                 <tree>
                                         <field name ="author_id"></field>
                                         <field name ="date"></field>
-                                        <field name="body" ></field>
+                                        <field name="body" style="white-space: normal;" ></field>
                                     </tree>
                             </field>
                 </page>
