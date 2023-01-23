@@ -217,7 +217,7 @@ class DaysOff(models.Model):
         for rec in self:
             rec.total = rec.used = rec.remaining = 0.0
             paid_time_off_type_id = self.env['hr.leave.type'].sudo().search(
-                [('name', '=', 'Paid Time Off')])
+                [('name', '=', 'Paid Time Off')], limit=1)
             if paid_time_off_type_id:
                 all_allocations = self.env['hr.leave.allocation'].sudo().search(
                     [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', paid_time_off_type_id.id)])
