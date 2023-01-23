@@ -128,7 +128,8 @@ class Training(models.Model):
     _name = "hr.training"
     _description = 'Training'
 
-    training_type = fields.Selection([('internal', 'Internal'), ('external', 'External'), ('online', 'Online')], string="Training Type")
+    training_type = fields.Selection([('internal', 'Internal'), ('external', 'External'), ('online', 'Online')],
+                                     string="Training Type")
     hours = fields.Integer(string=" Hours")
     cost = fields.Monetary(string="Cost")
     trainer = fields.Char(string="Trainer")
@@ -215,16 +216,18 @@ class DaysOff(models.Model):
     def compute_total(self):
         for rec in self:
             rec.total = rec.used = rec.remaining = 0.0
-            all_allocations = self.env['hr.leave.allocation'].sudo().search(
-                [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', 1)])
-            if all_allocations:
-                for allocation in all_allocations:
-                    if allocation.date_from <= datetime.now().date() <= allocation.date_to:
-                        rec.sudo().write({'total': allocation.max_leaves,
-                                          'used': allocation.leaves_taken,
-                                          'remaining': allocation.max_leaves - allocation.leaves_taken})
-
-                        break
+            paid_time_off_type_id = self.env['hr.leave.type'].sudo().search(
+                [('name', '=', 'Paid Time Off')])
+            if paid_time_off_type_id:
+                all_allocations = self.env['hr.leave.allocation'].sudo().search(
+                    [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', paid_time_off_type_id.id)])
+                if all_allocations:
+                    for allocation in all_allocations:
+                        if allocation.date_from <= datetime.now().date() <= allocation.date_to:
+                            rec.sudo().write({'total': allocation.max_leaves,
+                                              'used': allocation.leaves_taken,
+                                              'remaining': allocation.max_leaves - allocation.leaves_taken})
+                            break
 
 
 class Assessment(models.Model):
