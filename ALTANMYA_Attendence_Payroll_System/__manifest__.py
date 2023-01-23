@@ -42,7 +42,8 @@
              'views/employee_top_row_views.xml',
              'views/change_request.xml',
              'views/project.xml',
-             'views/employee_project_reports.xml'
+             'views/employee_project_reports.xml',
+            'views/hr_payslip_inherited.xml',
 
              ],
     'demo': [],
