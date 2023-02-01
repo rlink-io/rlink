@@ -12,31 +12,5 @@ fp_logerror_admin,fp.logerror,model_fp_logerror,ALTANMYA_Attendence_Payroll_Syst
 od_fp_settings_admin,od.fp.settings,model_od_fp_settings,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 od_attpayroll_admin,od.attpayroll,model_od_attpayroll,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_admin,1,1,1,1
 od_attpayroll_manager,od.attpayroll,model_od_attpayroll,ALTANMYA_Attendence_Payroll_System.altanmya_fgp_manager,1,1,1,0
-hr_user_access_deduction,hr.deduction,model_hr_deduction,hr.group_hr_user,1,0,0,0
-hr_manager_access_deduction,hr.deduction,model_hr_deduction,hr.group_hr_manager,1,1,1,1
-hr_user_access_rotation,hr.rotation,model_hr_rotation,hr.group_hr_user,1,0,0,0
-hr_manager_access_rotation,hr.rotation,model_hr_rotation,hr.group_hr_manager,1,1,1,1
-hr_user_access_violation,hr.violation,model_hr_violation,hr.group_hr_user,1,0,0,0
-hr_manger_access_violation,hr.violation,model_hr_violation,hr.group_hr_manager,1,1,1,1
-hr_user_access_training,hr.training,model_hr_training,hr.group_hr_user,1,0,0,0
-hr_manager_access_training,hr.training,model_hr_training,hr.group_hr_manager,1,1,1,1
-hr_days_off_manager_access,hr.days.off,model_hr_days_off,hr.group_hr_manager,1,1,1,1
-hr_days_off_user_access,hr.days.off,model_hr_days_off,hr.group_hr_user,1,0,0,0
-hr_salary_raise_user_access,hr.salary.raise,model_hr_salary_raise,hr.group_hr_user,1,0,0,0
-hr_salary_raise_manager_access,hr.salary.raise,model_hr_salary_raise,hr.group_hr_manager,1,1,1,1
-hr_advanced_payment,hr.advanced.payment,model_hr_advanced_payment,hr.group_hr_user,1,1,1,1
-hr_user_access_bonus,hr.bonus,model_hr_bonus,hr.group_hr_user,1,0,0,0
-hr_manager_access_bonus,hr.bonus,model_hr_bonus,hr.group_hr_manager,1,1,1,1
-hr_assessment,hr.assessment,model_hr_assessment,hr.group_hr_user,1,0,0,0
-kpi_monthly_report,kpi.monthly.report,model_kpi_monthly_report,hr.group_hr_user,1,1,0,1
-kpi_report_user_row,kpi.report.row,model_kpi_report_row,hr.group_hr_user,1,1,0,0
-kpi_report_manager_row,kpi.report.row,model_kpi_report_row,hr.group_hr_manager,1,1,0,0
-points_credit_report,points.credit.report,model_points_credit_report,hr.group_hr_user,1,1,0,1
-points_report_user_row,points.report.row,model_points_report_row,hr.group_hr_user,1,1,0,0
-points_report_manager_row,points.report.row,model_points_report_row,hr.group_hr_manager,1,1,0,0
-access_hr_change_Request_employee,hr.change.request,model_hr_change_request,hr.group_hr_user,1,1,1,1
-hr.access_hr_employee_user,hr.employee user,model_hr_employee,hr.group_hr_user,1,1,0,0
-access_hr_employee_manger,hr.employee manager,model_hr_employee,hr.group_hr_manager,1,1,1,1
-access_project_users_management,project.users.management,model_project_users_management,project.group_project_manager,1,1,0,0
-access_project_employees_reports,project.employees.reports,model_project_employees_reports,hr.group_hr_manager,1,0,0,0
-access_project_employees_reports_hr_employees,project.employees.reports.hr.employees,model_project_employees_reports,ALTANMYA_Attendence_Payroll_System.group_hr_employees,1,0,0,0
+
+

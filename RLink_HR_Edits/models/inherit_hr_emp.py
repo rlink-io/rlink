@@ -1,14 +1,21 @@
-from odoo import api, models, fields
+from odoo import api, models, fields, _
+import xlsxwriter
+import time
+import os
+import base64
+import pandas as pd
+import io
+from odoo.fields import Command
+import datetime
+from io import BytesIO
+from urllib.request import urlopen
+from odoo.tools.image import image_data_uri
 
 
 class ExtendEmp(models.Model):
     _inherit = 'hr.employee'
     # _name = 'attendance.employee'
 
-    studio_employee_number = fields.Integer(string='Id on device')
-    att_mode = fields.Selection([('standard', 'Standard mode'), ('daily', 'Daily mode'), ('classic', 'Classic mode'),
-                                 ('sequential', 'Sequential mode'), ('shift', 'Shift mode')], string='Attendance Mode',
-                                index=True)
     father_name = fields.Char(string='Father\'s Name')
     mother_name = fields.Char(string='Mother\'s Name')
     landline_number = fields.Char(string='Landline Number')
@@ -648,19 +655,24 @@ class ExtendEmpPub(models.Model):
     _inherit = 'hr.employee.public'
     # _name = 'attendance.employee'
 
-    studio_employee_number = fields.Integer(string='Id on device')
-    att_mode = fields.Selection([('standard', 'Standard mode'), ('daily', 'Daily mode'), ('classic', 'Classic mode'),
-                                 ('sequential', 'Sequential mode'), ('shift', 'Shift mode')], string='Attendance Mode',
-                                index=True)
-    # att_mode = fields.Selection( string='Attendance Mode',compute='_att_mode')
-#
-#     def _studio_employee_number(self):
-#         for rec in self:
-#             rec.studio_employee_number=super('ExtendEmpPub',rec).employee_id.studio_employee_number
-#
-#     def _att_mode(self):
-#         for rec in self:
-#             rec.studio_employee_number=super('ExtendEmpPub',rec).employee_id.att_mode
-
-
-
+    father_name = fields.Char(string='Father\'s Name')
+    mother_name = fields.Char(string='Mother\'s Name')
+    landline_number = fields.Char(string='Landline Number')
+    military_status = fields.Selection([('served', 'Served'), ('not_served', 'Not Served'),
+                                        ('exempted', 'Exempted'), ('not_applicable', 'Not Applicable')])
+    insurance_card_number = fields.Char(string='Insurance Card Number')
+    bank_account_number = fields.Char(string='Bank Account NO.')
+    deduction_ids = fields.One2many('hr.deduction', 'employee_id')
+    violation_ids = fields.One2many('hr.violation', 'employee_id')
+    bonus_ids = fields.One2many('hr.bonus', 'employee_id')
+    training_ids = fields.One2many('hr.training', 'employee_id')
+    days_off_id = fields.Many2one('hr.days.off')
+    salary_raise_ids = fields.One2many('hr.salary.raise', 'employee_id')
+    rotation_ids = fields.One2many('hr.rotation', 'employee_id')
+    assessment_id = fields.Many2one('hr.assessment')
+    state = fields.Selection([('confirmation_needed', 'Confirmation Needed'), ('confirmed', 'Confirmed')],
+                             default='confirmed')
+    change_request = fields.One2many('hr.change.request', 'employee_id')
+    emp_report = fields.Many2one('ir.attachment')
+    # employee_att = fields.Binary(string='Employee Attachment')
+    # emp_image = fields.Binary(string='Image Attachment')

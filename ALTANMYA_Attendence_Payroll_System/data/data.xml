@@ -108,8 +108,15 @@
             <field name="round_days_type">DOWN</field>
          </record>
 
+
+
+
+
+
+
+
         <delete id="work_entry_type_CT_HOLATT2" model="hr.work.entry.type"/>
-<!--        <delete id="work_entry_type_CT_HOLATT3" model="hr.work.entry.type"/>-->
+        <delete id="work_entry_type_CT_HOLATT3" model="hr.work.entry.type"/>
 
          <record id="Attendance_source_mode" model="od.fp.settings">
             <field name="setting_name">Source mode</field>
