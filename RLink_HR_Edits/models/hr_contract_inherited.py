@@ -37,7 +37,7 @@ class HrContractHistoryInherited(models.Model):
     def call_advanced_payment_action(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "ALTANMYA_Attendence_Payroll_System.hr_advanced_payment_action")
+            "RLink_HR_Edits.hr_advanced_payment_action")
         action['context'] = dict(self._context, default_contract_history_id=self.id, )
         action['domain'] = [('contract_history_id', '=', self.id)]
         return action

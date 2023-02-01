@@ -65,8 +65,8 @@
 				   name="Monthly Employees Reports"
 				   parent="project.menu_project_report"
 				   sequence="10"
-				   groups="ALTANMYA_Attendence_Payroll_System.group_hr_employees,hr.group_hr_manager"
+				   groups="RLink_HR_Edits.group_hr_employees,hr.group_hr_manager"
 		 />
-		 <menuitem id="project.menu_project_report" name="Reporting" groups="project.group_project_manager,ALTANMYA_Attendence_Payroll_System.group_hr_employees"/>
+		 <menuitem id="project.menu_project_report" name="Reporting" groups="project.group_project_manager,RLink_HR_Edits.group_hr_employees"/>
     </data>
 </odoo>

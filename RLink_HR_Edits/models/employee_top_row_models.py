@@ -253,7 +253,7 @@ class Assessment(models.Model):
     def open_points_credit_report(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "ALTANMYA_Attendence_Payroll_System.points_credit_report_action")
+            "RLink_HR_Edits.points_credit_report_action")
 
         action['context'] = dict(self._context, default_assessment_id=self.id)
         action['domain'] = [('assessment_id', '=', self.id)]
@@ -264,7 +264,7 @@ class Assessment(models.Model):
     def open_kpi_monthly_report(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "ALTANMYA_Attendence_Payroll_System.kpi_monthly_report_action")
+            "RLink_HR_Edits.kpi_monthly_report_action")
         action['context'] = dict(self._context, default_assessment_id=self.id)
         action['domain'] = [('assessment_id', '=', self.id)]
         if self.kpi_report_id:
