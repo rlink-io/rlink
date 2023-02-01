@@ -9,11 +9,10 @@ from . import fp_log
 from . import settings
 from . import att_payroll
 from . import hr_contract_inherited
-from . import employee_top_row_models
 from . import leaves_inherited
-from . import change_request
+from ...RLink_HR_Edits.models import change_request, employee_top_row_models
 from . import project
-from . import employee_project_reports
+from ...RLink_Project_Edits.models import employee_project_reports
 
 
 
