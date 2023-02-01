@@ -26,7 +26,7 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
-        'data/custom_channels.xml'
+        'data/custom_channels.xml',
         'views/cron_jobs.xml',
         'views/employee.xml',
         'views/hr_contract_inherited.xml',
