@@ -126,6 +126,7 @@
             <field name="setting_name">Attendance Seq</field>
             <field name="setting_value">-1</field>
          </record>
+
     </data>
 
     </odoo>

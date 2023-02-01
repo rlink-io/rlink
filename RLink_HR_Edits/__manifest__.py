@@ -26,6 +26,7 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'data/custom_channels.xml'
         'views/cron_jobs.xml',
         'views/employee.xml',
         'views/hr_contract_inherited.xml',
@@ -34,9 +35,7 @@
         'views/hr_payslip_inherited.xml',
     ],
     # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+
     'assets': {
         'web.assets_backend': [
             '/RLink_HR_Edits/static/src/css/style.css',
