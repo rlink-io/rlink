@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="project_task_form_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='date_deadline']" position="attributes">
+					<attribute name="attrs">
+						{'invisible':1}
+					</attribute>
+           </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+					<attribute name="attrs">
+						{'invisible':1}
+					</attribute>
+             </xpath>
+            <xpath expr="//field[@name='user_ids']" position="after">
+					<field name="requested_by"/>
+                <field name = "department_id" invisible="1"/>
+             </xpath>
+            <xpath expr="//page[@name='extra_info']" position="after">
+                <page name="assessments" string="Assessments">
+                    <group>
+                        <group>
+                            <field name="is_direct_manager" invisible="1"/>
+                            <field name="speed" attrs="{'readonly': [('is_direct_manager','=', False)]}"/>
+                            <field name="quality" attrs="{'readonly': [('is_direct_manager','=', False)]}"/>
+                            <field name="no_repeated_errors" attrs="{'readonly': [('is_direct_manager','=', False)]}"/>
+                        </group>
+                    </group>
+                </page>
+                <page name="notes" string="Notes">
+                            <field name="notes_ids" readonly="1" style="pointer-events:none;">
+                                    <tree>
+                                        <field name ="author_id"></field>
+                                        <field name ="date"></field>
+<!--                                        <field name ="subject"></field>-->
+                                        <field name="note" style="white-space: normal;"> </field>
+                                    </tree>
+                            </field>
+                </page>
+                 <page name="messages" string="Messages">
+                              <field name="messages_ids" readonly="1" style="pointer-events:none;">
+                                <tree>
+                                        <field name ="author_id"></field>
+                                        <field name ="date"></field>
+                                        <field name="body" style="white-space: normal;" ></field>
+                                    </tree>
+                            </field>
+                </page>
+            </xpath>
+               <xpath expr="//label[@for='planned_date_begin']" position="replace">
+            <label for="planned_date_from" string="Planned Date"/>
+               </xpath>
+            <xpath expr="//div[hasclass('o_row')]" position="replace">
+                    <div class="o_row">
+                        <field name="planned_date_from" widget="daterange" options='{"related_end_date": "planned_date_to"}'/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('planned_date_from', '=', False), ('planned_date_to', '=', False)]}"/>
+                        <field name="planned_date_to" widget="daterange" options='{"related_start_date": "planned_date_from"}'/>
+                    </div>
+               </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
+                <field name="document_attachment" widget="binary" />
+            </xpath>
+            <xpath  expr="//page[@name='task_dependencies']//field//tree//button[@name='action_open_task']" position="attributes" >
+                <attribute name="attrs">
+						{'invisible':1}
+					</attribute>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="quick_create_task_inherited_form" model="ir.ui.view">
+            <field name="name">project.task.form.quick_create.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.quick_create_task_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_ids']" position="after">
+					<field name="description" style="height:110px; width:100% !important"></field>
+                </xpath>
+            </field>
+     </record>
+
+     <record id="project.action_view_all_task" model="ir.actions.act_window">
+            <field name="context">{'search_default_my_tasks': 1, 'search_default_stage': 1, 'all_task': 0}</field>
+     </record>
+
+      <record id="view_task_kanban_inherited_" model="ir.ui.view">
+            <field name="name">project.task.timesheet.kanban.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+             <field name="arch" type="xml">
+                      <xpath expr="//t[@name='planned_hours']" position="replace">
+                              <t name="effective_hours">
+                        <t t-set="badge" t-value=""/>
+                       <t t-set="title" t-value="'Effective hours'"/>
+                        <div t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title">
+                          <field name="effective_hours" widget="timesheet_uom"/>
+                        </div>
+                   </t>
+                      </xpath>
+             </field>
+      </record>
+    	</data>
+</odoo>
