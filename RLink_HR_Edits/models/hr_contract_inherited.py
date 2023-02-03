@@ -5,6 +5,8 @@ from odoo.exceptions import UserError, ValidationError
 class HrContractInherited(models.Model):
     _inherit = 'hr.contract'
 
+    additional_wage = fields.Float('Wage Part 2', tracking=True)
+
     probation_period_start_date = fields.Date(string='Probation Period Start Date')
     permanent_period_start_date = fields.Date(string='Permanent Period Start Date')
     probation_period_salary = fields.Monetary(string='Probation Period Salary')

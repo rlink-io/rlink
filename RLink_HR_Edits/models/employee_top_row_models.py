@@ -128,7 +128,8 @@ class Training(models.Model):
     _name = "hr.training"
     _description = 'Training'
 
-    training_type = fields.Selection([('internal', 'Internal'), ('external', 'External'), ('online', 'Online')], string="Training Type")
+    training_type = fields.Selection([('internal', 'Internal'), ('external', 'External'), ('online', 'Online')],
+                                     string="Training Type")
     hours = fields.Integer(string=" Hours")
     cost = fields.Monetary(string="Cost")
     trainer = fields.Char(string="Trainer")
