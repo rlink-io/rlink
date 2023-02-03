@@ -51,9 +51,9 @@
                             </field>
                 </page>
             </xpath>
-               <xpath expr="//label[@for='planned_date_begin']" position="replace">
-            <label for="planned_date_from" string="Planned Date"/>
-               </xpath>
+<!--               <xpath expr="//label[@for='planned_date_begin']" position="replace">-->
+<!--            <label for="planned_date_from" string="Planned Date"/>-->
+<!--               </xpath>-->
             <xpath expr="//div[hasclass('o_row')]" position="replace">
                     <div class="o_row">
                         <field name="planned_date_from" widget="daterange" options='{"related_end_date": "planned_date_to"}'/>
