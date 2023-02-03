@@ -1,0 +1,72 @@
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="project_employees_reports_tree">
+			<field name="name">project.employees.reports.tree</field>
+			<field name="model">project.employees.reports</field>
+			<field name="arch" type="xml">
+				<tree string="Monthly Employees Reports" edit="0" delete="0" create="0">
+				    <field  name="user_id"/>
+                    <field  name="month"/>
+                    <field  name="year"/>
+					<field name="total" class="text-left" />
+				</tree>
+			</field>
+		</record>
+			<record model="ir.ui.view" id="project_employees_reports_form">
+			<field name="name">project.employees.reports.form</field>
+			<field name="model">project.employees.reports</field>
+			<field name="arch" type="xml">
+				<form string="Monthly Employees Reports">
+					<group col="2">
+				     <field name="user_id"/>
+						<field name="total"/>
+						<field name="month"/>
+						<field name="year"/>
+						</group>
+
+					<field name="task_ids" readonly="1">
+					<tree>
+						<field name="task_number" class="text-left" />
+						<field name="name"/>
+						<field name="planned_hours"/>
+						<field name="effective_hours"/>
+						<field name="remaining_hours"/>
+						<field name="speed"/>
+						<field name="quality"/>
+						<field name="no_repeated_errors"/>
+						<field name="total" class="text-left" />
+					</tree>
+				</field>
+				</form>
+			</field>
+		</record>
+
+		<record id="project_employees_reports_search_view" model="ir.ui.view">
+			<field name="name">project.employees.reports.search.view</field>
+			<field name="model">project.employees.reports</field>
+			<field name="arch" type="xml">
+				<search>
+					<filter name="group_user_id" string="Employees" context="{'group_by':'user_id'}"/>
+					<filter name="group_year" string="Year" context="{'group_by':'year'}"/>
+					<filter name="group_month" string="Month" context="{'group_by':'month'}"/>
+				</search>
+			</field>
+		</record>
+
+
+		<record id="project_employees_reports_action" model="ir.actions.act_window">
+			<field name="name">Monthly Employees Reports</field>
+			<field name="res_model">project.employees.reports</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="project_employees_reports_search_view"/>
+		</record>
+         <menuitem action="project_employees_reports_action"
+				   id="menu_project_employees_reports"
+				   name="Monthly Employees Reports"
+				   parent="project.menu_project_report"
+				   sequence="10"
+				   groups="RLink_HR_Edits.group_hr_employees,hr.group_hr_manager"
+		 />
+		 <menuitem id="project.menu_project_report" name="Reporting" groups="project.group_project_manager,RLink_HR_Edits.group_hr_employees"/>
+    </data>
+</odoo>

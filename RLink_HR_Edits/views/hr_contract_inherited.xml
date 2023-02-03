@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='yearly_advantages']" position="after" >
+                   <br></br>
+                <group >
+               <field name="probation_period_start_date"/>
+               <field name="permanent_period_start_date"/>
+                </group>
+                <group>
+                <field name="probation_period_salary"/>
+                <field name="permanent_period_salary"/>
+                </group>
+            </xpath>
+             <xpath expr="//page[@name='information']" position="after" >
+                <page string="Job Leave" name="job_leave">
+                    <group name="job_leave">
+                       <field name="leave_date" style = 'width:40%'/>
+                       <field name="leave_reason" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="hr_contract_history_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.history.form.inherit</field>
+        <field name="model">hr.contract.history</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_history_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+					<button style="text-align: center" name="call_advanced_payment_action" class="oe_stat_button" type="object">
+						Advanced Payment
+					</button>
+				</div>
+<!--            <xpath expr="//field[@name='name']" position="after">-->
+<!--					<field name="is_advanced_payment_previewed" readonly="1">-->
+<!--					</field>-->
+<!--				</xpath>-->
+        </field>
+     </record>
+
+        <record model="ir.ui.view" id="hr_advanced_payment_tree">
+			<field name="name">hr.advanced.payment.tree</field>
+			<field name="model">hr.advanced.payment</field>
+			<field name="arch" type="xml">
+				<tree editable="bottom" string="Advanced Payment">
+					<field width="50%" name="date" />
+					<field width="50%" name="value" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="hr_advanced_payment_action" model="ir.actions.act_window">
+			<field name="name">Advanced Payment</field>
+			<field name="res_model">hr.advanced.payment</field>
+			<field name="view_mode">tree</field>
+		</record>
+
+<!--     <record id="hr_contract_history_view_list_with_advanced_payment_action" model="ir.actions.act_window">-->
+<!--        <field name="name">Employees</field>-->
+<!--        <field name="res_model">hr.contract.history</field>-->
+<!--        <field name="view_mode">tree,kanban,form</field>-->
+<!--        <field name="search_view_id" ref="hr_contract_history_view_search"/>-->
+<!--        <field name="context">{'search_default_active_employees': 1}</field>-->
+<!--    </record>-->
+
+<!--       <menuitem-->
+<!--        id="hr_menu_contract_history"-->
+<!--        action="hr_contract_history_view_list_action_with_advanced_payment"-->
+<!--       />-->
+
+</data>
+</odoo>
