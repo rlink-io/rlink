@@ -23,14 +23,39 @@
     'summary': 'This ALTANMYA module integrates Odoo attendance with attendance devices (Suprema and Zk)',
     'description': "End to End process for Attendance Process with devices",
     'category': 'Human Resources/Employees',
-    'author': 'ALTANMYA - TECHNOLOGY SOLUTIONS',
+    'author': 'ALTANMYA - TECHNOLOGY SOLUTIONS, Momena Sukkar',
     'company': 'ALTANMYA - TECHNOLOGY SOLUTIONS Part of ALTANMYA GROUP',
     'website': "https://tech.altanmya.net",
-    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll'],
-    'data': ['views/view_v.xml','security/ir.model.access.csv','views/tstyle.xml','views/view_actions.xml','views/view_menu.xml','data/data.xml'],
+    'license': "LGPL-3",
+    'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts', 'hr_holidays', 'project', 'project_enterprise', 'hr_timesheet'],
+    'data': ['views/view_v.xml',
+             'security/security.xml',
+             'security/ir.model.access.csv',
+             'views/cron_jobs.xml',
+             'views/tstyle.xml',
+             'views/view_actions.xml',
+             'views/view_menu.xml',
+             'data/data.xml',
+             'data/custom_channels.xml',
+             'views/employee.xml',
+             'views/hr_contract_inherited.xml',
+             'views/employee_top_row_views.xml',
+             'views/change_request.xml',
+            'views/hr_payslip_inherited.xml',
+
+             ],
     'demo': [],
     'qweb': [],
+    'web.assets_qweb': [
+        'mail/static/src/xml/*.xml',
+
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,
+    'assets': {
+    'web.assets_backend': [
+    '/ALTANMYA_Attendence_Payroll_System/static/src/css/style.css',
+    ]},
+
 }

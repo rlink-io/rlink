@@ -89,5 +89,7 @@
             action="attend_payroll_action"
             sequence="60"/>
 
+
+
 </data>
 </odoo>

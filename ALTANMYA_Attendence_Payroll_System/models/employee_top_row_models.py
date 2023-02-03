@@ -216,16 +216,18 @@ class DaysOff(models.Model):
     def compute_total(self):
         for rec in self:
             rec.total = rec.used = rec.remaining = 0.0
-            all_allocations = self.env['hr.leave.allocation'].sudo().search(
-                [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', 1)])
-            if all_allocations:
-                for allocation in all_allocations:
-                    if allocation.date_from <= datetime.now().date() <= allocation.date_to:
-                        rec.sudo().write({'total': allocation.max_leaves,
-                                          'used': allocation.leaves_taken,
-                                          'remaining': allocation.max_leaves - allocation.leaves_taken})
-
-                        break
+            paid_time_off_type_id = self.env['hr.leave.type'].sudo().search(
+                [('name', '=', 'Paid Time Off')], limit=1)
+            if paid_time_off_type_id:
+                all_allocations = self.env['hr.leave.allocation'].sudo().search(
+                    [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', paid_time_off_type_id.id)])
+                if all_allocations:
+                    for allocation in all_allocations:
+                        if allocation.date_from <= datetime.now().date() <= allocation.date_to:
+                            rec.sudo().write({'total': allocation.max_leaves,
+                                              'used': allocation.leaves_taken,
+                                              'remaining': allocation.max_leaves - allocation.leaves_taken})
+                            break
 
 
 class Assessment(models.Model):
@@ -254,7 +256,7 @@ class Assessment(models.Model):
     def open_points_credit_report(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "RLink_HR_Edits.points_credit_report_action")
+            "ALTANMYA_Attendence_Payroll_System.points_credit_report_action")
 
         action['context'] = dict(self._context, default_assessment_id=self.id)
         action['domain'] = [('assessment_id', '=', self.id)]
@@ -265,7 +267,7 @@ class Assessment(models.Model):
     def open_kpi_monthly_report(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "RLink_HR_Edits.kpi_monthly_report_action")
+            "ALTANMYA_Attendence_Payroll_System.kpi_monthly_report_action")
         action['context'] = dict(self._context, default_assessment_id=self.id)
         action['domain'] = [('assessment_id', '=', self.id)]
         if self.kpi_report_id:
