@@ -33,4 +33,8 @@
         'views/employee_project_reports.xml',
     ],
     # only loaded in demonstration mode
+
+    'installable': True,
+    'auto_install': False,
+    'application': True,
 }

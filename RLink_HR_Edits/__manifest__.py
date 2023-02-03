@@ -40,4 +40,8 @@
         'web.assets_backend': [
             '/RLink_HR_Edits/static/src/css/style.css',
         ]},
+
+    'installable': True,
+    'auto_install': False,
+    'application': True,
 }
