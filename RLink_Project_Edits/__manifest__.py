@@ -20,7 +20,8 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail', 'contacts', 'hr_holidays', 'project', 'project_enterprise', 'hr_timesheet', 'RLink_HR_Edits'],
+    'depends': ['base', 'ALTANMYA_Attendence_Payroll_System', 'project', 'project_enterprise', 'hr_timesheet',
+                'timesheet_grid'],
 
     # always loaded
     'data': [

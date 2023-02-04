@@ -104,5 +104,8 @@
             <field name="code">model._update_hr_employees_group_users_cron()</field>
         </record>
 
+
+
+
     </data>
 </odoo>

@@ -26,7 +26,7 @@ class ProjectTaskInherited(models.Model):
                                          compute="_compute_planned_date_begin")
     planned_date_end = fields.Datetime("End date", compute="_compute_planned_date_end")
     direct_manager_id = fields.Many2one('res.users', compute="_compute_department_id", store=True)
-    is_direct_manager = fields.Boolean(compute="_compute_is_direct_manager")
+    is_assessments_readonly = fields.Boolean(compute="_compute_is_assessments_readonly")
     notes_ids = fields.One2many('mail.message', 'res_id', string="Notes", domain=[('subtype_id', '!=', 1)])
     messages_ids = fields.One2many('mail.message', 'res_id', string='Messages', domain=[('subtype_id', '=', 1)])
 
@@ -121,13 +121,23 @@ class ProjectTaskInherited(models.Model):
                         if user_id.employee_id.parent_id and user_id.employee_id.parent_id.user_id:
                             rec.direct_manager_id = user_id.employee_id.parent_id.user_id.id
 
-    @api.depends('direct_manager_id')
-    def _compute_is_direct_manager(self):
+    # @api.depends('direct_manager_id')
+    # def _compute_is_direct_manager(self):
+    #     for rec in self:
+    #         if self.env.user.id == rec.direct_manager_id.id:
+    #             rec.is_direct_manager = True
+    #         else:
+    #             rec.is_direct_manager = False
+
+    @api.depends('stage_id', 'direct_manager_id')
+    def _compute_is_assessments_readonly(self):
         for rec in self:
-            if self.env.user.id == rec.direct_manager_id.id:
-                rec.is_direct_manager = True
+            if rec.stage_id.name == "Done" and self.env.user.has_group('hr.group_hr_manager'):
+                rec.is_assessments_readonly = False
+            elif rec.stage_id.name != "Done" and self.env.user.id == rec.direct_manager_id.id:
+                rec.is_assessments_readonly = False
             else:
-                rec.is_direct_manager = False
+                rec.is_assessments_readonly = True
 
     def _set_department_for_tasks_cron(self):
         all_tasks = self.env['project.task'].search([])
@@ -140,4 +150,3 @@ class ProjectTaskInherited(models.Model):
                             rec.department_id = user_id.employee_id.department_id.id
                         if user_id.employee_id.parent_id:
                             rec.requested_by = user_id.employee_id.parent_id.user_id.id
-
