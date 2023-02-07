@@ -29,8 +29,8 @@
     'license': "LGPL-3",
     'depends': ['hr','resource','hr_attendance','hr_contract','hr_payroll', 'mail','contacts', 'hr_holidays'],
     'data': ['views/view_v.xml',
-             'security/ir.model.access.csv',
              'security/security.xml',
+             'security/ir.model.access.csv',
              'views/cron_jobs.xml',
              'views/tstyle.xml',
              'views/view_actions.xml',
@@ -41,10 +41,15 @@
              'views/hr_contract_inherited.xml',
              'views/employee_top_row_views.xml',
              'views/change_request.xml',
+            'views/hr_payslip_inherited.xml',
 
              ],
     'demo': [],
     'qweb': [],
+    'web.assets_qweb': [
+        'mail/static/src/xml/*.xml',
+
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,

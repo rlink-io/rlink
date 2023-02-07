@@ -128,7 +128,8 @@ class Training(models.Model):
     _name = "hr.training"
     _description = 'Training'
 
-    training_type = fields.Selection([('internal', 'Internal'), ('external', 'External'), ('online', 'Online')], string="Training Type")
+    training_type = fields.Selection([('internal', 'Internal'), ('external', 'External'), ('online', 'Online')],
+                                     string="Training Type")
     hours = fields.Integer(string=" Hours")
     cost = fields.Monetary(string="Cost")
     trainer = fields.Char(string="Trainer")
@@ -215,16 +216,18 @@ class DaysOff(models.Model):
     def compute_total(self):
         for rec in self:
             rec.total = rec.used = rec.remaining = 0.0
-            all_allocations = self.env['hr.leave.allocation'].sudo().search(
-                [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', 1)])
-            if all_allocations:
-                for allocation in all_allocations:
-                    if allocation.date_from <= datetime.now().date() <= allocation.date_to:
-                        rec.sudo().write({'total': allocation.max_leaves,
-                                          'used': allocation.leaves_taken,
-                                          'remaining': allocation.max_leaves - allocation.leaves_taken})
-
-                        break
+            paid_time_off_type_id = self.env['hr.leave.type'].sudo().search(
+                [('name', '=', 'Paid Time Off')], limit=1)
+            if paid_time_off_type_id:
+                all_allocations = self.env['hr.leave.allocation'].sudo().search(
+                    [('employee_id', '=', rec.employee_id.id), ('holiday_status_id', '=', paid_time_off_type_id.id)])
+                if all_allocations:
+                    for allocation in all_allocations:
+                        if allocation.date_from <= datetime.now().date() <= allocation.date_to:
+                            rec.sudo().write({'total': allocation.max_leaves,
+                                              'used': allocation.leaves_taken,
+                                              'remaining': allocation.max_leaves - allocation.leaves_taken})
+                            break
 
 
 class Assessment(models.Model):
@@ -403,6 +406,7 @@ class KPIReportRow(models.Model):
         string="Year",
         required=True
     )
+
     month = fields.Selection([('January', 'January'), ('February', 'February'),
                               ('March', 'March'), ('April', 'April'),
                               ('May', 'May'), ('June', 'June'),
@@ -411,7 +415,7 @@ class KPIReportRow(models.Model):
                               ('November', 'November'), ('December', 'December')],
                              required=True, string='Month')
 
-    kpi = fields.Integer(string='KPI', default=0)
+    kpi = fields.Float(string='KPI', default=0)
     is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
     def _compute_is_hr_manager(self):
@@ -603,11 +607,11 @@ class points_report_row(models.Model):
         string="Year",
         required=True
     )
-    account = fields.Integer(string='Account')
-    eval_kpi = fields.Integer(string='KPI')
-    evaluation = fields.Integer(string='Evaluation')
-    training = fields.Integer(string='Training')
-    eval_total = fields.Integer(string='Total', compute='_compute_total')
+    account = fields.Float(string='Account')
+    eval_kpi = fields.Float(string='KPI')
+    evaluation = fields.Float(string='Evaluation')
+    training = fields.Float(string='Training')
+    eval_total = fields.Float(string='Total', compute='_compute_total')
     round_limit_row = fields.Integer(string='Round Limit')
     is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
