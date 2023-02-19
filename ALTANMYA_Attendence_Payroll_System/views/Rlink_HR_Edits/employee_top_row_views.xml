@@ -271,8 +271,8 @@
 								<group col="2" name="main_group">
 									<group col="2">
 											<field name="is_hr_manager_profile" invisible="1"/>
-											<field name="round_limit"  attrs="{'invisible': [('is_hr_manager_profile', '!=', True)]}"/>
-											<field name="current_round_limit"  attrs="{'invisible': [('is_hr_manager_profile', '==', True)]}" readonly="1"/>
+<!--											<field name="round_limit"  attrs="{'invisible': [('is_hr_manager_profile', '!=', True)]}"/>-->
+<!--											<field name="current_round_limit"  attrs="{'invisible': [('is_hr_manager_profile', '==', True)]}" readonly="1"/>-->
 											<field name="filter_by" widget="radio" />
 									</group>
 									<group col="4">

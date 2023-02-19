@@ -469,21 +469,20 @@ class PointsCreditReport(models.Model):
                           '&', ('eval_month', 'in', to_months_list), ('eval_year', '=', self.to_year)]
         return domain
 
-    @api.model
-    def get_current_round_limit(self):
-        reports = self.env['points.report.row'].search(
-            [('eval_year', '=', str(datetime.now().year)), ('month_number', '=', datetime.now().month)])
-        if reports:
-            return reports[0].round_limit_row
-        else:
-            return 5
+    # @api.model
+    # def get_current_round_limit(self):
+    #     reports = self.env['points.report.row'].search(
+    #         [('eval_year', '=', str(datetime.now().year)), ('month_number', '=', datetime.now().month)])
+    #     if reports:
+    #         return reports[0].round_limit_row
+    #     else:
+    #         return 5
 
     display_name = fields.Char(default='Points Credit Report')
     assessment_id = fields.Many2one('hr.assessment', 'points_report_id', required=True, ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', related='assessment_id.employee_id', required=True)
-    round_limit = fields.Integer(string='Round Limit', required=True,
-                                 default=get_current_round_limit)  # for Hr manager
-    current_round_limit = fields.Integer(string='Current Round Limit', required=True, default=get_current_round_limit)
+    round_limit = fields.Integer(string='Round Limit', default=0)  # for Hr manager
+    current_round_limit = fields.Integer(string='Current Round Limit', default=0)
     is_hr_manager_profile = fields.Boolean(compute="_compute_is_hr_manager_profile", default=False)
 
     filter_by = fields.Selection([('year', 'Year'), ('year_and_month', 'Year And Month')],
@@ -534,35 +533,34 @@ class PointsCreditReport(models.Model):
                 "report_id": new.id,
                 "eval_month": month,
                 "eval_year": str(datetime.now().year),
-                "month_number": months_list.index(month) + 1,
-                "round_limit_row": new.current_round_limit})
+                "month_number": months_list.index(month) + 1})
         return new
 
-    def write(self, vals):
-        if 'round_limit' in vals and vals['round_limit'] < 0:
-            raise ValidationError('you can\'t enter negative value for Round Limit')
+    # def write(self, vals):
+    #     if 'round_limit' in vals and vals['round_limit'] < 0:
+    #         raise ValidationError('you can\'t enter negative value for Round Limit')
+    #
+    #     else:
+    #         rec = super(PointsCreditReport, self).write(vals)
+    #         if 'round_limit' in vals:
+    #             self.update_reports_current_round_limit(vals['round_limit'])
+    #             self.update_reports_rows_round_limit(vals['round_limit'])
+    #         return rec
 
-        else:
-            rec = super(PointsCreditReport, self).write(vals)
-            if 'round_limit' in vals:
-                self.update_reports_current_round_limit(vals['round_limit'])
-                self.update_reports_rows_round_limit(vals['round_limit'])
-            return rec
-
-    def update_reports_current_round_limit(self, new_round_limit):
-
-        points_report_ids = self.env['points.credit.report'].search([])
-        for report in points_report_ids:
-            report.write({'current_round_limit': new_round_limit})
-
-    def update_reports_rows_round_limit(self, new_round_limit):
-        current_year = datetime.now().year
-        current_month = datetime.now().month
-        updated_rows = self.env['points.report.row'].search(
-            [('eval_year', '=', current_year), ('month_number', '>=', current_month)])
-        for row in updated_rows:
-            row.round_limit_row = new_round_limit
-            row.compute_account_value()
+    # def update_reports_current_round_limit(self, new_round_limit):
+    #
+    #     points_report_ids = self.env['points.credit.report'].search([])
+    #     for report in points_report_ids:
+    #         report.write({'current_round_limit': new_round_limit})
+    #
+    # def update_reports_rows_round_limit(self, new_round_limit):
+    #     current_year = datetime.now().year
+    #     current_month = datetime.now().month
+    #     updated_rows = self.env['points.report.row'].search(
+    #         [('eval_year', '=', current_year), ('month_number', '>=', current_month)])
+    #     for row in updated_rows:
+    #         row.round_limit_row = new_round_limit
+    #         row.compute_account_value()
 
     def _yearly_update_points_credit_report_cron(self):
         points_report_ids = self.env['points.credit.report'].search([])
@@ -576,8 +574,7 @@ class PointsCreditReport(models.Model):
                     "report_id": points_report_id.id,
                     "eval_month": month,
                     "eval_year": str(datetime.now().year),
-                    "month_number": months_list.index(month) + 1,
-                    "round_limit_row": points_report_id.current_round_limit})
+                    "month_number": months_list.index(month) + 1, })
 
 
 class points_report_row(models.Model):
@@ -636,7 +633,11 @@ class points_report_row(models.Model):
         if next_rows:
             for i, next_row in enumerate(next_rows):
                 previous_row_total = self.eval_total if i == 0 else next_rows[i - 1].eval_total
-                next_row.account = previous_row_total - self.round_limit_row if self.round_limit_row < previous_row_total else 0
+                if previous_row_total >= 25:
+                    next_row.account = previous_row_total - 25
+                    self.send_25_points_notification_to_hr_manager()
+                else:
+                    next_row.account = previous_row_total
 
     @api.onchange('account')
     def check_training_value(self):
@@ -667,3 +668,18 @@ class points_report_row(models.Model):
     def _compute_total(self):
         for row in self:
             row.eval_total = row.account + row.eval_kpi + row.evaluation + row.training
+
+    def send_25_points_notification_to_hr_manager(self):
+
+        users = self.env.ref('hr.group_hr_manager').users
+        for user in users:
+            channel = self.env['mail.channel'].channel_get(
+                [user.partner_id.id])
+            channel_id = self.env['mail.channel'].browse(channel["id"])
+            channel_id.message_post(
+                body=('Points Alert :{employee} reachs to 25 points in {month}.'.format(
+                    employee=self.report_id.employee_id.name,
+                    month=self.eval_month)),
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+            )
