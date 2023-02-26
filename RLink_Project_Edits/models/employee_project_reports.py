@@ -39,7 +39,6 @@ class ProjectEmployeesReports(models.Model):
         monthly_total = 0
         task_ids = []
         for task in all_task:
-            print(user_id, task.user_ids.ids)
             if user_id in task.user_ids.ids \
                     and task.date_last_stage_update.month == yesterday_date.month \
                     and task.date_last_stage_update.year == yesterday_date.year:

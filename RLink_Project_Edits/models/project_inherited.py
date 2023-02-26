@@ -1,7 +1,6 @@
 from odoo import api, models, fields, _
 from datetime import datetime, timedelta
 from odoo.exceptions import UserError, ValidationError
-from bs4 import BeautifulSoup
 
 
 class ProjectInherited(models.Model):
