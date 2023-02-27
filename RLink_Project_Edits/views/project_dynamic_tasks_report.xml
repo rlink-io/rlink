@@ -30,7 +30,7 @@
                              <field name="planned_date_from"/>
                             <field name="planned_date_to"/>
                             <field name="description"/>
-                            <field name="effective_hours"/>
+                            <field name="effective_hours" widget="float_time"  class="text-left" />
                             <field name="speed"/>
                             <field name="quality"/>
                             <field name="no_repeated_errors"/>
