@@ -13,6 +13,7 @@ locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 class ProjectTasksDynamicReport(models.Model):
     _name = 'project.tasks.dynamic.reports'
     _description = 'Project Tasks Dynamic Reports'
+    display_name = fields.Char(default='Project Tasks Dynamic Reports')
 
     from_date = fields.Date(string='From Date')
     to_date = fields.Date(string='To Date')
@@ -60,7 +61,8 @@ class ProjectTasksDynamicReport(models.Model):
             row = 2
             for task in self.task_ids:
                 main_worksheet.write(row, 0, task.project_id.name, header_format)
-                main_worksheet.write(row, 1, task.user_ids[0].name, header_format)
+                assignees = ', '.join(user.name for user in task.user_ids)
+                main_worksheet.write(row, 1, assignees, header_format)
                 main_worksheet.write(row, 2, task.name, header_format)
                 main_worksheet.write(row, 3, task.planned_date_from.strftime('%m/%d/%Y') if task.planned_date_from else '', header_format)
                 main_worksheet.write(row, 4, task.planned_date_to.strftime('%m/%d/%Y') if task.planned_date_to else '', header_format)
@@ -92,7 +94,7 @@ class ProjectTasksDynamicReport(models.Model):
             download_url = '/web/content/' + str(self.report.id) + '?download=true'
             return {
                 "type": "ir.actions.act_url",
-                "url": str(base_url) + str(download_url),
+                "url": str(download_url),
                 "target": "self",
             }
             report.unlink()
