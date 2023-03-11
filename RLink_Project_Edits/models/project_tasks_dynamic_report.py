@@ -24,8 +24,8 @@ class ProjectTasksDynamicReport(models.Model):
 
     @api.depends('from_date', 'to_date', 'user_ids')
     def _compute_task_ids(self):
-        done_stages = self.env['project.task.type'].search([('name', '=', 'Done')]).ids
-        all_tasks = self.env['project.task'].search([('stage_id', 'in', done_stages)])
+        # done_stages = self.env['project.task.type'].search([('name', '=', 'Done')]).ids
+        all_tasks = self.env['project.task'].search([])
         task_ids = []
         for task in all_tasks:
             for user_id in self.user_ids:
@@ -66,13 +66,13 @@ class ProjectTasksDynamicReport(models.Model):
                 main_worksheet.write(row, 2, task.name, header_format)
                 main_worksheet.write(row, 3, task.planned_date_from.strftime('%m/%d/%Y') if task.planned_date_from else '', header_format)
                 main_worksheet.write(row, 4, task.planned_date_to.strftime('%m/%d/%Y') if task.planned_date_to else '', header_format)
-                desc = ' '.join(BeautifulSoup(task.description, "html.parser").stripped_strings)
+                desc = ' '.join(BeautifulSoup(task.description, "html.parser").stripped_strings) if task.description else ''
                 main_worksheet.write(row, 5, desc, header_format)
                 effective_hours = '{0:02.0f}:{1:02.0f}'.format(*divmod(float(task.effective_hours) * 60, 60))
                 main_worksheet.write(row, 6, effective_hours, header_format)
-                main_worksheet.write(row, 7, task.speed, header_format)
-                main_worksheet.write(row, 8, task.quality, header_format)
-                main_worksheet.write(row, 9, task.no_repeated_errors, header_format)
+                main_worksheet.write(row, 7, task.speed if task.speed else '', header_format)
+                main_worksheet.write(row, 8, task.quality if task.quality else '', header_format)
+                main_worksheet.write(row, 9, task.no_repeated_errors if task.no_repeated_errors else '', header_format)
                 main_worksheet.write(row, 10, task.stage_id.name, header_format)
                 row = row + 1
             workbook.close()
@@ -91,7 +91,6 @@ class ProjectTasksDynamicReport(models.Model):
             report = self.env['ir.attachment'].create(attachment)
             self.report = report
 
-            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
             download_url = '/web/content/' + str(self.report.id) + '?download=true'
             return {
                 "type": "ir.actions.act_url",

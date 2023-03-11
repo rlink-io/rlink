@@ -608,7 +608,7 @@ class points_report_row(models.Model):
     eval_kpi = fields.Float(string='KPI')
     evaluation = fields.Float(string='Evaluation')
     training = fields.Float(string='Training')
-    eval_total = fields.Float(string='Total', compute='_compute_total')
+    eval_total = fields.Float(string='Total', compute='_compute_total', store=True)
     round_limit_row = fields.Integer(string='Round Limit')
     is_hr_manager = fields.Boolean(compute="_compute_is_hr_manager", default=False)
 
@@ -619,8 +619,8 @@ class points_report_row(models.Model):
             else:
                 rec.is_hr_manager = False
 
-    @api.onchange('eval_total')
-    def compute_account_value(self):
+    def compute_next_row_account_value(self):
+        print(self.id)
         years_list = ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033',
                       '2034', '2035', '2036', '2037', '2038', '2039', '2040', '2041', '2042']
         domain_year = str(int(self.eval_year) + 1) if self.month_number == 12 else self.eval_year
@@ -630,6 +630,7 @@ class points_report_row(models.Model):
                   ("eval_year", "in", next_years)
                   ]
         next_rows = self.env['points.report.row'].search(domain)
+        print(next_rows)
         if next_rows:
             for i, next_row in enumerate(next_rows):
                 previous_row_total = self.eval_total if i == 0 else next_rows[i - 1].eval_total
@@ -638,11 +639,7 @@ class points_report_row(models.Model):
                     self.send_25_points_notification_to_hr_manager()
                 else:
                     next_row.account = previous_row_total
-
-    @api.onchange('account')
-    def check_training_value(self):
-        if self.account < 0:
-            raise ValidationError('you can\'t enter negative value for account value')
+                print(previous_row_total, next_row.account)
 
     @api.onchange('eval_kpi')
     def check_eval_kpi_value(self):
@@ -659,15 +656,11 @@ class points_report_row(models.Model):
         if self.evaluation < 0:
             raise ValidationError('you can\'t enter negative value for evaluation value')
 
-    @api.onchange('eval_total')
-    def check_eval_total_value(self):
-        if self.eval_total < 0:
-            raise ValidationError('you can\'t enter negative value for total value')
-
     @api.depends('account', 'eval_kpi', 'evaluation', 'training')
     def _compute_total(self):
         for row in self:
             row.eval_total = row.account + row.eval_kpi + row.evaluation + row.training
+            row.compute_next_row_account_value()
 
     def send_25_points_notification_to_hr_manager(self):
 
@@ -677,7 +670,7 @@ class points_report_row(models.Model):
                 [user.partner_id.id])
             channel_id = self.env['mail.channel'].browse(channel["id"])
             channel_id.message_post(
-                body=('Points Alert :{employee} reachs to 25 points in {month}.'.format(
+                body=('Points Alert :{employee} reaches to 25 points in {month}.'.format(
                     employee=self.report_id.employee_id.name,
                     month=self.eval_month)),
                 message_type='comment',
