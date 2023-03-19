@@ -24,14 +24,18 @@ class ProjectTasksDynamicReport(models.Model):
 
     @api.depends('from_date', 'to_date', 'user_ids')
     def _compute_task_ids(self):
+
         # done_stages = self.env['project.task.type'].search([('name', '=', 'Done')]).ids
         all_tasks = self.env['project.task'].search([])
         task_ids = []
-        for task in all_tasks:
-            for user_id in self.user_ids:
-                if user_id.id in task.user_ids.ids \
-                        and self.from_date <= task.date_last_stage_update.date() <= self.to_date:
-                    task_ids.append(task.id)
+        if self.from_date and self.to_date:
+            for task in all_tasks:
+                if task.planned_date_to and task.planned_date_from:
+                    for user_id in self.user_ids:
+                        if(user_id.id in task.user_ids.ids) \
+                                and not (task.planned_date_to < self.from_date) \
+                                and not (task.planned_date_from > self.to_date):
+                            task_ids.append(task.id)
 
         self.task_ids = [(6, 0, task_ids)]
 
