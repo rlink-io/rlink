@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
     <odoo>
     <data noupdate="0">
-
           <record id="project_user_management_id" model="project.users.management">
               <field name="display_name">Timesheet Document Logging Upload</field>
+          </record>
+
+    </data>
+    <data noupdate="0">
+          <record id="project_task_dynamic_report_id" model="project.tasks.dynamic.reports">
+              <field name="display_name">Employee Dynamic tasks report</field>
           </record>
 
     </data>

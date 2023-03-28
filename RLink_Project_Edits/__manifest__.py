@@ -32,6 +32,7 @@
         'views/project_user_management_view.xml',
         'views/report_project_task_user_view.xml',
         'views/employee_project_reports.xml',
+        'views/project_dynamic_tasks_report.xml',
     ],
     # only loaded in demonstration mode
 

@@ -271,8 +271,8 @@
 								<group col="2" name="main_group">
 									<group col="2">
 											<field name="is_hr_manager_profile" invisible="1"/>
-											<field name="round_limit"  attrs="{'invisible': [('is_hr_manager_profile', '!=', True)]}"/>
-											<field name="current_round_limit"  attrs="{'invisible': [('is_hr_manager_profile', '==', True)]}" readonly="1"/>
+<!--											<field name="round_limit"  attrs="{'invisible': [('is_hr_manager_profile', '!=', True)]}"/>-->
+<!--											<field name="current_round_limit"  attrs="{'invisible': [('is_hr_manager_profile', '==', True)]}" readonly="1"/>-->
 											<field name="filter_by" widget="radio" />
 									</group>
 									<group col="4">
@@ -291,11 +291,11 @@
 												<field name="is_hr_manager" invisible="1"/>
 												<field name="eval_year" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
 												<field name="eval_month" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
-												<field name="account" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="account" attrs="{'readonly': 1}"/>
 												<field name="eval_kpi"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
 												<field name="training" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
 												<field name="evaluation" attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
-												<field name="eval_total"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>
+												<field name="eval_total"  attrs="{'readonly': 1}"/>
 <!--												<field name="round_limit_row"  attrs="{'readonly': [('is_hr_manager', '!=', True)]}"/>-->
 											</tree>
 										</field>

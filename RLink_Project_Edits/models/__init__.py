@@ -7,3 +7,4 @@ from . import project_user_management
 from . import report_project_task_user_inherited
 from . import mail_message_inherited
 from . import employee_project_reports
+from . import project_tasks_dynamic_report

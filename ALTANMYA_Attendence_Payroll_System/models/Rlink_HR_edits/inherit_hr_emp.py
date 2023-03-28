@@ -384,12 +384,10 @@ class ExtendEmp(models.Model):
         }
         report = self.env['ir.attachment'].create(attachment)
         self.emp_report = report
-
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         download_url = '/web/content/' + str(self.emp_report.id) + '?download=true'
         return {
             "type": "ir.actions.act_url",
-            "url": str(base_url) + str(download_url),
+            "url": str(download_url),
             "target": "self",
         }
         report.unlink()
