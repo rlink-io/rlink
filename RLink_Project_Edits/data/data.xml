@@ -12,5 +12,11 @@
           </record>
 
     </data>
+    <data noupdate="0">
+          <record id="project_timesheet_report_id" model="project.timesheet.reports">
+              <field name="display_name">Project Timesheet Report</field>
+          </record>
+
+    </data>
 
     </odoo>
