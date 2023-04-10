@@ -36,7 +36,7 @@ class ProjectTimesheetReports(models.Model):
                   ('task_id', '!=', False),
                   ('project_id', '!=', False),
                   ('date', '>=', self.from_date),
-                  ('date', '<', self.to_date),
+                  ('date', '<=', self.to_date),
                   ]
         timesheet_ids = self.env['account.analytic.line'].search(domain)
         self.timesheet_ids = [(6, 0, timesheet_ids.ids)]
