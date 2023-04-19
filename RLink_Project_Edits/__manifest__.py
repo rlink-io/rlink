@@ -33,6 +33,7 @@
         'views/report_project_task_user_view.xml',
         'views/employee_project_reports.xml',
         'views/project_dynamic_tasks_report.xml',
+        'views/project_timesheet_report_view.xml'
     ],
     # only loaded in demonstration mode
 
