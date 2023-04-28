@@ -53,6 +53,7 @@ class ProjectTaskInherited(models.Model):
     def _check_timesheet_name_len(self):
         for rec in self:
             for timesheet in rec.timesheet_ids:
+                print(timesheet.name, timesheet.document_attachment)
                 if len(timesheet.name) < 25:
                     raise ValidationError(
                         "The Description of timesheet line cannot be empty and should be more than 25 characters.")
