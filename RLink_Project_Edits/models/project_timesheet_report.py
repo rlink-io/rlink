@@ -47,6 +47,7 @@ class ProjectTimesheetReports(models.Model):
             writer = pd.ExcelWriter(output, engine='xlsxwriter')
             workbook = writer.book
             header_format = workbook.add_format({'bold': True})
+            time_format = workbook.add_format({'num_format': '[h]:mm'})
             header_format.set_align('center')
             header_format.set_align('vcenter')
             main_worksheet = workbook.add_worksheet("Project Timesheet Report")
@@ -65,7 +66,7 @@ class ProjectTimesheetReports(models.Model):
                 main_worksheet.write(row, 2, timesheet.employee_id.name)
                 main_worksheet.write(row, 3, timesheet.date.strftime('%m/%d/%Y'))
                 main_worksheet.write(row, 4, timesheet.name)
-                main_worksheet.write(row, 5, ':'.join(map(str, get_time_from_float(timesheet.unit_amount))))
+                main_worksheet.write(row, 5, ':'.join(map(str, get_time_from_float(timesheet.unit_amount))), time_format)
 
                 row = row + 1
             workbook.close()
