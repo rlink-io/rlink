@@ -56,7 +56,6 @@ class ProjectEmployeesReports(models.Model):
 
         all_users = self.env['res.users'].sudo().search([('share', '=', False)])
         yesterday_date = date.today() - timedelta(days=1)
-        print(yesterday_date.strftime("%B"))
 
         for user in all_users:
             task_ids, monthly_total = self.compute_task_ids(user.id)
