@@ -80,7 +80,7 @@ class ProjectEmployeesReports(models.Model):
                 for row_id in kpi_report_id.rows_ids:
                     if (row_id['year'] == str(yesterday_date.year) and row_id['month'] == yesterday_date.strftime(
                             "%B")):
-                        row_id.kpi = monthly_total
+                        row_id.sudo().kpi = monthly_total
 
                 points_report_id = self.env['points.credit.report'].search([('employee_id', '=', employee_id.id)],
                                                                            limit=1)
@@ -88,4 +88,4 @@ class ProjectEmployeesReports(models.Model):
                     if (row_id['eval_year'] == str(yesterday_date.year) and row_id[
                         'eval_month'] == yesterday_date.strftime(
                         "%B")):
-                        row_id.eval_kpi = monthly_total
+                        row_id.sudo().eval_kpi = monthly_total
