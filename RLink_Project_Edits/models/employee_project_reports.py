@@ -67,7 +67,7 @@ class ProjectEmployeesReports(models.Model):
                 'task_ids': task_ids,
                 'total': monthly_total
             }
-            self.fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
+            self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
 
             self.env['project.employees.reports'].sudo().create(vals)
 
