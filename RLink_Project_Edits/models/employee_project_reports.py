@@ -71,11 +71,8 @@ class ProjectEmployeesReports(models.Model):
             self.env['project.employees.reports'].sudo().create(vals)
 
     def fill_Kpi_in_employees_reports(self, user, yesterday_date, monthly_total):
-        print(1)
         if user.employee_ids:
-            print(1)
             for employee_id in user.employee_ids:
-                print(employee_id)
                 kpi_report_id = self.env['kpi.monthly.report'].search([('employee_id', '=', employee_id.id)],
                                                                       limit=1)
                 print(kpi_report_id)
@@ -83,9 +80,7 @@ class ProjectEmployeesReports(models.Model):
 
                     if (row_id['year'] == str(yesterday_date.year) and row_id['month'] == yesterday_date.strftime(
                             "%B")):
-                        console.log('row_id', row_id)
-                        row_id.sudo().write({'kpi', monthly_total})
-                        console.log('row_id', row_id.kpi)
+                        row_id.sudo().kpi = monthly_total
 
                 points_report_id = self.env['points.credit.report'].search([('employee_id', '=', employee_id.id)],
                                                                            limit=1)
@@ -94,4 +89,3 @@ class ProjectEmployeesReports(models.Model):
                         'eval_month'] == yesterday_date.strftime(
                         "%B")):
                         row_id.sudo().eval_kpi = monthly_total
-                        console.log(eval_kpi, 'eval_kpi')
