@@ -52,7 +52,7 @@ class ProjectEmployeesReports(models.Model):
 
         return task_ids, monthly_total
 
-    def _create_monthly_project_employee_report_cron(self):
+    def _create_monthly_project_employee_report_cron1(self):
 
         all_users = self.env['res.users'].sudo().search([('share', '=', False)])
         yesterday_date = date.today() - timedelta(days=1)
