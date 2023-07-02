@@ -52,7 +52,7 @@
                 </page>
             </xpath>
                <xpath expr="//label[@for='planned_date_begin']" position="replace">
-            <label for="planned_date_from" string="Planned Date"/>
+            <label for="planned_date_from" string="Deadline"/>
                </xpath>
             <xpath expr="//div[hasclass('o_row')]" position="replace">
                     <div class="o_row">
@@ -80,6 +80,15 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_ids']" position="after">
 					<field name="description" style="height:110px; width:100% !important"></field>
+                   <label for="planned_date_from" string="Planned Date"/>
+                <div class="w-100">
+                    <div class="o_row">
+                        <field name="planned_date_from" widget="daterange" options='{"related_end_date": "planned_date_to"}'/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('planned_date_from', '=', False), ('planned_date_to', '=', False)]}"/>
+                        <field name="planned_date_to" widget="daterange" options='{"related_start_date": "planned_date_from"}'/>
+                    </div>
+                </div>
                 </xpath>
             </field>
      </record>

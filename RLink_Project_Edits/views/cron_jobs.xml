@@ -13,7 +13,7 @@
              <field name="nextcall">2023-02-01 01:00:00</field>
             <field name="model_id" ref="model_project_employees_reports"></field>
             <field name="state">code</field>
-            <field name="code">model._create_monthly_project_employee_report_cron()</field>
+            <field name="code">model._create_monthly_project_employee_report_cron1()</field>
         </record>
 
       <record id="_set_department_for_tasks_cron" model="ir.cron">

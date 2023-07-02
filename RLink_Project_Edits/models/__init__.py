@@ -10,4 +10,5 @@ from . import employee_project_reports
 from . import project_tasks_dynamic_report
 from . import project_task_create_timesheet
 from . import project_timesheet_report
+from . import platinium_process
 

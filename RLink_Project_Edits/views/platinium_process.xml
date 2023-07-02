@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="sale_order_portal_content_inherited" inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//a[@id='o_sale_portal_paynow']" position="after">
+            <a t-else="!sale_order.has_to_be_paid(True) and !sale_order.has_to_be_signed(True)" role="button"
+               id="o_sale_portal_confirm"
+               href="#"
+               t-att-class="'btn-block mb8 %s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')"
+            t-esc="sale_order.confirm_order()"
+            >
+               </a>
+        </xpath>
+    </template>
+</odoo>

@@ -19,8 +19,8 @@ class ProjectTaskInherited(models.Model):
                                    string="Requested By")
     department_id = fields.Many2one('hr.department', compute="_compute_department_id", store=True)
     description = fields.Html(required=True)
-    planned_date_from = fields.Date("Start date ")
-    planned_date_to = fields.Date("End date ")
+    planned_date_from = fields.Date("Start date", required=True)
+    planned_date_to = fields.Date("End date ", required=True)
 
     planned_date_begin = fields.Datetime("Start date", tracking=True, task_dependency_tracking=True,
                                          compute="_compute_planned_date_begin")
@@ -53,6 +53,7 @@ class ProjectTaskInherited(models.Model):
     def _check_timesheet_name_len(self):
         for rec in self:
             for timesheet in rec.timesheet_ids:
+                print(timesheet.name, timesheet.document_attachment)
                 if len(timesheet.name) < 25:
                     raise ValidationError(
                         "The Description of timesheet line cannot be empty and should be more than 25 characters.")
