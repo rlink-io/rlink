@@ -2,6 +2,7 @@ from odoo import api, models, fields, _
 from datetime import datetime, timedelta, date
 from odoo.exceptions import UserError, ValidationError
 import locale
+_logger = logging.getLogger(__name__)
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
@@ -56,6 +57,7 @@ class ProjectEmployeesReports(models.Model):
 
         all_users = self.env['res.users'].sudo().search([('share', '=', False)])
         yesterday_date = date.today() - timedelta(days=1)
+        _logger.info(f'sdswwwwwwwwwwwwww{yesterday_date}')
 
         for user in all_users:
             task_ids, monthly_total = self.compute_task_ids(user.id)
@@ -67,6 +69,7 @@ class ProjectEmployeesReports(models.Model):
                 'total': monthly_total
             }
             self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
+             _logger.info(f'aqqqqqqqqqqqqqqqqqqq{self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)}')
 
             self.env['project.employees.reports'].sudo().create(vals)
 
