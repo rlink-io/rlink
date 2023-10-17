@@ -62,6 +62,7 @@ class ProjectEmployeesReports(models.Model):
 
         for user in all_users:
             task_ids, monthly_total = self.compute_task_ids(user.id)
+            _logger.info(f'fffffffffffffff{task_ids, monthly_total}')
             vals = {
                 'user_id': user.id,
                 'month': str(yesterday_date.month),
