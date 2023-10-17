@@ -2,6 +2,7 @@ from odoo import api, models, fields, _
 from datetime import datetime, timedelta, date
 from odoo.exceptions import UserError, ValidationError
 import locale
+import logging
 _logger = logging.getLogger(__name__)
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
