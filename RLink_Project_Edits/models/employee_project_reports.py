@@ -70,7 +70,7 @@ class ProjectEmployeesReports(models.Model):
                 'total': monthly_total
             }
             self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
-             _logger.info(f'aqqqqqqqqqqqqqqqqqqq{self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)}')
+            _logger.info(f'aqqqqqqqqqqqqqqqqqqq{self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)}')
 
             self.env['project.employees.reports'].sudo().create(vals)
 
