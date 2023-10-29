@@ -61,7 +61,7 @@ class ProjectTaskInherited(models.Model):
                 import logging
 
                 _logger = logging.getLogger(__name__)
-                _looger.info(f'ssssssssssssssssssssssssssssss{optional_users_ids,timesheet.document_attachment}')
+                _logger.info(f'ssssssssssssssssssssssssssssss{optional_users_ids,timesheet.document_attachment}')
                 # if timesheet.employee_id.user_id.id not in optional_users_ids:
                 #     raise ValidationError(
                 #         "The Document in timesheet line is required.")
