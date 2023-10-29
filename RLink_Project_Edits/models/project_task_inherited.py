@@ -58,10 +58,7 @@ class ProjectTaskInherited(models.Model):
                     raise ValidationError(
                         "The Description of timesheet line cannot be empty and should be more than 25 characters.")
                 optional_users_ids = self.env['project.users.management'].search([('id', '=', 1)]).optional_users.ids
-                import logging
-
-                _logger = logging.getLogger(__name__)
-                _logger.info(f'ssssssssssssssssssssssssssssss{optional_users_ids,timesheet.document_attachment}')
+               
                 # if timesheet.employee_id.user_id.id not in optional_users_ids:
                 #     raise ValidationError(
                 #         "The Document in timesheet line is required.")
