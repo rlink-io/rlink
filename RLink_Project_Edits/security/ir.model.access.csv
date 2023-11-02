@@ -11,4 +11,4 @@ project.access_project_task_type_portal,task_type_portal,project.model_project_t
 access_project_task_type_user_admin,project.task.type.user,project.model_project_task_type,base.group_system,1,0,0,0
 access_project_task_type_project_user_admin,project.task.type.project.user,project.model_project_task_type,base.group_system,1,0,0,0
 access_project_task_type_manager_admin,project.task.type manager,project.model_project_task_type,base.group_system,1,1,1,1
-access_project_task_type_portal_admin,task_type_portal,project.model_project_task_type,base.group_system,1,0,0,0
+
