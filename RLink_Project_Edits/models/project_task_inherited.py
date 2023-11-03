@@ -96,13 +96,17 @@ class ProjectTaskInherited(models.Model):
         return rec
 
     def check_stage_restrictions(self, vals):
+        all_approvers =[]
+        all_approvers.append(self.direct_manager_id.id)
+        if self.env.user.has_group('base.group_system'):
+            all_approvers.append(self.env.user.id)
         if self.stage_id.name == 'Done' and not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(
                 _("You are not allowed to change the stage of task please contact with the HR manager!"))
         if self.stage_id.name == 'To Check':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
             if new_stage.name == "Done":
-                if new_stage.name == "Done" and (self.env.user.id != self.direct_manager_id.id or not self.env.user.has_group('base.group_system')):
+                if self.env.user.id not in all_approvers:
                     
                     raise UserError(
                         _("You are not allowed to change the stage of task please contact with the Direct Manager!"))
