@@ -103,6 +103,11 @@ class ProjectTaskInherited(models.Model):
         if self.stage_id.name == 'Done' and not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(
                 _("You are not allowed to change the stage of task please contact with the HR manager!"))
+        if self.stage_id.name == 'Doing':
+            new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
+            if new_stage.name == "Done":
+               raise UserError(
+                        _("You are not allowed to change the stage of task please contact with the Direct Manager!"))     
         if self.stage_id.name == 'To Check':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
             if new_stage.name == "Done":
