@@ -134,13 +134,12 @@ class ProjectTaskInherited(models.Model):
     @api.depends('stage_id', 'direct_manager_id')
     def _compute_is_assessments_readonly(self):
         for rec in self:
-            if self.env.user.has_group('base.group_system'):
-                rec.is_assessments_readonly = True
             elif rec.stage_id.name == "Done" and self.env.user.has_group('hr.group_hr_manager'):
                 rec.is_assessments_readonly = False
             elif rec.stage_id.name != "Done" and self.env.user.id == rec.direct_manager_id.id:
                 rec.is_assessments_readonly = False
-            
+            elif self.env.user.has_group('base.group_system'):
+                rec.is_assessments_readonly = True
             else:
                 rec.is_assessments_readonly = True
 
