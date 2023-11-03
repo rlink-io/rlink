@@ -102,7 +102,7 @@ class ProjectTaskInherited(models.Model):
         if self.stage_id.name == 'To Check':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
             if new_stage.name == "Done":
-                if self.env.user.id != self.direct_manager_id.id or self.env.user.has_group('base.group_system'):
+                if self.env.user.id != self.direct_manager_id.id:
                     raise UserError(
                         _("You are not allowed to change the stage of task please contact with the Direct Manager!"))
                 else:
@@ -134,12 +134,13 @@ class ProjectTaskInherited(models.Model):
     @api.depends('stage_id', 'direct_manager_id')
     def _compute_is_assessments_readonly(self):
         for rec in self:
-            if rec.stage_id.name == "Done" and self.env.user.has_group('hr.group_hr_manager'):
+            if self.env.user.has_group('base.group_system'):
+                rec.is_assessments_readonly = True
+            elif rec.stage_id.name == "Done" and self.env.user.has_group('hr.group_hr_manager'):
                 rec.is_assessments_readonly = False
             elif rec.stage_id.name != "Done" and self.env.user.id == rec.direct_manager_id.id:
                 rec.is_assessments_readonly = False
-            if rec.stage_id.name == "Done" and self.env.user.has_group('base.group_system'):
-                rec.is_assessments_readonly = True
+            
             else:
                 rec.is_assessments_readonly = True
 
