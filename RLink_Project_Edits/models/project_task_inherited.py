@@ -102,7 +102,7 @@ class ProjectTaskInherited(models.Model):
         if self.stage_id.name == 'To Check':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
             if new_stage.name == "Done":
-                if self.env.user.has_group('base.group_system'):
+                if self.env.user.id != self.direct_manager_id.id or not self.env.user.has_group('base.group_system'):
                     raise UserError(
                         _("You are not allowed to change the stage of task please contact with the Direct Manager!"))
                  
