@@ -86,8 +86,9 @@ class ProjectTaskInherited(models.Model):
 
     @api.model
     def create(self, vals_list):
+        _logger.info(f'sssssssssssssssssssssssssssssss{self.env["project.task.type"].sudo().browse(vals_list["stage_id"]).name}')
         if 'stage_id' in vals_list:
-            _logger.info(f'sssssssssssssssssssssssssssssss{self.env["project.task.type"].sudo().browse(vals_list["stage_id"]).name}')
+            
             if self.env['project.task.type'].sudo().browse(vals_list['stage_id']).name == 'To Do':
                 
                 raise ValidationError(
