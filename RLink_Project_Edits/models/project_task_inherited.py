@@ -89,7 +89,8 @@ class ProjectTaskInherited(models.Model):
         if 'stage_id' in vals_list:
             if self.env['project.task.type'].sudo().browse(vals_list['stage_id']).name == 'To Do':
                 
-                _logger.info(f'edddddddddddddddddd{vals_list}')
+                raise ValidationError(
+                        "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
         rec = super(ProjectTaskInherited, self).create(vals_list)
         
         if 'user_ids' in vals_list and not 'requested_by' in vals_list:
