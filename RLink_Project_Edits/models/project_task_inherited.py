@@ -2,8 +2,8 @@ from odoo import api, models, fields, _
 from datetime import datetime, timedelta
 from odoo.exceptions import UserError, ValidationError
 from bs4 import BeautifulSoup
-
-
+import logging
+_logger = logging.getLogger(__name__)
 class ProjectTaskInherited(models.Model):
     _inherit = 'project.task'
 
@@ -87,6 +87,7 @@ class ProjectTaskInherited(models.Model):
     @api.model
     def create(self, vals_list):
         rec = super(ProjectTaskInherited, self).create(vals_list)
+        _logger.info(f'edddddddddddddddddd{vals_list}')
         if 'user_ids' in vals_list and not 'requested_by' in vals_list:
             for user_id in rec.user_ids:
                 if user_id.employee_id:
