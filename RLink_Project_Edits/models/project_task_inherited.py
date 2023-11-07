@@ -157,7 +157,7 @@ class ProjectTaskInherited(models.Model):
                 rec.is_assessments_readonly = False
             elif rec.stage_id.name != "Done" and self.env.user.id == rec.direct_manager_id.id:
                 rec.is_assessments_readonly = False
-            elif self.env.user.has_group('base.group_system'):
+            elif rec.stage_id.name != "Done" and self.env.user.has_group('base.group_system'):
                 rec.is_assessments_readonly = False
             else:
                 rec.is_assessments_readonly = True
