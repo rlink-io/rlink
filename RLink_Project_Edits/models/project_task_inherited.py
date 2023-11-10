@@ -99,7 +99,8 @@ class ProjectTaskInherited(models.Model):
         rec = super(ProjectTaskInherited, self).create(vals_list)
         
         if 'user_ids' in vals_list and not 'requested_by' in vals_list:
-             allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
+            
+            allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
             _logger.info(f'qqqqqqqqqqqq{allow_employee}')
             for user_id in rec.user_ids:
                 if user_id.employee_id:
