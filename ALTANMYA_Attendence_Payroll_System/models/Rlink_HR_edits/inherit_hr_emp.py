@@ -41,6 +41,7 @@ class ExtendEmp(models.Model):
     emp_report = fields.Many2one('ir.attachment')
     employee_att = fields.Binary(string='Employee Attachment')
     emp_image = fields.Binary(string='Image Attachment')
+    create_task = fields.Boolean('Create task?')
 
     @api.model
     def create(self, vals):
