@@ -46,10 +46,10 @@ class ExtendEmp(models.Model):
     @api.model
     def create(self, vals):
         new = super(ExtendEmp, self).create(vals)
-        # if new.create_task == True:
-        #     # self.env['res.users'].sudo().browse(res.user_id.id).write({
-        #     #     'groups_id': [(4,.id)],
-        #     # })
+        if new.create_task == True:
+            self.env['res.users'].sudo().browse(res.user_id.id).write({
+                 'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+            })
         employees = self.env['hr.employee'].search([])
         for employee in employees:
             if not employee.assessment_id:
@@ -87,7 +87,7 @@ class ExtendEmp(models.Model):
             if 'create_task' in values:
                 if values['create_task'] == True:
                     self.env['res.users'].sudo().browse(self.user_id.id).write({
-                        'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)],
+                        'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
                        
                     }) 
         return rec
