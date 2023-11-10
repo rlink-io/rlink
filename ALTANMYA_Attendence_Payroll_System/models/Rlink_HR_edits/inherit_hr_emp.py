@@ -84,11 +84,12 @@ class ExtendEmp(models.Model):
                 self.create_rotation(new_title, new_dep)
                 
             rec = super(ExtendEmp, self).write(values)
-        # if 'create_task' in values:
-              # if values['create_task'] == True:
-        #     # self.env['res.users'].sudo().browse(self.user_id.id).write({
-        #     #     'groups_id': [(4,.id)],
-        #     # }) 
+            if 'create_task' in values:
+                if values['create_task'] == True:
+                    self.env['res.users'].sudo().browse(self.user_id.id).write({
+                        'groups_id': [(4, self.env.ref('sales_team.group_hr_create_task').id)],
+                       
+                    }) 
         return rec
 
     def create_rotation(self, new_title, new_dep):
