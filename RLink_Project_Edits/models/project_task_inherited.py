@@ -88,6 +88,7 @@ class ProjectTaskInherited(models.Model):
     def create(self, vals_list):
         
         if 'stage_id' in vals_list:
+            _logger.info('ffferrrrrrrrrrrrrrrrrrrrrrrr')
             allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
             _logger.info(f'rrrrrrrrrrrrrrrrrrrrrrrr{allow_employee}')
             
