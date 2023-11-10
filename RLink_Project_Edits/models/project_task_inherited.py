@@ -87,7 +87,7 @@ class ProjectTaskInherited(models.Model):
     @api.model
     def create(self, vals_list):
         
-        _logger.info('ffferrrrrrrrrrrrrrrrrrrrrrrr')
+        _logger.info('fddfddddddddddddddddddddddddd{vals_list}')
         allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
         _logger.info(f'rrrrrrrrrrrrrrrrrrrrrrrr{allow_employee}')
         
