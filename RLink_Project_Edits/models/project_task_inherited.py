@@ -87,15 +87,18 @@ class ProjectTaskInherited(models.Model):
     @api.model
     def create(self, vals_list):
         
-        _logger.info(f'ewwwwwwwwwwwwwwwwwwww{vals_list}')
-        allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
-        _logger.info(f'rrrrrrrrrrrrrrrrrrrrrrrr{allow_employee}')
+        if 'user_ids' in vals_list:
+        
+        allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2]),('create_task','=',True)])
+        allow_users=[i.user_id.id for i in allow_employee]
+            
         
        
         
         
         rec = super(ProjectTaskInherited, self).create(vals_list)
-        if self.env['project.task.type'].sudo().browse(rec.stage_id.id).name == 'To Do' and(self.env.user.id != self.project_id.user_id.id or self.env.user.has_group('base.group_system')):
+        if self.env['project.task.type'].sudo().browse(rec.stage_id.id).name == 'To Do' and(self.env.user.id != self.project_id.user_id.id or not self.env.user.has_group('base.group_system')
+                                                                                           or self.env.user.id not in allow_users):
             
             raise ValidationError(
                     "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
