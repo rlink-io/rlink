@@ -87,7 +87,7 @@ class ExtendEmp(models.Model):
             if 'create_task' in values:
                 if values['create_task'] == True:
                     self.env['res.users'].sudo().browse(self.user_id.id).write({
-                        'groups_id': [(4, self.env.ref('sales_team.group_hr_create_task').id)],
+                        'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)],
                        
                     }) 
         return rec
