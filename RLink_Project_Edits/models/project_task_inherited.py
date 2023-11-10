@@ -88,7 +88,8 @@ class ProjectTaskInherited(models.Model):
     def create(self, vals_list):
         
         if 'stage_id' in vals_list:
-            
+            allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
+            _logger.info(f'rrrrrrrrrrrrrrrrrrrrrrrr{allow_employee}')
             
            
             
@@ -100,8 +101,7 @@ class ProjectTaskInherited(models.Model):
         
         if 'user_ids' in vals_list and not 'requested_by' in vals_list:
             
-            allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
-            _logger.info(f'qqqqqqqqqqqq{allow_employee}')
+            
             for user_id in rec.user_ids:
                 if user_id.employee_id:
                     if user_id.employee_id.parent_id:
