@@ -90,7 +90,7 @@ class ProjectTaskInherited(models.Model):
         if 'stage_id' in vals_list:
             if 'user_ids' in vals_list:
                 allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list.get('user_ids')[0][2])])
-                _logger.info(f'eeeeeeeeeeeeeeeeeeeeee{allow_employee}')
+                _logger.info(f'eeeeeeeeeeeeeeeeeeeeee{allow_employee,vals_list.get('user_ids')[0][2]}')
             if self.env['project.task.type'].sudo().browse(vals_list['stage_id']).name == 'To Do' and(self.env.user.id != self.project_id.user_id.id or self.env.user.has_group('base.group_system')):
                 
                 raise ValidationError(
