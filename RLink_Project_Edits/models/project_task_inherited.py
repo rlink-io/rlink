@@ -89,9 +89,9 @@ class ProjectTaskInherited(models.Model):
         
         if 'user_ids' in vals_list:
         
-        allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2]),('create_task','=',True)])
-        allow_users=[i.user_id.id for i in allow_employee]
-            
+            allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2]),('create_task','=',True)])
+            allow_users=[i.user_id.id for i in allow_employee]
+                
         
        
         
