@@ -87,17 +87,16 @@ class ProjectTaskInherited(models.Model):
     @api.model
     def create(self, vals_list):
         
-        if 'stage_id' in vals_list:
-            _logger.info('ffferrrrrrrrrrrrrrrrrrrrrrrr')
-            allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
-            _logger.info(f'rrrrrrrrrrrrrrrrrrrrrrrr{allow_employee}')
+        _logger.info('ffferrrrrrrrrrrrrrrrrrrrrrrr')
+        allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
+        _logger.info(f'rrrrrrrrrrrrrrrrrrrrrrrr{allow_employee}')
+        
+       
+        
+        if self.env['project.task.type'].sudo().browse(vals_list['stage_id']).name == 'To Do' and(self.env.user.id != self.project_id.user_id.id or self.env.user.has_group('base.group_system')):
             
-           
-            
-            if self.env['project.task.type'].sudo().browse(vals_list['stage_id']).name == 'To Do' and(self.env.user.id != self.project_id.user_id.id or self.env.user.has_group('base.group_system')):
-                
-                raise ValidationError(
-                        "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+            raise ValidationError(
+                    "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
         rec = super(ProjectTaskInherited, self).create(vals_list)
         
         if 'user_ids' in vals_list and not 'requested_by' in vals_list:
