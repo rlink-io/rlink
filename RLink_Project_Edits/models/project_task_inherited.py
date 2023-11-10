@@ -95,7 +95,7 @@ class ProjectTaskInherited(models.Model):
         
         
         rec = super(ProjectTaskInherited, self).create(vals_list)
-        if self.env['project.task.type'].sudo().browse(rec.stage_id).name == 'To Do' and(self.env.user.id != self.project_id.user_id.id or self.env.user.has_group('base.group_system')):
+        if self.env['project.task.type'].sudo().browse(rec.stage_id.id).name == 'To Do' and(self.env.user.id != self.project_id.user_id.id or self.env.user.has_group('base.group_system')):
             
             raise ValidationError(
                     "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
