@@ -2,12 +2,14 @@ from odoo import api, models, fields, _
 from datetime import datetime, timedelta
 from odoo.exceptions import UserError, ValidationError
 
-
+import logging
+_logger = logging.getLogger(__name__)
 class ProjectInherited(models.Model):
     _inherit = 'project.project'
 
     @api.model
     def create(self, vals):
+        _logger.info(f'sddddddddddeeeee{vals}')
         rec = super(ProjectInherited, self).create(vals)
 
         to_do = self.env['project.task.type'].create({'name': 'To Do', 'sequence': 1})
