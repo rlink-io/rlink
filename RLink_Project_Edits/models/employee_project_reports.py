@@ -51,6 +51,16 @@ class ProjectEmployeesReports(models.Model):
                     task.total = ((int(task.speed) * 1.5) + (int(task.quality) * 2) + (int(task.no_repeated_errors))) / 4.5
                     sum_total += task.total
                     task_ids.append(task.id)
+            elif not task.date_check:
+                if task.planned_date_to:
+                     if user_id in task.user_ids.ids \
+                        and task.planned_date_to.month == yesterday_date.month \
+                        and task.planned_date_to.year == yesterday_date.year:
+                    task_number = task_number + 1
+                    task.task_number = task_number
+                    task.total = ((int(task.speed) * 1.5) + (int(task.quality) * 2) + (int(task.no_repeated_errors))) / 4.5
+                    sum_total += task.total
+                    task_ids.append(task.id)
         if task_ids:
             monthly_total = sum_total / len(task_ids)
 
