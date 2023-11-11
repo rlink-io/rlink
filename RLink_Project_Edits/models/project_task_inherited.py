@@ -21,6 +21,7 @@ class ProjectTaskInherited(models.Model):
     description = fields.Html(required=True)
     planned_date_from = fields.Date("Start date", required=True)
     planned_date_to = fields.Date("End date ", required=True)
+    date_check = fields.Date("Check date ", readonly=True)
 
     planned_date_begin = fields.Datetime("Start date", tracking=True, task_dependency_tracking=True,
                                          compute="_compute_planned_date_begin")
@@ -74,6 +75,7 @@ class ProjectTaskInherited(models.Model):
 
     def write(self, vals):
         if 'stage_id' in vals:
+            
             self.check_stage_restrictions(vals)
         rec = super(ProjectTaskInherited, self).write(vals)
         if 'user_ids' in vals and 'requested_by' not in vals:
@@ -128,7 +130,9 @@ class ProjectTaskInherited(models.Model):
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
             if new_stage.name == "Done":
                raise UserError(
-                        _("You are not allowed to change the stage of task please contact with the Direct Manager!"))     
+                        _("You are not allowed to change the stage of task please contact with the Direct Manager!"))  
+            elif new_stage.name =='To Check':
+                self.date_check = fields.Datetime.today()
         if self.stage_id.name == 'To Check':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
             if new_stage.name == "Done":
