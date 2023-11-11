@@ -83,8 +83,13 @@
                <field name="att_mode"/>
                <field name="studio_employee_number"/>
             </xpath>
+             <xpath expr="//field[@name='work_email']" position="after" >
+               <field name="create_task"/>
+             
+            </xpath>
              
         </field>
+        
     </record>
 
     <record id="resourcecalendarattendance_inherit" model="ir.ui.view">
