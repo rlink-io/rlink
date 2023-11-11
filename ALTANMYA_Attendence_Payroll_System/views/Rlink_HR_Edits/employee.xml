@@ -42,11 +42,16 @@
 				<xpath expr="//field[@name='child_ids']" position="replace">
 			 <field name="child_ids" widget="hr_org_chart" style="pointer-events:none;"/>
 				</xpath>
+				 <xpath expr="//field[@name='coach_id']" position="after" >
+               				<field name="create_task"/>
+             
+            			</xpath>
 				<xpath expr="//field[@name='coach_id']" position="attributes">
 					<attribute name="attrs">
 						{'invisible':1}
 					</attribute>
 				</xpath>
+				
 				<xpath expr="//field[@name='lang']" position="attributes">
 					<attribute name="attrs">
 						{'invisible':1}
