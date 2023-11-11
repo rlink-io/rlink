@@ -119,6 +119,7 @@ class ProjectTaskInherited(models.Model):
         return rec
 
     def check_stage_restrictions(self, vals):
+        _logger.info(f'deeeeeeeeeeeeeeeeeee{vals}')
         all_approvers =[]
         all_approvers.append(self.direct_manager_id.id)
         if self.env.user.has_group('base.group_system'):
@@ -126,13 +127,19 @@ class ProjectTaskInherited(models.Model):
         if self.stage_id.name == 'Done' and not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(
                 _("You are not allowed to change the stage of task please contact with the HR manager!"))
-        if self.stage_id.name == 'Doing' or self.stage_id.name == 'To Do':
+        if self.stage_id.name == 'Doing':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
+            
             if new_stage.name == "Done":
                raise UserError(
                         _("You are not allowed to change the stage of task please contact with the Direct Manager!"))  
             elif new_stage.name =='To Check':
                 self.date_check = fields.Datetime.today()
+        if self.stage_id.name == 'To Do':
+            new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
+            if new_stage.name == "Done":
+               raise UserError(
+                        _("You are not allowed to change the stage of task please contact with the Direct Manager!"))          
         if self.stage_id.name == 'To Check':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
             if new_stage.name == "Done":
