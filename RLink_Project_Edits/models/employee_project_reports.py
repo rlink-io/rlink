@@ -42,14 +42,15 @@ class ProjectEmployeesReports(models.Model):
         monthly_total = 0
         task_ids = []
         for task in all_task:
-            if user_id in task.user_ids.ids \
-                    and task.date_last_stage_update.month == yesterday_date.month \
-                    and task.date_last_stage_update.year == yesterday_date.year:
-                task_number = task_number + 1
-                task.task_number = task_number
-                task.total = ((int(task.speed) * 1.5) + (int(task.quality) * 2) + (int(task.no_repeated_errors))) / 4.5
-                sum_total += task.total
-                task_ids.append(task.id)
+            if task.date_check:
+                if user_id in task.user_ids.ids \
+                        and task.date_check.month == yesterday_date.month \
+                        and task.date_check.year == yesterday_date.year:
+                    task_number = task_number + 1
+                    task.task_number = task_number
+                    task.total = ((int(task.speed) * 1.5) + (int(task.quality) * 2) + (int(task.no_repeated_errors))) / 4.5
+                    sum_total += task.total
+                    task_ids.append(task.id)
         if task_ids:
             monthly_total = sum_total / len(task_ids)
 
