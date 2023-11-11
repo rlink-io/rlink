@@ -14,7 +14,7 @@ class ProjectInherited(models.Model):
         rec = super(ProjectInherited, self).create(vals)
         if 'user_id' in vals:
             self.env['res.users'].sudo().browse(rec.user_id.id).write({
-                     'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+                     'groups_id': [(4, self.env.ref('project.group_project_manager').id)]
                 })
 
         to_do = self.env['project.task.type'].create({'name': 'To Do', 'sequence': 1})
