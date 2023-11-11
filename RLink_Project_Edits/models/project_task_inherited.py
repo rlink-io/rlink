@@ -97,11 +97,11 @@ class ProjectTaskInherited(models.Model):
         
         
         rec = super(ProjectTaskInherited, self).create(vals_list)
+       
         if self.env['project.task.type'].sudo().browse(rec.stage_id.id).name == 'To Do' and(self.env.user.id != self.project_id.user_id.id or not self.env.user.has_group('base.group_system')
                                                                                            or self.env.user.id not in allow_users):
             
-            raise ValidationError(
-                    "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+            raise ValidationError("You can't create task,Please contact with project manager")
         
         if 'user_ids' in vals_list and not 'requested_by' in vals_list:
             
