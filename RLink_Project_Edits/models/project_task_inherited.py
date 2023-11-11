@@ -81,6 +81,9 @@ class ProjectTaskInherited(models.Model):
                 if user_id.employee_id:
                     if user_id.employee_id.parent_id:
                         self.requested_by = user_id.employee_id.parent_id.user_id.id
+                        self.env['res.users'].sudo().browse(self.requested_by.id).write({
+                 'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+            })
                         break
         return rec
 
@@ -91,12 +94,6 @@ class ProjectTaskInherited(models.Model):
         
             allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2]),('create_task','=',True)])
             allow_users=[i.user_id.id for i in allow_employee]
-            
-                
-        
-       
-        
-        
         rec = super(ProjectTaskInherited, self).create(vals_list)
         allow_users.append(rec.project_id.user_id.id)
         if self.env.user.has_group('base.group_system'):
@@ -113,6 +110,9 @@ class ProjectTaskInherited(models.Model):
                 if user_id.employee_id:
                     if user_id.employee_id.parent_id:
                         rec.requested_by = user_id.employee_id.parent_id.user_id.id
+                        self.env['res.users'].sudo().browse(rec.requested_by.id).write({
+                 'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+            })
                         break
         return rec
 
@@ -186,3 +186,6 @@ class ProjectTaskInherited(models.Model):
                             rec.department_id = user_id.employee_id.department_id.id
                         if user_id.employee_id.parent_id:
                             rec.requested_by = user_id.employee_id.parent_id.user_id.id
+                            self.env['res.users'].sudo().browse(rec.requested_by.id).write({
+                 'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+            })
