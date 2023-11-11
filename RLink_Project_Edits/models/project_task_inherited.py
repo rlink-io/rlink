@@ -98,7 +98,7 @@ class ProjectTaskInherited(models.Model):
         
         
         rec = super(ProjectTaskInherited, self).create(vals_list)
-        allow_users.aapend(rec.project_id.user_id.id)
+        allow_users.append(rec.project_id.user_id.id)
         if self.env.user.has_group('base.group_system'):
             allow_users.append(self.env.user.id)
        
