@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_project_users_management,project.users.management,model_project_users_management,project.group_project_manager,1,1,0,0
-access_project_employees_reports,project.employees.reports,model_project_employees_reports,hr.group_hr_manager,1,0,0,0
-access_project_employees_reports_hr_employees,project.employees.reports.hr.employees,model_project_employees_reports,ALTANMYA_Attendence_Payroll_System.group_hr_employees,1,0,0,0
+access_project_employees_reports,project.employees.reports,model_project_employees_reports,hr.group_hr_manager,1,1,1,1
+access_project_employees_reports_hr_employees,project.employees.reports.hr.employees,model_project_employees_reports,ALTANMYA_Attendence_Payroll_System.group_hr_employees,1,1,1,1
 access_project_employees_dynamic_reports,project.tasks.dynamic.reports,model_project_tasks_dynamic_reports,hr.group_hr_manager,1,1,0,0
 access_project_timesheet_reports,project.timesheet.reports,model_project_timesheet_reports,project.group_project_manager,1,1,0,0
 project.access_project_task_type_user,project.task.type.user,project.model_project_task_type,base.group_user,1,0,0,0

@@ -14,7 +14,7 @@
             <field name="state">code</field>
             <field name="code">model._create_monthly_project_employee_report_cron1()</field>
         </record>
-<!--      <record id="_create_monthly_project_employee_report_cron_month" model="ir.actions.server">    
+     <record id="_create_monthly_project_employee_report_cron_month" model="ir.actions.server">    
          <field name="name">Create month</field>    
          <field name="model_id" ref="model_project_employees_reports"/>    
          <field name="binding_model_id" ref="RLink_Project_Edits.model_project_employees_reports"/>    
@@ -24,7 +24,7 @@
           action = model._create_monthly_project_employee_report_cron1_month()
           </field>
   </record>
- -->
+
       
 
       <record id="_set_department_for_tasks_cron" model="ir.cron">
