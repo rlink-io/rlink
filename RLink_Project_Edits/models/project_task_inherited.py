@@ -2,8 +2,8 @@ from odoo import api, models, fields, _
 from datetime import datetime, timedelta
 from odoo.exceptions import UserError, ValidationError
 from bs4 import BeautifulSoup
-
-
+import logging
+_logger = logging.getLogger(__name__)
 class ProjectTaskInherited(models.Model):
     _inherit = 'project.task'
 
@@ -21,6 +21,7 @@ class ProjectTaskInherited(models.Model):
     description = fields.Html(required=True)
     planned_date_from = fields.Date("Start date", required=True)
     planned_date_to = fields.Date("End date ", required=True)
+    date_check = fields.Date("Check date ", readonly=True)
 
     planned_date_begin = fields.Datetime("Start date", tracking=True, task_dependency_tracking=True,
                                          compute="_compute_planned_date_begin")
@@ -74,6 +75,7 @@ class ProjectTaskInherited(models.Model):
 
     def write(self, vals):
         if 'stage_id' in vals:
+            
             self.check_stage_restrictions(vals)
         rec = super(ProjectTaskInherited, self).write(vals)
         if 'user_ids' in vals and 'requested_by' not in vals:
@@ -81,21 +83,43 @@ class ProjectTaskInherited(models.Model):
                 if user_id.employee_id:
                     if user_id.employee_id.parent_id:
                         self.requested_by = user_id.employee_id.parent_id.user_id.id
+                        self.env['res.users'].sudo().browse(self.requested_by.id).write({
+                 'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+            })
                         break
         return rec
 
     @api.model
     def create(self, vals_list):
+        
+        if 'user_ids' in vals_list:
+        
+            allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2]),('create_task','=',True)])
+            allow_users=[i.user_id.id for i in allow_employee]
         rec = super(ProjectTaskInherited, self).create(vals_list)
+        allow_users.append(rec.project_id.user_id.id)
+        if self.env.user.has_group('base.group_system'):
+            allow_users.append(self.env.user.id)
+       
+        if self.env['project.task.type'].sudo().browse(rec.stage_id.id).name == 'To Do' and self.env.user.id not in allow_users:
+            
+            raise ValidationError("You can't create task,Please contact with project manager")
+        
         if 'user_ids' in vals_list and not 'requested_by' in vals_list:
+            
+            
             for user_id in rec.user_ids:
                 if user_id.employee_id:
                     if user_id.employee_id.parent_id:
                         rec.requested_by = user_id.employee_id.parent_id.user_id.id
+                        self.env['res.users'].sudo().browse(rec.requested_by.id).write({
+                 'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+            })
                         break
         return rec
 
     def check_stage_restrictions(self, vals):
+        allow_users = [i.id for i in self.user_ids]
         all_approvers =[]
         all_approvers.append(self.direct_manager_id.id)
         if self.env.user.has_group('base.group_system'):
@@ -105,9 +129,17 @@ class ProjectTaskInherited(models.Model):
                 _("You are not allowed to change the stage of task please contact with the HR manager!"))
         if self.stage_id.name == 'Doing':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
+            
             if new_stage.name == "Done":
                raise UserError(
-                        _("You are not allowed to change the stage of task please contact with the Direct Manager!"))     
+                        _("You are not allowed to change the stage of task please contact with the Direct Manager!"))  
+            elif new_stage.name =='To Check': 
+                self.date_check = fields.Datetime.today()
+        if self.stage_id.name == 'To Do':
+            new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
+            if new_stage.name == "Done":
+               raise UserError(
+                        _("You are not allowed to change the stage of task please contact with the Direct Manager!"))          
         if self.stage_id.name == 'To Check':
             new_stage = self.env['project.task.type'].search([('id', '=', vals['stage_id'])])
             if new_stage.name == "Done":
@@ -149,7 +181,7 @@ class ProjectTaskInherited(models.Model):
                 rec.is_assessments_readonly = False
             elif rec.stage_id.name != "Done" and self.env.user.id == rec.direct_manager_id.id:
                 rec.is_assessments_readonly = False
-            elif self.env.user.has_group('base.group_system'):
+            elif rec.stage_id.name != "Done" and self.env.user.has_group('base.group_system'):
                 rec.is_assessments_readonly = False
             else:
                 rec.is_assessments_readonly = True
@@ -165,3 +197,6 @@ class ProjectTaskInherited(models.Model):
                             rec.department_id = user_id.employee_id.department_id.id
                         if user_id.employee_id.parent_id:
                             rec.requested_by = user_id.employee_id.parent_id.user_id.id
+                            self.env['res.users'].sudo().browse(rec.requested_by.id).write({
+                 'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+            })

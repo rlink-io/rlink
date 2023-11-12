@@ -41,10 +41,15 @@ class ExtendEmp(models.Model):
     emp_report = fields.Many2one('ir.attachment')
     employee_att = fields.Binary(string='Employee Attachment')
     emp_image = fields.Binary(string='Image Attachment')
+    create_task = fields.Boolean('Create task?')
 
     @api.model
     def create(self, vals):
         new = super(ExtendEmp, self).create(vals)
+        if new.create_task == True:
+            self.env['res.users'].sudo().browse(res.user_id.id).write({
+                 'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+            })
         employees = self.env['hr.employee'].search([])
         for employee in employees:
             if not employee.assessment_id:
@@ -77,7 +82,14 @@ class ExtendEmp(models.Model):
                 new_dep = self.env['hr.department'].sudo().search([('id', '=', values['department_id'])],
                                                                   limit=1).id if 'department_id' in values else self.department_id.id
                 self.create_rotation(new_title, new_dep)
+                
             rec = super(ExtendEmp, self).write(values)
+            if 'create_task' in values:
+                if values['create_task'] == True:
+                    self.env['res.users'].sudo().browse(self.user_id.id).write({
+                        'groups_id': [(4, self.env.ref('ALTANMYA_Attendence_Payroll_System.group_hr_create_task').id)]
+                       
+                    }) 
         return rec
 
     def create_rotation(self, new_title, new_dep):
