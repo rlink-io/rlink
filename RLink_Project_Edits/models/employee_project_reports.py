@@ -117,23 +117,23 @@ class ProjectEmployeesReports(models.Model):
             self.env['project.employees.reports'].sudo().create(vals)
 
     def _create_monthly_project_employee_report_cron1_month(self):
-        pass
-        # all_users = self.env['res.users'].sudo().search([('share', '=', False)])
+        
+        all_users = self.env['res.users'].sudo().search([('share', '=', False)])
 
-        # for i in range(1, 11):
-        #     yesterday_date = date.today() - relativedelta(months=i)
-        #     for user in all_users:
-        #         task_ids, monthly_total = self.sudo().compute_task_ids_month(user.id, i)
-        #         vals = {
-        #             'user_id': user.id,
-        #             'month': str(yesterday_date.month),
-        #             'year': yesterday_date.year,
-        #             'task_ids': task_ids,
-        #             'total': monthly_total
-        #         }
-        #         self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
+        for i in range(1, 11):
+            yesterday_date = date.today() - relativedelta(months=i)
+            for user in all_users:
+                task_ids, monthly_total = self.sudo().compute_task_ids_month(user.id, i)
+                vals = {
+                    'user_id': user.id,
+                    'month': str(yesterday_date.month),
+                    'year': yesterday_date.year,
+                    'task_ids': task_ids,
+                    'total': monthly_total
+                }
+                self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
 
-        #         self.env['project.employees.reports'].sudo().create(vals)
+                self.env['project.employees.reports'].sudo().create(vals)
 
     def fill_Kpi_in_employees_reports(self, user, yesterday_date, monthly_total):
         if user.employee_ids:
