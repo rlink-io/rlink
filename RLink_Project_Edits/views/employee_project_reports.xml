@@ -49,7 +49,7 @@
 					<filter name="group_user_id" string="Employees" context="{'group_by':'user_id'}"/>
 					<filter name="group_year" string="Year" context="{'group_by':'year'}"/>
 					<filter name="group_month" string="Month" context="{'group_by':'month'}"/>
-					<filter name="group_month_order" string="Month order" context="{'group_by':'date:month'}"/>
+					<filter name="group_month_order" string="Month order" context="{'group_by':'date'}"/>
 				
 				</search>
 			</field>
