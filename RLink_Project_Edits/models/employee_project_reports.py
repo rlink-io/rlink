@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 import locale
 import logging
 from dateutil.relativedelta import relativedelta
+import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -26,6 +27,7 @@ class ProjectEmployeesReports(models.Model):
     year = fields.Char(string='Year')
     total = fields.Float(string='Total', default=0)
     task_ids = fields.Many2many('project.task')
+    date = fields.Datetime('Date')
 
     def _compute_display_name(self):
         for report in self:
@@ -129,7 +131,8 @@ class ProjectEmployeesReports(models.Model):
                     'month': str(yesterday_date.month),
                     'year': yesterday_date.year,
                     'task_ids': task_ids,
-                    'total': monthly_total
+                    'total': monthly_total,
+                    'date':datetime.datetime.strptime("1/"+str(yesterday_date.month)+"/"str(yesterday_date.year),'%d/%m/%Y')
                 }
                 self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
 
