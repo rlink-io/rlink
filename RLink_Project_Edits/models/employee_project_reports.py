@@ -110,7 +110,8 @@ class ProjectEmployeesReports(models.Model):
                 'month': str(yesterday_date.month),
                 'year': yesterday_date.year,
                 'task_ids': task_ids,
-                'total': monthly_total
+                'total': monthly_total,
+                'date':datetime.datetime.strptime("1/"+str(yesterday_date.month)+"/"+str(yesterday_date.year),'%d/%m/%Y')
             }
             self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
             _logger.info(
