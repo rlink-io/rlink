@@ -124,6 +124,7 @@ class ProjectEmployeesReports(models.Model):
             yesterday_date = date.today() - relativedelta(months=i)
             for user in all_users:
                 task_ids, monthly_total = self.sudo().compute_task_ids_month(user.id, i)
+                _logger.info(f'ssssssssssssssssssss{str(yesterday_date.month)}')
                 vals = {
                     'user_id': user.id,
                     'month': str(yesterday_date.month),
