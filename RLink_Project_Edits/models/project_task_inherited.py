@@ -96,7 +96,8 @@ class ProjectTaskInherited(models.Model):
             allow_manager = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
             allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2]),('create_task','=',True)])
             allow_users=[i.user_id.id for i in allow_employee]
-            allow_users=[i.parent_id.user_id.id for i in allow_manager]
+            for i in allow_manager:
+                allow_users.append(i.parent_id.user_id.id)
         rec = super(ProjectTaskInherited, self).create(vals_list)
         allow_users.append(rec.project_id.user_id.id)
         if self.env.user.has_group('base.group_system'):
