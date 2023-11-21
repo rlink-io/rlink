@@ -84,7 +84,7 @@
                <field name="studio_employee_number"/>
             </xpath>
              <xpath expr="//field[@name='work_email']" position="after" >
-               <field name="create_task"/>
+               <field name="create_task" groups="hr.group_hr_manager"/>
              
             </xpath>
              
