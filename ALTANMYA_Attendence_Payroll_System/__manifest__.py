@@ -39,7 +39,7 @@
              'views/Rlink_HR_Edits/cron_jobs.xml',
              # 'views/Rlink_HR_Edits/employee.xml',
              'views/Rlink_HR_Edits/hr_contract_inherited.xml',
-             'views/Rlink_HR_Edits/employee_top_row_views.xml',
+             # 'views/Rlink_HR_Edits/employee_top_row_views.xml',
              'views/Rlink_HR_Edits/change_request.xml',
              'views/Rlink_HR_Edits/hr_payslip_inherited.xml',
 
