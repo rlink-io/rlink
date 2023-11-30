@@ -136,7 +136,7 @@
             name="Employees"
 			action="hr_action_emp_kanban"
 			parent="hr.menu_hr_employee_payroll"
-			groups="hr.group_hr_user"
+			groups="hr.group_hr_manager"
             sequence="1"
          />
 
