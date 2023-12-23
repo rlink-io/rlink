@@ -91,11 +91,12 @@ class ProjectTaskInherited(models.Model):
 
     @api.model
     def create(self, vals_list):
-        
+        allow_users=[]
         if 'user_ids' in vals_list:
             allow_manager = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2])])
             allow_employee = self.env['hr.employee'].sudo().search([('user_id','in',vals_list['user_ids'][0][2]),('create_task','=',True)])
-            allow_users=[i.user_id.id for i in allow_employee]
+            for i in allow_employee:
+                allow_users.append(i.user_id.id)
             for i in allow_manager:
                 allow_users.append(i.parent_id.user_id.id)
         rec = super(ProjectTaskInherited, self).create(vals_list)
