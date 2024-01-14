@@ -123,7 +123,7 @@ class ProjectEmployeesReports(models.Model):
         
         all_users = self.env['res.users'].sudo().search([('share', '=', False)])
 
-        for i in range(1, 13):
+        for i in range(1, 12):
             yesterday_date = date.today() - relativedelta(months=i)
             for user in all_users:
                 task_ids, monthly_total = self.sudo().compute_task_ids_month(user.id, i)
