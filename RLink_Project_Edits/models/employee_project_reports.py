@@ -34,7 +34,7 @@ class ProjectEmployeesReports(models.Model):
             report.display_name = "{user_name}-{month}-{year}".format(user_name=report.user_id.name,
                                                                       month=dict(report._fields['month'].selection).get(
                                                                           report.month),
-                                                                      year=report.year)
+                                                                      year="2023")
 
     def compute_task_ids(self, user_id):
         yesterday_date = date.today() - timedelta(days=1)
@@ -72,6 +72,7 @@ class ProjectEmployeesReports(models.Model):
         return task_ids, monthly_total
 
     def compute_task_ids_month(self, user_id, i):
+        _logger.info(f'ttttttttttttttttttt{i}')
 
         yesterday_date = date.today() - relativedelta(months=i)
         done_stages = self.env['project.task.type'].search([('name', '=', 'Done')]).ids
@@ -84,7 +85,7 @@ class ProjectEmployeesReports(models.Model):
             if task.planned_date_to:
                 if user_id in task.user_ids.ids \
                         and task.planned_date_to.month == yesterday_date.month \
-                        and task.planned_date_to.year == yesterday_date.year:
+                        and str("2023") == str("2023"):
                     task_number = task_number + 1
                     task.task_number = task_number
                     task.total = ((int(task.speed) * 1.5) + (int(task.quality) * 2) + (
@@ -130,10 +131,10 @@ class ProjectEmployeesReports(models.Model):
                 vals = {
                     'user_id': user.id,
                     'month': str(yesterday_date.month),
-                    'year': yesterday_date.year,
+                    'year':str("2023"),
                     'task_ids': task_ids,
                     'total': monthly_total,
-                    'date':datetime.datetime.strptime("1/"+str(yesterday_date.month)+"/"+str(yesterday_date.year),'%d/%m/%Y')
+                    'date':datetime.datetime.strptime("1/"+str(yesterday_date.month)+"/"+str("2023"),'%d/%m/%Y')
                 }
                 self.sudo().fill_Kpi_in_employees_reports(user, yesterday_date, monthly_total)
 
@@ -147,14 +148,14 @@ class ProjectEmployeesReports(models.Model):
                 print(kpi_report_id)
                 for row_id in kpi_report_id.rows_ids:
 
-                    if (row_id['year'] == str(yesterday_date.year) and row_id['month'] == yesterday_date.strftime(
+                    if (row_id['year'] == str("2023") and row_id['month'] == yesterday_date.strftime(
                             "%B")):
                         row_id.sudo().kpi = monthly_total
 
                 points_report_id = self.env['points.credit.report'].search([('employee_id', '=', employee_id.id)],
                                                                            limit=1)
                 for row_id in points_report_id.rows_ids:
-                    if (row_id['eval_year'] == str(yesterday_date.year) and row_id[
+                    if (row_id['eval_year'] == str("2023") and row_id[
                         'eval_month'] == yesterday_date.strftime(
                         "%B")):
                         row_id.sudo().eval_kpi = monthly_total
